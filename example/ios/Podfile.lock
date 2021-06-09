@@ -1,0 +1,29 @@
+PODS:
+  - exponea (0.0.1):
+    - ExponeaSDK (~> 2.11.0)
+    - Flutter
+  - ExponeaSDK (2.11.0)
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - exponea (from `.symlinks/plugins/exponea/ios`)
+  - Flutter (from `Flutter`)
+
+SPEC REPOS:
+  trunk:
+    - ExponeaSDK
+
+EXTERNAL SOURCES:
+  exponea:
+    :path: ".symlinks/plugins/exponea/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  exponea: ee7749550221672fd96f2a8f911d5dfacf2fc008
+  ExponeaSDK: ddb7bc9e47b3ca983c376ca18d8a245238eca390
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+
+COCOAPODS: 1.10.1

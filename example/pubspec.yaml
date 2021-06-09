@@ -1,0 +1,23 @@
+name: exponea_example
+description: Demonstrates how to use the exponea plugin.
+version: 1.0.0+1
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  exponea:
+    path: ../
+
+  cupertino_icons: ^1.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
