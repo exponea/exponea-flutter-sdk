@@ -1,3 +1,17 @@
 extension ObjectExt<T> on T {
   R let<R>(R function(T value)) => function.call(this);
 }
+
+extension MapExt on Map<String, dynamic> {
+  T? getOptional<T>(String key) {
+    return this[key];
+  }
+
+  T getRequired<T>(String key) {
+    final value = this[key] as T?;
+    if (value == null) {
+      throw StateError('$key is required!');
+    }
+    return value;
+  }
+}

@@ -1,5 +1,10 @@
 export 'configuration.dart';
+export 'configuration_change.dart';
 export 'consent.dart';
+export 'customer.dart';
+export 'datetime.dart';
+export 'duration.dart';
+export 'event.dart';
 export 'event_type.dart';
 export 'flush_mode.dart';
 export 'http_log_level.dart';

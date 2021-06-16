@@ -1,0 +1,7 @@
+[
+  {},
+  {"projectToken":"1234567890"},
+  {"projectToken":"1234567890","authorizationToken":"0987654321"},
+  {"projectToken":"1234567890","authorizationToken":"0987654321","baseUrl":null},
+  {"projectToken":"1234567890","authorizationToken":"0987654321","baseUrl":"http://a.b.c"}
+]

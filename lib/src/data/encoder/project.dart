@@ -1,14 +1,14 @@
-import 'package:exponea/src/data/encoder/main.dart';
-
 import '../model/event_type.dart';
 import '../model/project.dart';
+import '../util/object.dart';
+import 'event_type.dart';
 
 abstract class ExponeaProjectEncoder {
   static ExponeaProject decode(Map<String, dynamic> data) {
     return ExponeaProject(
-      projectToken: data['projectToken'],
-      authorizationToken: data['authorizationToken'],
-      baseUrl: data['baseUrl'],
+      projectToken: data.getRequired('projectToken'),
+      authorizationToken: data.getRequired('authorizationToken'),
+      baseUrl: data.getOptional('baseUrl'),
     );
   }
 
@@ -17,7 +17,7 @@ abstract class ExponeaProjectEncoder {
       'projectToken': project.projectToken,
       'authorizationToken': project.authorizationToken,
       'baseUrl': project.baseUrl,
-    };
+    }..removeWhere((key, value) => value == null);
   }
 }
 
@@ -28,7 +28,10 @@ abstract class ExponeaProjectMappingEncoder {
     return data.map(
       (key, value) => MapEntry(
         EventTypeEncoder.decode(key),
-        value.map((project) => ExponeaProjectEncoder.decode(project)).toList(),
+        value
+            .map((project) => ExponeaProjectEncoder.decode(project))
+            .cast<ExponeaProject>()
+            .toList(),
       ),
     );
   }
@@ -39,7 +42,10 @@ abstract class ExponeaProjectMappingEncoder {
     return mapping.map(
       (key, value) => MapEntry(
         EventTypeEncoder.encode(key),
-        value.map((project) => ExponeaProjectEncoder.encode(project)).toList(),
+        value
+            .map((project) => ExponeaProjectEncoder.encode(project))
+            .cast<Map<String, dynamic>>()
+            .toList(),
       ),
     );
   }

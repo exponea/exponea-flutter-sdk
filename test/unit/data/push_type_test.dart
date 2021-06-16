@@ -2,21 +2,28 @@ import 'package:exponea/exponea.dart';
 import 'package:exponea/src/data/encoder/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'base.dart';
+
 void main() {
-  group('PushActionTypeEncoder', () {
+  group('PushActionType', () {
     final encode = PushActionTypeEncoder.encode;
     final decode = PushActionTypeEncoder.decode;
 
+    final data = readStringData('push_type');
+    test('check data', () async {
+      expect(data.length, 3);
+    });
+
     test('encode', () async {
-      expect(encode(PushActionType.app), 'app');
-      expect(encode(PushActionType.deeplink), 'deeplink');
-      expect(encode(PushActionType.web), 'web');
+      for (int i = 0; i < data.length; i++) {
+        expect(encode(PushActionType.values[i]), data[i]);
+      }
     });
 
     test('decode', () async {
-      expect(decode('app'), PushActionType.app);
-      expect(decode('deeplink'), PushActionType.deeplink);
-      expect(decode('web'), PushActionType.web);
+      for (int i = 0; i < data.length; i++) {
+        expect(decode(data[i]), PushActionType.values[i]);
+      }
       expect(() => decode('foo'), throwsUnsupportedError);
     });
   });

@@ -1,26 +1,34 @@
-import 'package:exponea/src/data/encoder/main.dart';
-
 import '../model/configuration.dart';
 import '../util/object.dart';
 import 'http_log_level.dart';
 import 'notification_importance.dart';
+import 'project.dart';
+import 'token_frequency.dart';
 
 abstract class ExponeaConfigurationEncoder {
   static ExponeaConfiguration decode(Map<String, dynamic> data) {
     return ExponeaConfiguration(
-      projectToken: data['projectToken'],
-      authorizationToken: data['authorizationToken'],
-      baseUrl: data['baseUrl'],
-      projectMapping:
-          data['projectMapping']?.let(ExponeaProjectMappingEncoder.decode),
-      defaultProperties: data['defaultProperties'],
-      flushMaxRetries: data['flushMaxRetries'],
-      sessionTimeout: data['sessionTimeout'],
-      automaticSessionTracking: data['automaticSessionTracking'],
-      pushTokenTrackingFrequency:
-          data['pushTokenTrackingFrequency']?.let(TokenFrequencyEncoder.decode),
-      android: data['android']?.let(AndroidExponeaConfigurationEncoder.decode),
-      ios: data['ios']?.let(IOSExponeaConfigurationEncoder.decode),
+      projectToken: data.getRequired('projectToken'),
+      authorizationToken: data.getRequired('authorizationToken'),
+      baseUrl: data.getOptional('baseUrl'),
+      projectMapping: data
+          .getOptional<Map<String, dynamic>>('projectMapping')
+          ?.let(ExponeaProjectMappingEncoder.decode),
+      defaultProperties: data
+          .getOptional<Map<String, dynamic>>('defaultProperties')
+          ?.cast<String, Object>(),
+      flushMaxRetries: data.getOptional<num>('flushMaxRetries')?.toInt(),
+      sessionTimeout: data.getOptional('sessionTimeout'),
+      automaticSessionTracking: data.getOptional('automaticSessionTracking'),
+      pushTokenTrackingFrequency: data
+          .getOptional<String>('pushTokenTrackingFrequency')
+          ?.let(TokenFrequencyEncoder.decode),
+      android: data
+          .getOptional<Map<String, dynamic>>('android')
+          ?.let(AndroidExponeaConfigurationEncoder.decode),
+      ios: data
+          .getOptional<Map<String, dynamic>>('ios')
+          ?.let(IOSExponeaConfigurationEncoder.decode),
     );
   }
 
@@ -32,38 +40,41 @@ abstract class ExponeaConfigurationEncoder {
       'projectMapping':
           config.projectMapping?.let(ExponeaProjectMappingEncoder.encode),
       'defaultProperties': config.defaultProperties,
-      'flushMaxRetries': config.flushMaxRetries,
+      'flushMaxRetries': config.flushMaxRetries?.toDouble(),
       'sessionTimeout': config.sessionTimeout,
       'automaticSessionTracking': config.automaticSessionTracking,
       'pushTokenTrackingFrequency':
           config.pushTokenTrackingFrequency?.let(TokenFrequencyEncoder.encode),
       'android': config.android?.let(AndroidExponeaConfigurationEncoder.encode),
       'ios': config.ios?.let(IOSExponeaConfigurationEncoder.encode),
-    };
+    }..removeWhere((key, value) => value == null);
   }
 }
 
 abstract class AndroidExponeaConfigurationEncoder {
   static AndroidExponeaConfiguration decode(Map<String, dynamic> data) {
     return AndroidExponeaConfiguration(
-      automaticPushNotifications: data['automaticPushNotifications'],
-      pushIcon: data['pushIcon'],
-      pushAccentColor: data['pushAccentColor'],
-      pushChannelName: data['pushChannelName'],
-      pushChannelDescription: data['pushChannelDescription'],
-      pushChannelId: data['pushChannelId'],
-      pushNotificationImportance: data['pushNotificationImportance']
+      automaticPushNotifications:
+          data.getOptional('automaticPushNotifications'),
+      pushIcon: data.getOptional<num>('pushIcon')?.toInt(),
+      pushAccentColor: data.getOptional<num>('pushAccentColor')?.toInt(),
+      pushChannelName: data.getOptional('pushChannelName'),
+      pushChannelDescription: data.getOptional('pushChannelDescription'),
+      pushChannelId: data.getOptional('pushChannelId'),
+      pushNotificationImportance: data
+          .getOptional<String>('pushNotificationImportance')
           ?.let(PushNotificationImportanceEncoder.decode),
-      httpLoggingLevel:
-          data['httpLoggingLevel']?.let(HttpLoggingLevelEncoder.decode),
+      httpLoggingLevel: data
+          .getOptional<String>('httpLoggingLevel')
+          ?.let(HttpLoggingLevelEncoder.decode),
     );
   }
 
   static Map<String, dynamic> encode(AndroidExponeaConfiguration config) {
     return {
       'automaticPushNotifications': config.automaticPushNotifications,
-      'pushIcon': config.pushIcon,
-      'pushAccentColor': config.pushAccentColor,
+      'pushIcon': config.pushIcon?.toDouble(),
+      'pushAccentColor': config.pushAccentColor?.toDouble(),
       'pushChannelName': config.pushChannelName,
       'pushChannelDescription': config.pushChannelDescription,
       'pushChannelId': config.pushChannelId,
@@ -78,8 +89,8 @@ abstract class AndroidExponeaConfigurationEncoder {
 abstract class IOSExponeaConfigurationEncoder {
   static IOSExponeaConfiguration decode(Map<String, dynamic> data) {
     return IOSExponeaConfiguration(
-      requirePushAuthorization: data['requirePushAuthorization'],
-      appGroup: data['appGroup'],
+      requirePushAuthorization: data.getOptional('requirePushAuthorization'),
+      appGroup: data.getOptional('appGroup'),
     );
   }
 

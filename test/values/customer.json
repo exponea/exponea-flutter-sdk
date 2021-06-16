@@ -1,0 +1,6 @@
+[
+  {},
+  {"ids":{},"properties":{}},
+  {"ids":{"registered":"test@mail.com"},"properties":{}},
+  {"ids":{"registered":"test@mail.com"},"properties":{"str_test":"abc-123","double_test":123.987,"int_test":109,"bool_test":true}}
+]

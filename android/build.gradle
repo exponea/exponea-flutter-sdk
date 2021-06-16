@@ -48,4 +48,7 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.exponea.sdk:sdk:$exponea_sdk_version"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'com.google.code.gson:gson:2.8.6'
 }

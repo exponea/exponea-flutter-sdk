@@ -1,0 +1,6 @@
+[
+  {},
+  {"action":"app"},
+  {"action":"deeplink","additionalData":{"test":true,"num":1.23}},
+  {"action":"web","url":"https://a.b.c"}
+]

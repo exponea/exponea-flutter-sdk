@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../data/model/configuration.dart';
+import '../data/model/configuration_change.dart';
 import '../data/model/consent.dart';
-import '../data/model/event_type.dart';
+import '../data/model/customer.dart';
+import '../data/model/event.dart';
 import '../data/model/flush_mode.dart';
 import '../data/model/log_level.dart';
-import '../data/model/project.dart';
 import '../data/model/recommendation.dart';
 import '../interface.dart';
 import 'method_channel.dart';
@@ -37,10 +38,10 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  Future<void> anonymize({
-    ExponeaProject? exponeaProject,
-    Map<EventType, List<ExponeaProject>>? mapping,
-  }) async {
+  Future<void> anonymize([
+    ExponeaConfigurationChange configurationChange =
+        const ExponeaConfigurationChange(),
+  ]) async {
     throw UnimplementedError();
   }
 
@@ -96,10 +97,7 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  Future<void> identifyCustomer({
-    required Map<String, String> customerIds,
-    required Map<String, dynamic> properties,
-  }) async {
+  Future<void> identifyCustomer(Customer customer) async {
     throw UnimplementedError();
   }
 
@@ -154,21 +152,17 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  Future<void> trackEvent({
-    required String eventName,
-    required Map<String, dynamic> properties,
-    DateTime? timestamp,
-  }) async {
+  Future<void> trackEvent(Event event) async {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> trackSessionEnd(DateTime timestamp) async {
+  Future<void> trackSessionEnd({DateTime? timestamp}) async {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> trackSessionStart(DateTime timestamp) async {
+  Future<void> trackSessionStart({DateTime? timestamp}) async {
     throw UnimplementedError();
   }
 }

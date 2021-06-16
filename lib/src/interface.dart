@@ -1,9 +1,10 @@
 import 'data/model/configuration.dart';
+import 'data/model/configuration_change.dart';
 import 'data/model/consent.dart';
-import 'data/model/event_type.dart';
+import 'data/model/customer.dart';
+import 'data/model/event.dart';
 import 'data/model/flush_mode.dart';
 import 'data/model/log_level.dart';
-import 'data/model/project.dart';
 import 'data/model/push.dart';
 import 'data/model/recommendation.dart';
 
@@ -59,35 +60,30 @@ abstract class BaseInterface {
   /// Anonymize current customer and create a new one.
   /// Push token is cleared on Exponea backend.
   /// Optionally changes default Exponea project and event-project mapping.
-  Future<void> anonymize({
-    ExponeaProject? exponeaProject,
-    Map<EventType, List<ExponeaProject>>? mapping,
-  });
+  Future<void> anonymize([
+    ExponeaConfigurationChange configurationChange =
+        const ExponeaConfigurationChange(),
+  ]);
 
   /// Identify current customer with new customer ids and properties.
-  Future<void> identifyCustomer({
-    required Map<String, String> customerIds,
-    required Map<String, dynamic> properties,
-  });
+  Future<void> identifyCustomer(Customer customer);
 
   /// Flush data to Exponea backend.
   /// Only usable in [FlushMode.manual].
   Future<void> flushData();
 
   /// Track custom event to Exponea backend.
-  Future<void> trackEvent({
-    required String eventName,
-    required Map<String, dynamic> properties,
-    DateTime? timestamp,
-  });
+  Future<void> trackEvent(Event event);
 
   /// Manually track session start.
   /// Only usable when [ExponeaConfiguration.automaticSessionTracking] is disabled.
-  Future<void> trackSessionStart(DateTime timestamp);
+  /// NOTE: iOS doesn't support using a specific timestamp.
+  Future<void> trackSessionStart({DateTime? timestamp});
 
   /// Manually track session end.
   /// Only usable when [ExponeaConfiguration.automaticSessionTracking] is disabled.
-  Future<void> trackSessionEnd(DateTime timestamp);
+  /// NOTE: iOS doesn't support using a specific timestamp.
+  Future<void> trackSessionEnd({DateTime? timestamp});
 
   /// Fetch consents for the current customer.
   Future<List<Consent>> fetchConsents();

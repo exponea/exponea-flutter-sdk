@@ -14,6 +14,10 @@ class ExponeaException : Exception {
             return ExponeaException("Flush mode is not periodic.")
         }
 
+        fun flushModeNotManual(): ExponeaException {
+            return ExponeaException("Flush mode is not manual.")
+        }
+
         fun notAvailableForPlatform(name: String): ExponeaException {
             return ExponeaException("$name is not available for iOS platform.")
         }

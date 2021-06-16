@@ -1,0 +1,6 @@
+[
+  {},
+  {"project":{"projectToken":"mock-project-token","authorizationToken":"mock-auth-token"}},
+  {"project":{"projectToken":"mock-project-token","authorizationToken":"mock-auth-token","baseUrl":"http://mock.base.url.com"}},
+  {"project":{"projectToken":"mock-project-token","authorizationToken":"mock-auth-token","baseUrl":"http://mock.base.url.com"},"mapping":{"PAYMENT":[{"projectToken":"other-project-token","authorizationToken":"other-auth-token"}]}}
+]

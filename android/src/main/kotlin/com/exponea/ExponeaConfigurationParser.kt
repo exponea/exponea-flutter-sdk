@@ -1,6 +1,7 @@
 package com.exponea
 
 import android.app.NotificationManager
+import com.exponea.data.ExponeaConfigurationChange
 import com.exponea.exception.ExponeaDataException
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration
@@ -9,7 +10,7 @@ import java.lang.Exception
 
 @Suppress("UNCHECKED_CAST")
 internal class ExponeaConfigurationParser {
-    fun parse(map: Map<String, Any?>): ExponeaConfiguration {
+    fun parseConfig(map: Map<String, Any?>): ExponeaConfiguration {
         return ExponeaConfiguration().apply {
             projectToken = map.getRequired("projectToken")
             authorization = "Token ${ map.getRequired<String>("authorizationToken") }"
@@ -20,11 +21,11 @@ internal class ExponeaConfigurationParser {
             map.getOptional<Map<String, Any?>>("projectMapping")?.let {
                 projectRouteMap = parseProjectMapping(it, baseURL)
             }
-            map.getOptional<HashMap<String, Any>>("defaultProperties")?.let {
-                defaultProperties = it
+            map.getOptional<Map<String, Any>>("defaultProperties")?.let {
+                defaultProperties = HashMap(it)
             }
-            map.getOptional<Int>("flushMaxRetries")?.let {
-                maxTries = it
+            map.getOptional<Double>("flushMaxRetries")?.let {
+                maxTries = it.toInt()
             }
             map.getOptional<Double>("sessionTimeout")?.let {
                 sessionTimeout = it
@@ -45,16 +46,26 @@ internal class ExponeaConfigurationParser {
         }
     }
 
+    fun parseConfigChange(map: Map<String, Any?>, baseUrl: String): ExponeaConfigurationChange {
+        val project = map.getOptional<Map<String, Any?>>("project")?.let {
+            parseExponeaProject(it, baseUrl)
+        }
+        val mapping = map.getOptional<Map<String, Any?>>("mapping")?.let {
+            parseProjectMapping(it, project?.baseUrl ?: baseUrl)
+        }
+        return ExponeaConfigurationChange(project, mapping)
+    }
+
     private fun parseAndroidConfig(map: Map<String, Any?>, configuration: ExponeaConfiguration) {
         configuration.apply {
             map.getOptional<Boolean>("automaticPushNotifications")?.let {
                 automaticPushNotification = it
             }
-            map.getOptional<Int>("pushIcon")?.let {
-                pushIcon = it
+            map.getOptional<Double>("pushIcon")?.let {
+                pushIcon = it.toInt()
             }
-            map.getOptional<Int>("pushAccentColor")?.let {
-                pushAccentColor = it
+            map.getOptional<Double>("pushAccentColor")?.let {
+                pushAccentColor = it.toInt()
             }
             map.getOptional<String>("pushChannelId")?.let {
                 pushChannelId = it
@@ -84,7 +95,7 @@ internal class ExponeaConfigurationParser {
         }
     }
 
-    private fun parseExponeaProject(map: Map<String, Any?>, defaultBaseUrl: String): ExponeaProject {
+    fun parseExponeaProject(map: Map<String, Any?>, defaultBaseUrl: String): ExponeaProject {
         val baseUrl: String? = map.getOptional("baseUrl")
         val projectToken: String = map.getRequired("projectToken")
         val authorizationToken: String = map.getRequired("authorizationToken")

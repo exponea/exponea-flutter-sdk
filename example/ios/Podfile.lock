@@ -4,26 +4,40 @@ PODS:
     - Flutter
   - ExponeaSDK (2.11.0)
   - Flutter (1.0.0)
+  - Nimble (8.0.7)
+  - Quick (4.0.0)
+  - shared_preferences (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - exponea (from `.symlinks/plugins/exponea/ios`)
   - Flutter (from `Flutter`)
+  - Nimble (= 8.0.7)
+  - Quick (= 4.0.0)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
 
 SPEC REPOS:
   trunk:
     - ExponeaSDK
+    - Nimble
+    - Quick
 
 EXTERNAL SOURCES:
   exponea:
     :path: ".symlinks/plugins/exponea/ios"
   Flutter:
     :path: Flutter
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
 
 SPEC CHECKSUMS:
   exponea: ee7749550221672fd96f2a8f911d5dfacf2fc008
   ExponeaSDK: ddb7bc9e47b3ca983c376ca18d8a245238eca390
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
+  Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
 
-PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+PODFILE CHECKSUM: a49370f3c2161a45cb7e6936c5be6c4c3f841b32
 
 COCOAPODS: 1.10.1

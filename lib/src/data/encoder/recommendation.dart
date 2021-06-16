@@ -1,14 +1,16 @@
 import '../model/recommendation.dart';
+import '../util/object.dart';
 
 abstract class RecommendationOptionsEncoder {
   static RecommendationOptions decode(Map<String, dynamic> data) {
     return RecommendationOptions(
-      id: data['id'],
-      fillWithRandom: data['fillWithRandom'],
-      size: data['size'],
-      items: data['items'],
-      noTrack: data['noTrack'],
-      catalogAttributesWhitelist: data['catalogAttributesWhitelist'],
+      id: data.getRequired('id'),
+      fillWithRandom: data.getRequired('fillWithRandom'),
+      size: data.getOptional('size'),
+      items: data.getOptional('items'),
+      noTrack: data.getOptional('noTrack'),
+      catalogAttributesWhitelist:
+          data.getOptional('catalogAttributesWhitelist'),
     );
   }
 
@@ -20,7 +22,7 @@ abstract class RecommendationOptionsEncoder {
       'items': options.items,
       'noTrack': options.noTrack,
       'catalogAttributesWhitelist': options.catalogAttributesWhitelist,
-    };
+    }..removeWhere((key, value) => value == null);
   }
 }
 

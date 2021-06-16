@@ -7,13 +7,12 @@ import Foundation
 import ExponeaSDK
 
 struct JsonDataParser {
-    static func parse(dictionary: NSDictionary) throws -> [String: JSONConvertible] {
+    static func parse(dictionary: [String: Any?]) throws -> [String: JSONConvertible] {
         var data: [String: JSONConvertible] = [:]
         try dictionary.forEach { key, value in
-            guard let key = key as? String else {
-                throw ExponeaDataError.invalidValue(for: "property key")
+            if let usedValue = value {
+                data[key] = try parseValue(value: usedValue)
             }
-            data[key] = try parseValue(value: value)
         }
         return data
     }
@@ -23,7 +22,7 @@ struct JsonDataParser {
     }
     
     static func parseValue(value: Any) throws -> JSONConvertible {
-        if let dictionary = value as? NSDictionary {
+        if let dictionary = value as? [String:Any?] {
             return try parse(dictionary: dictionary)
         } else if let array = value as? NSArray {
             return try parseArray(array: array)

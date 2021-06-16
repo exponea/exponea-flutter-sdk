@@ -1,12 +1,13 @@
 import '../model/consent.dart';
+import '../util/object.dart';
 
 abstract class ConsentEncoder {
   static Consent decode(Map<String, dynamic> data) {
     return Consent(
-      id: data['id'],
-      legitimateInterest: data['legitimateInterest'],
-      sources: ConsentSourcesEncoder.decode(data['sources']),
-      translations: data['translations'],
+      id: data.getRequired('id'),
+      legitimateInterest: data.getRequired('legitimateInterest'),
+      sources: ConsentSourcesEncoder.decode(data.getRequired('sources')),
+      translations: data.getRequired('translations'),
     );
   }
 

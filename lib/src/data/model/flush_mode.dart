@@ -1,7 +1,4 @@
 enum FlushMode {
-  /// Events are flushed to Exponea backend immediately when they are tracked
-  immediate,
-
   /// Events are flushed to Exponea backend periodically based on flush period
   period,
 
@@ -10,4 +7,7 @@ enum FlushMode {
 
   /// Events are flushed to Exponea when flushData() is manually called by the developer
   manual,
+
+  /// Events are flushed to Exponea backend immediately when they are tracked
+  immediate,
 }

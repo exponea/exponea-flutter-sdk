@@ -1,11 +1,11 @@
-import 'package:exponea/src/data/model/configuration.dart';
-import 'package:exponea/src/data/model/consent.dart';
-import 'package:exponea/src/data/model/event_type.dart';
-import 'package:exponea/src/data/model/flush_mode.dart';
-import 'package:exponea/src/data/model/log_level.dart';
-import 'package:exponea/src/data/model/project.dart';
-import 'package:exponea/src/data/model/recommendation.dart';
-
+import '../data/model/configuration.dart';
+import '../data/model/configuration_change.dart';
+import '../data/model/consent.dart';
+import '../data/model/customer.dart';
+import '../data/model/event.dart';
+import '../data/model/flush_mode.dart';
+import '../data/model/log_level.dart';
+import '../data/model/recommendation.dart';
 import '../interface.dart';
 import '../platform/platform_interface.dart';
 
@@ -13,14 +13,11 @@ class ExponeaPlugin implements BaseInterface {
   ExponeaPlatform get _platform => ExponeaPlatform.instance;
 
   @override
-  Future<void> anonymize({
-    ExponeaProject? exponeaProject,
-    Map<EventType, List<ExponeaProject>>? mapping,
-  }) =>
-      _platform.anonymize(
-        exponeaProject: exponeaProject,
-        mapping: mapping,
-      );
+  Future<void> anonymize([
+    ExponeaConfigurationChange configurationChange =
+        const ExponeaConfigurationChange(),
+  ]) =>
+      _platform.anonymize(configurationChange);
 
   @override
   Future<void> checkPushSetup() => _platform.checkPushSetup();
@@ -57,14 +54,8 @@ class ExponeaPlugin implements BaseInterface {
   Future<LogLevel> getLogLevel() => _platform.getLogLevel();
 
   @override
-  Future<void> identifyCustomer({
-    required Map<String, String> customerIds,
-    required Map<String, dynamic> properties,
-  }) =>
-      _platform.identifyCustomer(
-        customerIds: customerIds,
-        properties: properties,
-      );
+  Future<void> identifyCustomer(Customer customer) =>
+      _platform.identifyCustomer(customer);
 
   @override
   Future<bool> isConfigured() => _platform.isConfigured();
@@ -102,22 +93,13 @@ class ExponeaPlugin implements BaseInterface {
       _platform.setPushReceivedListener(listener);
 
   @override
-  Future<void> trackEvent({
-    required String eventName,
-    required Map<String, dynamic> properties,
-    DateTime? timestamp,
-  }) =>
-      _platform.trackEvent(
-        eventName: eventName,
-        properties: properties,
-        timestamp: timestamp,
-      );
+  Future<void> trackEvent(Event event) => _platform.trackEvent(event);
 
   @override
-  Future<void> trackSessionEnd(DateTime timestamp) =>
-      _platform.trackSessionEnd(timestamp);
+  Future<void> trackSessionEnd({DateTime? timestamp}) =>
+      _platform.trackSessionEnd(timestamp: timestamp);
 
   @override
-  Future<void> trackSessionStart(DateTime timestamp) =>
-      _platform.trackSessionStart(timestamp);
+  Future<void> trackSessionStart({DateTime? timestamp}) =>
+      _platform.trackSessionStart(timestamp: timestamp);
 }

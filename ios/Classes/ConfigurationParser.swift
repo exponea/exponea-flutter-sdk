@@ -7,17 +7,25 @@ import Foundation
 import ExponeaSDK
 
 class ConfigurationParser {
-    static func parseExponeaProject(_ projectData: [String:Any?], defaultBaseUrl: String) throws -> ExponeaProject {
+    func parseConfig(_ data: [String:Any?]) throws -> ExponeaConfiguration {
+        return try ExponeaConfiguration(data, parser: self)
+    }
+    
+    func parseConfigChange(_ data: [String:Any?], defaultBaseUrl: String) throws -> ExponeaConfigurationChange {
+        return try ExponeaConfigurationChange(data, parser: self, baseUrl: defaultBaseUrl)
+    }
+    
+    func parseExponeaProject(_ projectData: [String:Any?], defaultBaseUrl: String) throws -> ExponeaProject {
         let projectToken: String = try projectData.getRequired("projectToken")
         let authorizationToken: String = try projectData.getRequired("authorizationToken")
         let baseUrl: String = try projectData.getOptional("baseUrl") ?? defaultBaseUrl
         return ExponeaProject(baseUrl: baseUrl, projectToken: projectToken, authorization: .token(authorizationToken))
     }
     
-    static func parseProjectMapping(
+    func parseProjectMapping(
         _ mappingData: [String:Any?],
         defaultBaseUrl: String
-    ) throws -> [EventType: [ExponeaProject]]? {
+    ) throws -> [EventType: [ExponeaProject]] {
         var res: [EventType: [ExponeaProject]]  = [:]
         
         for (key, value) in mappingData {
@@ -45,7 +53,7 @@ class ConfigurationParser {
         let baseUrl: String = try data.getOptional("baseUrl") ?? ExponeaSDK.Constants.Repository.baseUrl
         var projectMapping: [EventType: [ExponeaProject]]?
         if let mapping: [String:Any?] = try data.getOptional("projectMapping") {
-            projectMapping = try ConfigurationParser.parseProjectMapping(mapping, defaultBaseUrl: baseUrl)
+            projectMapping = try parseProjectMapping(mapping, defaultBaseUrl: baseUrl)
         }
         return ExponeaSDK.Exponea.ProjectSettings(
             projectToken: projectToken,
@@ -90,7 +98,7 @@ class ConfigurationParser {
     }
     
     func parseDefaultProperties(_ data: [String:Any?]) throws -> [String: JSONConvertible]? {
-        if let props: NSDictionary = try data.getOptional("defaultProperties") {
+        if let props: [String:Any?] = try data.getOptional("defaultProperties") {
             return try JsonDataParser.parse(dictionary: props)
         }
         return nil
