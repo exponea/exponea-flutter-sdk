@@ -19,6 +19,8 @@ import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -30,25 +32,45 @@ private const val TAG = "ExponeaPlugin"
 /**
  * Exponea Android Plugin
  */
-class ExponeaPlugin : FlutterPlugin {
+class ExponeaPlugin : FlutterPlugin, ActivityAware {
     companion object {
         private const val CHANNEL_NAME = "com.exponea"
     }
 
     private var channel: MethodChannel? = null
+    private var methodHandler: ExponeaMethodHandler? = null
 
     override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         val context = binding.applicationContext
 
         channel = MethodChannel(binding.binaryMessenger, CHANNEL_NAME).apply {
-            val methodHandler = ExponeaMethodHandler(context)
-            setMethodCallHandler(methodHandler)
+            val handler = ExponeaMethodHandler(context)
+            setMethodCallHandler(handler)
+            methodHandler = handler
         }
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel?.setMethodCallHandler(null)
         channel = null
+        methodHandler?.activity = null
+        methodHandler = null
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        methodHandler?.activity = binding.activity
+    }
+
+    override fun onDetachedFromActivity() {
+        methodHandler?.activity = null
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        onDetachedFromActivity()
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        onAttachedToActivity(binding)
     }
 }
 
@@ -74,6 +96,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_FETCH_RECOMMENDATIONS = "fetchRecommendations"
     }
 
+    var activity: Context? = null
     private var configuration: ExponeaConfiguration? = null
     private val handler: Handler = Handler(Looper.getMainLooper())
 
@@ -178,7 +201,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         }
 
         val configuration = ExponeaConfigurationParser().parseConfig(data)
-        Exponea.init(context, configuration)
+        Exponea.init(activity ?: context, configuration)
         this.configuration = configuration
         // FIXME Exponea.notificationDataCallback = { pushNotificationReceived(it) }
     }

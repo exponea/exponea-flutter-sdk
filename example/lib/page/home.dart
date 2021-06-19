@@ -208,6 +208,34 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+                ListTile(
+                  title: Text('Trigger in-app message by event:'),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () =>
+                            _triggerInAppMessage(context, 'test_msg_modal'),
+                        child: Text('Modal'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            _triggerInAppMessage(context, 'test_msg_fullscreen'),
+                        child: Text('Fullscreen'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            _triggerInAppMessage(context, 'test_msg_slide'),
+                        child: Text('Slide-in'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            _triggerInAppMessage(context, 'test_msg_alert'),
+                        child: Text('Alert'),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -315,6 +343,11 @@ class _HomePageState extends State<HomePage> {
           },
         );
         await _plugin.trackEvent(event);
+      });
+
+  Future<void> _triggerInAppMessage(BuildContext context, String name) =>
+      _runAndShowResult(context, () async {
+        await _plugin.trackEvent(Event(name: name));
       });
 
   Future<void> _trackSessionStart(BuildContext context) =>
