@@ -14,14 +14,14 @@ class ExponeaCustomerSpec: QuickSpec {
     override func spec() {
         describe("parse") {
             let fileData = TestUtil.loadFile("customer")
-            let jsonList = TestUtil.parseJsonList(fileData)
+            let jsonList = TestUtil.parseJsonList(fileData).map { $0 as! [String:Any?] }
             
             it("verify data") {
                 expect(jsonList.count).to(equal(4))
             }
             
             it("emoty map") {
-                let data = jsonList[0] as! [String:Any?]
+                let data = jsonList[0]
                 let customer = try ExponeaCustomer(data)
                 
                 expect(customer.ids.isEmpty).to(equal(true))
@@ -29,7 +29,7 @@ class ExponeaCustomerSpec: QuickSpec {
             }
             
             it("empty customer") {
-                let data = jsonList[1] as! [String:Any?]
+                let data = jsonList[1]
                 let customer = try ExponeaCustomer(data)
                 
                 expect(customer.ids.isEmpty).to(equal(true))
@@ -37,7 +37,7 @@ class ExponeaCustomerSpec: QuickSpec {
             }
             
             it("customer with registered email") {
-                let data = jsonList[2] as! [String:Any?]
+                let data = jsonList[2]
                 let customer = try ExponeaCustomer(data)
 
                 expect(customer.ids.count).to(equal(1))
@@ -46,7 +46,7 @@ class ExponeaCustomerSpec: QuickSpec {
             }
             
             it("customer with everything") {
-                let data = jsonList[3] as! [String:Any?]
+                let data = jsonList[3]
                 let customer = try ExponeaCustomer(data)
                 
                 expect(customer.ids.count).to(equal(1))

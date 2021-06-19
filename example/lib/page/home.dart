@@ -1,4 +1,5 @@
-import 'dart:math';
+import 'dart:async';
+import 'dart:io';
 
 import 'package:exponea/exponea.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,25 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _flushPeriodController = ValueNotifier<int>(5);
   final _flushModeController = ValueNotifier<FlushMode?>(FlushMode.manual);
+  final _logLevelController = ValueNotifier<LogLevel?>(LogLevel.info);
+  final _pushController = ValueNotifier<String>('- none -');
+  late final StreamSubscription<OpenedPush> _openedPushSub;
+  late final StreamSubscription<ReceivedPush> _receivedPushSub;
+
+  @override
+  void initState() {
+    _openedPushSub = _plugin.openedPushStream.listen(_onPushEvent);
+    _receivedPushSub = _plugin.receivedPushStream.listen(_onPushEvent);
+    super.initState();
+  }
 
   @override
   void dispose() {
+    _openedPushSub.cancel();
+    _receivedPushSub.cancel();
     _flushPeriodController.dispose();
     _flushModeController.dispose();
+    _pushController.dispose();
     super.dispose();
   }
 
@@ -41,6 +56,20 @@ class _HomePageState extends State<HomePage> {
             constraints: BoxConstraints(maxWidth: 400),
             child: ListView(
               children: [
+                ListTile(
+                  title: Text('Push events'),
+                  subtitle: ValueListenableBuilder<String>(
+                    valueListenable: _pushController,
+                    builder: (context, value, _) => Text(value),
+                  ),
+                ),
+                if (Platform.isIOS)
+                  ListTile(
+                    title: ElevatedButton(
+                      onPressed: () => _requestIosPushAuthorization(context),
+                      child: Text('Request Push Authorization'),
+                    ),
+                  ),
                 ListTile(
                   title: ElevatedButton(
                     onPressed: () => _checkIsConfigured(context),
@@ -219,8 +248,8 @@ class _HomePageState extends State<HomePage> {
                         child: Text('Modal'),
                       ),
                       ElevatedButton(
-                        onPressed: () =>
-                            _triggerInAppMessage(context, 'test_msg_fullscreen'),
+                        onPressed: () => _triggerInAppMessage(
+                            context, 'test_msg_fullscreen'),
                         child: Text('Fullscreen'),
                       ),
                       ElevatedButton(
@@ -232,6 +261,45 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () =>
                             _triggerInAppMessage(context, 'test_msg_alert'),
                         child: Text('Alert'),
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: Text('Log Level'),
+                  subtitle: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _getLogLevel(context),
+                        child: Text('Get'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => _setLogLevel(context),
+                        child: Text('Set'),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ValueListenableBuilder<LogLevel?>(
+                          valueListenable: _logLevelController,
+                          builder: (context, selected, _) => Row(
+                            children: [
+                              DropdownButton<LogLevel>(
+                                value: selected,
+                                onChanged: (value) =>
+                                    _logLevelController.value = value,
+                                items: LogLevel.values
+                                    .map(
+                                      (level) => DropdownMenuItem<LogLevel>(
+                                        value: level,
+                                        child: Text(level.toString()),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -256,7 +324,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _identifyCustomer(BuildContext context) =>
       _runAndShowResult(context, () async {
-        final email = 'user.${Random().nextInt(10000)}@test.com';
+        // final email = 'user.${Random().nextInt(10000)}@test.com';
+        final email = 'user.125@test.com';
         final customer = Customer(
           ids: {
             'registered': email,
@@ -298,8 +367,7 @@ class _HomePageState extends State<HomePage> {
         const options = RecommendationOptions(
           id: '60db38da9887668875998c49',
           fillWithRandom: true,
-          items: {
-          }
+          items: {},
         );
         return await _plugin.fetchRecommendations(options);
       });
@@ -360,6 +428,22 @@ class _HomePageState extends State<HomePage> {
         await _plugin.trackSessionEnd();
       });
 
+  Future<void> _getLogLevel(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        return await _plugin.getLogLevel();
+      });
+
+  Future<void> _setLogLevel(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        final level = _logLevelController.value!;
+        return await _plugin.setLogLevel(level);
+      });
+
+  Future<void> _requestIosPushAuthorization(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        return await _plugin.requestIosPushAuthorization();
+      });
+
   Future<void> _runAndShowResult(
     BuildContext context,
     Future<dynamic> block(),
@@ -380,5 +464,9 @@ class _HomePageState extends State<HomePage> {
       duration: Duration(seconds: 1),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _onPushEvent(dynamic push) {
+    _pushController.value = '$push\nat: ${DateTime.now().toIso8601String()}';
   }
 }

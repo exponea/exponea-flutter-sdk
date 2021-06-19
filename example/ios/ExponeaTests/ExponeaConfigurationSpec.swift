@@ -15,14 +15,14 @@ class ExponeaConfigurationParserSpec: QuickSpec {
         describe("parse") {
             let parser = ConfigurationParser()
             let fileData = TestUtil.loadFile("configuration")
-            let jsonList = TestUtil.parseJsonList(fileData)
+            let jsonList = TestUtil.parseJsonList(fileData).map { $0 as! [String:Any?] }
             
             it("verify data") {
                 expect(jsonList.count).to(equal(3))
             }
             
             it("emoty map") {
-                let data = jsonList[0] as! [String:Any?]
+                let data = jsonList[0]
                 do {
                     _ = try parser.parseConfig(data)
                     fail("Should throw error")
@@ -32,7 +32,7 @@ class ExponeaConfigurationParserSpec: QuickSpec {
             }
             
             it("minimal") {
-                let data = jsonList[1] as! [String:Any?]
+                let data = jsonList[1]
                 let config = try parser.parseConfig(data)
                 
                 let settings = config.projectSettings
@@ -57,7 +57,7 @@ class ExponeaConfigurationParserSpec: QuickSpec {
             }
             
             it("full") {
-                let data = jsonList[2] as! [String:Any?]
+                let data = jsonList[2]
                 let config = try parser.parseConfig(data)
                 
                 let settings = config.projectSettings

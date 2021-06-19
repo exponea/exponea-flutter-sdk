@@ -18,7 +18,7 @@ extension Dictionary where Key == String, Value == Any? {
         }
         return nil
     }
-    
+
     func getRequired<T>(_ property: String) throws -> T {
         guard let anyValue = self[property] else {
             throw ExponeaDataError.missingProperty(property: property)

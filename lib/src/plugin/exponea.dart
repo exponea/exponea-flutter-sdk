@@ -5,6 +5,8 @@ import '../data/model/customer.dart';
 import '../data/model/event.dart';
 import '../data/model/flush_mode.dart';
 import '../data/model/log_level.dart';
+import '../data/model/push_opened.dart';
+import '../data/model/push_received.dart';
 import '../data/model/recommendation.dart';
 import '../interface.dart';
 import '../platform/platform_interface.dart';
@@ -61,12 +63,6 @@ class ExponeaPlugin implements BaseInterface {
   Future<bool> isConfigured() => _platform.isConfigured();
 
   @override
-  void removePushOpenedListener() => _platform.removePushOpenedListener();
-
-  @override
-  void removePushReceivedListener() => _platform.removePushReceivedListener();
-
-  @override
   Future<bool> requestIosPushAuthorization() =>
       _platform.requestIosPushAuthorization();
 
@@ -85,14 +81,6 @@ class ExponeaPlugin implements BaseInterface {
   Future<void> setLogLevel(LogLevel level) => _platform.setLogLevel(level);
 
   @override
-  void setPushOpenedListener(OpenedPushListener listener) =>
-      _platform.setPushOpenedListener(listener);
-
-  @override
-  void setPushReceivedListener(PushReceivedListener listener) =>
-      _platform.setPushReceivedListener(listener);
-
-  @override
   Future<void> trackEvent(Event event) => _platform.trackEvent(event);
 
   @override
@@ -102,4 +90,10 @@ class ExponeaPlugin implements BaseInterface {
   @override
   Future<void> trackSessionStart({DateTime? timestamp}) =>
       _platform.trackSessionStart(timestamp: timestamp);
+
+  @override
+  Stream<OpenedPush> get openedPushStream => _platform.openedPushStream;
+
+  @override
+  Stream<ReceivedPush> get receivedPushStream => _platform.receivedPushStream;
 }

@@ -8,7 +8,7 @@ import ExponeaSDK
 
 class ExponeaEvent {
     let name: String
-    let properties: [String : JSONConvertible]
+    let properties: [String:JSONConvertible]
     let timestamp: Double?
     
     init(_ data: [String:Any?]) throws {

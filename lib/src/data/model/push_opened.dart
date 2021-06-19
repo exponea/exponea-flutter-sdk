@@ -8,11 +8,16 @@ class OpenedPush {
   final String? url;
 
   /// Additional data defined on Exponea web app when creating the push
-  final Map<String, dynamic>? additionalData;
+  final Map<String, dynamic>? data;
 
   const OpenedPush({
     required this.action,
     this.url,
-    this.additionalData,
+    this.data,
   });
+
+  @override
+  String toString() {
+    return 'OpenedPush{action: $action, url: $url, data: $data}';
+  }
 }

@@ -1,6 +1,7 @@
 package com.exponea
 
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -9,6 +10,8 @@ import com.exponea.data.ConsentEncoder
 import com.exponea.data.Customer
 import com.exponea.data.Event
 import com.exponea.data.ExponeaConfigurationParser
+import com.exponea.data.OpenedPush
+import com.exponea.data.ReceivedPush
 import com.exponea.data.RecommendationEncoder
 import com.exponea.data.RecommendationOptionsEncoder
 import com.exponea.exception.ExponeaException
@@ -18,9 +21,13 @@ import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
+import com.exponea.sdk.util.Logger
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.EventChannel.EventSink
+import io.flutter.plugin.common.EventChannel.StreamHandler
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -35,10 +42,19 @@ private const val TAG = "ExponeaPlugin"
 class ExponeaPlugin : FlutterPlugin, ActivityAware {
     companion object {
         private const val CHANNEL_NAME = "com.exponea"
+        private const val STREAM_NAME_OPENED_PUSH = "$CHANNEL_NAME/opened_push"
+        private const val STREAM_NAME_RECEIVED_PUSH = "$CHANNEL_NAME/received_push"
+
+        fun handleCampaignIntent(intent: Intent?, context: Context) {
+            // TODO-EXF-8 : Exponea.handleCampaignIntent(intent, context)
+        }
     }
 
     private var channel: MethodChannel? = null
     private var methodHandler: ExponeaMethodHandler? = null
+    private var openedPushChannel: EventChannel? = null
+    private var openedPushStreamHandler: OpenedPushStreamHandler? = null
+    private var receivedPushChannel: EventChannel? = null
 
     override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         val context = binding.applicationContext
@@ -48,6 +64,15 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
             setMethodCallHandler(handler)
             methodHandler = handler
         }
+        openedPushChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_OPENED_PUSH).apply {
+            val handler = OpenedPushStreamHandler()
+            setStreamHandler(handler)
+            openedPushStreamHandler = handler
+        }
+        receivedPushChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_RECEIVED_PUSH).apply {
+            val handler = ReceivedPushStreamHandler()
+            setStreamHandler(handler)
+        }
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -55,6 +80,10 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         channel = null
         methodHandler?.activity = null
         methodHandler = null
+        openedPushChannel?.setStreamHandler(null)
+        openedPushChannel = null
+        receivedPushChannel?.setStreamHandler(null)
+        receivedPushChannel = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -94,6 +123,9 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_TRACK_SESSION_END = "trackSessionEnd"
         private const val METHOD_FETCH_CONSENTS = "fetchConsents"
         private const val METHOD_FETCH_RECOMMENDATIONS = "fetchRecommendations"
+        private const val METHOD_GET_LOG_LEVEL = "getLogLevel"
+        private const val METHOD_SET_LOG_LEVEL = "setLogLevel"
+        private const val METHOD_CHECK_PUSH_SETUP = "checkPushSetup"
     }
 
     var activity: Context? = null
@@ -155,15 +187,30 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             METHOD_FETCH_RECOMMENDATIONS -> {
                 fetchRecommendations(call.arguments, result)
             }
+            METHOD_GET_LOG_LEVEL -> {
+                getLogLevel(result)
+            }
+            METHOD_SET_LOG_LEVEL -> {
+                setLogLevel(call.arguments, result)
+            }
+            METHOD_CHECK_PUSH_SETUP -> {
+                checkPushSetup(result)
+            }
             else -> {
                 result.notImplemented()
             }
         }
     }
 
-    private fun requireInitialized() {
+    private fun requireConfigured() {
         if (!Exponea.isInitialized) {
             throw ExponeaException.notConfigured()
+        }
+    }
+
+    private fun requireNotConfigured() {
+        if (Exponea.isInitialized) {
+            throw ExponeaException.alreadyConfigured()
         }
     }
 
@@ -194,16 +241,12 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun configure(args: Any?, result: Result) = runWithNoResult(result) {
+        requireNotConfigured()
         val data = args as Map<String, Any?>
-
-        if (Exponea.isInitialized) {
-            throw ExponeaException.alreadyConfigured()
-        }
-
         val configuration = ExponeaConfigurationParser().parseConfig(data)
         Exponea.init(activity ?: context, configuration)
         this.configuration = configuration
-        // FIXME Exponea.notificationDataCallback = { pushNotificationReceived(it) }
+        Exponea.notificationDataCallback = { ReceivedPushStreamHandler.handle(ReceivedPush(it)) }
     }
 
     private fun isConfigured(result: Result) = runWithResult<Boolean>(result) {
@@ -211,12 +254,12 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun getCustomerCookie(result: Result) = runWithResult<String>(result) {
-        requireInitialized()
+        requireConfigured()
         return@runWithResult Exponea.customerCookie!!
     }
 
     private fun identifyCustomer(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         val data = args as Map<String, Any?>
         val customer = Customer.fromMap(data)
         Exponea.identifyCustomer(
@@ -226,7 +269,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun anonymize(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         val data = args as Map<String, Any?>
         val configChange = ExponeaConfigurationParser().parseConfigChange(data, configuration!!.baseURL)
         if (configChange.project != null && configChange.mapping != null) {
@@ -241,18 +284,18 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun getDefaultProperties(result: Result) = runWithResult<Map<String, Any>>(result) {
-        requireInitialized()
+        requireConfigured()
         Exponea.defaultProperties
     }
 
     private fun setDefaultProperties(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         val data = args as Map<String, Any>
         Exponea.defaultProperties = HashMap(data)
     }
 
     private fun flush(result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         if (Exponea.flushMode != FlushMode.MANUAL) {
             throw ExponeaException.flushModeNotManual()
         }
@@ -260,18 +303,18 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun getFlushMode(result: Result) = runWithResult(result) {
-        requireInitialized()
+        requireConfigured()
         return@runWithResult Exponea.flushMode.name
     }
 
     private fun setFlushMode(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         val data = args as String
         Exponea.flushMode = FlushMode.valueOf(data)
     }
 
     private fun getFlushPeriod(result: Result) = runWithResult(result) {
-        requireInitialized()
+        requireConfigured()
         if (Exponea.flushMode != FlushMode.PERIOD) {
             throw ExponeaException.flushModeNotPeriodic()
         }
@@ -280,7 +323,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun setFlushPeriod(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         if (Exponea.flushMode != FlushMode.PERIOD) {
             throw ExponeaException.flushModeNotPeriodic()
         }
@@ -289,7 +332,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun trackEvent(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         val data = args as Map<String, Any?>
         val event = Event.fromMap(data)
         Exponea.trackEvent(
@@ -300,7 +343,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun trackSessionStart(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         val timestamp = args as? Double
         if (timestamp != null) {
             Exponea.trackSessionStart(timestamp)
@@ -310,7 +353,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun trackSessionEnd(args: Any?, result: Result) = runWithNoResult(result) {
-        requireInitialized()
+        requireConfigured()
         val timestamp = args as? Double
         if (timestamp != null) {
             Exponea.trackSessionEnd(timestamp)
@@ -320,7 +363,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun fetchConsents(result: Result) = runAsync(result) {
-        requireInitialized()
+        requireConfigured()
         Exponea.getConsents(
                 {
                     val data = it.results.map { consent ->
@@ -339,7 +382,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun fetchRecommendations(args: Any?, result: Result) = runAsync(result) {
-        requireInitialized()
+        requireConfigured()
         val inData = args as Map<String, Any?>
         val options = RecommendationOptionsEncoder.decode(inData)
         Log.i(TAG, "aaa $options")
@@ -359,5 +402,117 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
                     }
                 }
         )
+    }
+
+    private fun getLogLevel(result: Result) = runWithResult(result) {
+        requireConfigured()
+        return@runWithResult Exponea.loggerLevel.name
+    }
+
+    private fun setLogLevel(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val logLevel = args as String
+        Exponea.loggerLevel = Logger.Level.valueOf(logLevel)
+    }
+
+    private fun checkPushSetup(result: Result) = runWithNoResult(result) {
+        requireNotConfigured()
+        Exponea.checkPushSetup = true
+    }
+}
+
+/**
+ * Handles listeners for opened push notifications.
+ */
+class OpenedPushStreamHandler : StreamHandler {
+    companion object {
+        private var currentInstance: OpenedPushStreamHandler? = null
+
+        // We have to hold OpenedPush until plugin is initialized and listener set
+        private var pendingData: OpenedPush? = null
+
+        fun handle(push: OpenedPush): Boolean {
+            val handled = currentInstance?.internalHandle(push) ?: false
+            if (!handled) {
+                pendingData = push
+            }
+            return handled
+        }
+    }
+
+    init {
+        currentInstance = this
+    }
+
+    private var eventSink: EventSink? = null
+
+    override fun onListen(arguments: Any?, eSink: EventSink?) {
+        eventSink = eSink
+        pendingData?.let {
+            if (handle(it)) {
+                pendingData = null
+            }
+        }
+    }
+
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
+    }
+
+    private fun internalHandle(push: OpenedPush): Boolean {
+        val sink = eventSink
+        if (sink != null) {
+            sink.success(push.toMap())
+            return true
+        }
+        return false
+    }
+}
+
+/**
+ * Handles listeners for received push notifications.
+ */
+class ReceivedPushStreamHandler : StreamHandler {
+    companion object {
+        private var currentInstance: ReceivedPushStreamHandler? = null
+
+        // We have to hold OpenedPush until plugin is initialized and listener set
+        private var pendingData: ReceivedPush? = null
+
+        fun handle(push: ReceivedPush): Boolean {
+            val handled = currentInstance?.internalHandle(push) ?: false
+            if (!handled) {
+                pendingData = push
+            }
+            return handled
+        }
+    }
+
+    init {
+        currentInstance = this
+    }
+
+    private var eventSink: EventSink? = null
+
+    override fun onListen(arguments: Any?, eSink: EventSink?) {
+        eventSink = eSink
+        pendingData?.let {
+            if (handle(it)) {
+                pendingData = null
+            }
+        }
+    }
+
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
+    }
+
+    private fun internalHandle(push: ReceivedPush): Boolean {
+        val sink = eventSink
+        if (sink != null) {
+            sink.success(push.toMap())
+            return true
+        }
+        return false
     }
 }

@@ -5,12 +5,9 @@ import 'data/model/customer.dart';
 import 'data/model/event.dart';
 import 'data/model/flush_mode.dart';
 import 'data/model/log_level.dart';
-import 'data/model/push.dart';
+import 'data/model/push_opened.dart';
+import 'data/model/push_received.dart';
 import 'data/model/recommendation.dart';
-
-typedef PushReceivedListener = void Function(Map<String, dynamic> data);
-
-typedef OpenedPushListener = void Function(OpenedPush openedPush);
 
 ///
 /// Base interface implemented by platforms and plugin.
@@ -93,20 +90,16 @@ abstract class BaseInterface {
     RecommendationOptions options,
   );
 
-  /// Set a listener to be called when push notification is opened.
-  /// The SDK will hold last [OpenedPush] until you set the listener.
-  void setPushOpenedListener(OpenedPushListener listener);
+  /// A stream of opened push notifications.
+  /// The SDK will hold last data until you set the listener.
+  /// Don't forget to call cancel on the subscription when no longer listening.
+  Stream<OpenedPush> get openedPushStream;
 
-  /// Removes push notification opened listener.
-  void removePushOpenedListener();
-
-  /// Set a listener to be called when push notification is received.
+  /// A stream of received push notifications.
   /// Called for both regular and silent push notifications on Android, and silent notifications *only* on iOS.
   /// The SDK will hold last data until you set the listener.
-  void setPushReceivedListener(PushReceivedListener listener);
-
-  /// Remove push notification received listener.
-  void removePushReceivedListener();
+  /// Don't forget to call cancel on the subscription when no longer listening.
+  Stream<ReceivedPush> get receivedPushStream;
 
   /// Request push authorization on iOS.
   Future<bool> requestIosPushAuthorization();

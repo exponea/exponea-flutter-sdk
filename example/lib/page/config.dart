@@ -132,27 +132,27 @@ class _ConfigPageState extends State<ConfigPage> {
         'int': 10,
         'bool': true,
       },
-      projectMapping: {
-        EventType.banner: [
-          ExponeaProject(projectToken: '1', authorizationToken: '11'),
-        ],
-        EventType.campaignClick: [
-          ExponeaProject(projectToken: '2', authorizationToken: '22'),
-        ],
-      },
+      // projectMapping: {
+      //   EventType.banner: [
+      //     ExponeaProject(projectToken: '1', authorizationToken: '11'),
+      //   ],
+      //   EventType.campaignClick: [
+      //     ExponeaProject(projectToken: '2', authorizationToken: '22'),
+      //   ],
+      // },
       android: AndroidExponeaConfiguration(
-        automaticPushNotifications: false,
+        automaticPushNotifications: true,
         httpLoggingLevel: HttpLoggingLevel.body,
         pushChannelDescription: 'test-channel-desc',
         pushChannelId: 'test-channel-id',
         pushChannelName: 'test-channel-name',
         pushNotificationImportance: PushNotificationImportance.normal,
-        pushAccentColor: 10,
-        pushIcon: 11,
+        // pushAccentColor: 10,
+        // pushIcon: 11,
       ),
       ios: IOSExponeaConfiguration(
         requirePushAuthorization: true,
-        appGroup: 'test-ios-app-group',
+        appGroup: 'group.com.exponea.ExponeaSDK-Example2',
       ),
     );
     try {

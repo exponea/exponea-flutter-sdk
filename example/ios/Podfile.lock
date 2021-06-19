@@ -2,9 +2,10 @@ PODS:
   - AnyCodable-FlightSchool (0.4.1)
   - exponea (0.0.1):
     - AnyCodable-FlightSchool (~> 0.4.0)
-    - ExponeaSDK (~> 2.11.0)
+    - ExponeaSDK (~> 2.11.1)
     - Flutter
-  - ExponeaSDK (2.11.0)
+  - ExponeaSDK (2.11.1)
+  - ExponeaSDK-Notifications (2.11.1)
   - Flutter (1.0.0)
   - Nimble (8.0.7)
   - Quick (4.0.0)
@@ -13,6 +14,7 @@ PODS:
 
 DEPENDENCIES:
   - exponea (from `.symlinks/plugins/exponea/ios`)
+  - ExponeaSDK-Notifications
   - Flutter (from `Flutter`)
   - Nimble (= 8.0.7)
   - Quick (= 4.0.0)
@@ -22,6 +24,7 @@ SPEC REPOS:
   trunk:
     - AnyCodable-FlightSchool
     - ExponeaSDK
+    - ExponeaSDK-Notifications
     - Nimble
     - Quick
 
@@ -35,13 +38,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: d27283db6e9feaddb0fa73a25835e5cdf41b3213
-  exponea: aed2bd8c715fd1cab17c6f3c08943dfc3b3a6b70
-  ExponeaSDK: ddb7bc9e47b3ca983c376ca18d8a245238eca390
+  exponea: d488031ab10df163a0ee19f29372e1dba1908218
+  ExponeaSDK: 0d94e874bd71c63e730443292a4263a47d6d0b83
+  ExponeaSDK-Notifications: 6a616340c122ce1fa5dddc76495d375c434948af
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
 
-PODFILE CHECKSUM: a49370f3c2161a45cb7e6936c5be6c4c3f841b32
+PODFILE CHECKSUM: b2a2cb7a89763ed3e4bc1c024ee7c5d71a31e241
 
 COCOAPODS: 1.10.1

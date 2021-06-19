@@ -14,14 +14,14 @@ class ExponeaEventSpec: QuickSpec {
     override func spec() {
         describe("parse") {
             let fileData = TestUtil.loadFile("event")
-            let jsonList = TestUtil.parseJsonList(fileData)
+            let jsonList = TestUtil.parseJsonList(fileData).map { $0 as! [String:Any?] }
             
             it("verify data") {
                 expect(jsonList.count).to(equal(4))
             }
             
-            it("emoty map") {
-                let data = jsonList[0] as! [String:Any?]
+            it("empty map") {
+                let data = jsonList[0]
                 do {
                     _ = try ExponeaEvent(data)
                     fail("Should throw error")
@@ -31,7 +31,7 @@ class ExponeaEventSpec: QuickSpec {
             }
             
             it("event with name only") {
-                let data = jsonList[1] as! [String:Any?]
+                let data = jsonList[1]
                 let event = try ExponeaEvent(data)
 
                 expect(event.name).to(equal("test_event"))
@@ -40,7 +40,7 @@ class ExponeaEventSpec: QuickSpec {
             }
             
             it("event with empty values") {
-                let data = jsonList[2] as! [String:Any?]
+                let data = jsonList[2]
                 let event = try ExponeaEvent(data)
                 
                 expect(event.name).to(equal("test_event"))
@@ -49,7 +49,7 @@ class ExponeaEventSpec: QuickSpec {
             }
             
             it("full event") {
-                let data = jsonList[3] as! [String:Any?]
+                let data = jsonList[3]
                 let event = try ExponeaEvent(data)
                 
                 expect(event.name).to(equal("test_event"))

@@ -15,9 +15,9 @@ class ExponeaConfiguration {
     let flushingSetup: ExponeaSDK.Exponea.FlushingSetup
     let defaultProperties: [String: JSONConvertible]?
     
-    init(_ data: [String:Any?], parser: ConfigurationParser) throws {
+    init(_ data: [String:Any?], parser: ConfigurationParser, delegate: PushNotificationManagerDelegate) throws {
         self.projectSettings = try parser.parseProjectSettings(data)
-        self.pushNotificationTracking = try parser.parsePushNotificationTracking(data)
+        self.pushNotificationTracking = try parser.parsePushNotificationTracking(data, delegate: delegate)
         self.automaticSessionTracking = try parser.parseSessionTracking(data)
         self.flushingSetup = try parser.parseFlushingSetup(data)
         self.defaultProperties = try parser.parseDefaultProperties(data)

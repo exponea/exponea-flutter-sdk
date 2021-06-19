@@ -1,8 +1,11 @@
 import Flutter
 import UIKit
 import ExponeaSDK
+import UserNotifications
 
 private let channelName = "com.exponea"
+private let openedPushStreamName = "\(channelName)/opened_push"
+private let receivedPushStreamName = "\(channelName)/received_push"
 private let methodConfigure = "configure"
 private let methodIsConfigured = "isConfigured"
 private let methodGetCustomerCookie = "getCustomerCookie"
@@ -20,6 +23,11 @@ private let methodTrackSessionStart = "trackSessionStart"
 private let methodTrackSessionEnd = "trackSessionEnd"
 private let methodFetchConsents = "fetchConsents"
 private let methodFetchRecommendations = "fetchRecommendations"
+private let methodGetLogLevel = "getLogLevel"
+private let methodSetLogLevel = "setLogLevel"
+private let methodCheckPushSetup = "checkPushSetup"
+private let methodRequestPushAuthorization = "requestPushAuthorization"
+
 
 private let defaultFlushPeriod = 5 * 60 // 5 minutes
 
@@ -31,9 +39,14 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
         let instance = SwiftExponeaPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
+
+        let openedPushEventChannel = FlutterEventChannel(name: openedPushStreamName, binaryMessenger: registrar.messenger())
+        openedPushEventChannel.setStreamHandler(OpenedPushStreamHandler.newInstance())
+
+        let receivedPushEventChannel = FlutterEventChannel(name: receivedPushStreamName, binaryMessenger: registrar.messenger())
+        receivedPushEventChannel.setStreamHandler(ReceivedPushStreamHandler.newInstance())
     }
     
-    // to be changed in unit tests
     var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -72,6 +85,14 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             fetchConsents(with: result)
         case methodFetchRecommendations:
             fetchRecommendations(call.arguments, with: result)
+        case methodGetLogLevel:
+            getLogLevel(with: result)
+        case methodSetLogLevel:
+            setLogLevel(call.arguments, with: result)
+        case methodCheckPushSetup:
+            checkPushSetup(with: result)
+        case methodRequestPushAuthorization:
+            requestPushAuthorization(with: result)
         default:
             let error = FlutterError(code: errorCode, message: "\(call.method) is not supported by iOS", details: nil)
             result(error)
@@ -79,15 +100,13 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
     }
     
     private func configure(_ args: Any?, with result: FlutterResult) {
+        guard requireNotConfigured(with: result) else { return }
         do {
             let data = args as! [String:Any?]
-            
-            guard !exponeaInstance.isConfigured else {
-                throw ExponeaError.alreadyConfigured
-            }
-            
+
             let parser = ConfigurationParser()
-            let config = try parser.parseConfig(data)
+            let config = try parser.parseConfig(data, delegate: self) // FIXME : delegate
+            // exponeaInstance.checkPushSetup = true // FIXME
             exponeaInstance.configure(
                 config.projectSettings,
                 pushNotificationTracking: config.pushNotificationTracking,
@@ -170,32 +189,21 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
     
     private func getFlushMode(with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
-        switch exponeaInstance.flushingMode {
-        case .automatic: result("APP_CLOSE")
-        case .immediate: result("IMMEDIATE")
-        case .periodic: result("PERIOD")
-        case .manual: result("MANUAL")
-        }
+        let encoder = FlushModeEncoder()
+        let mode = encoder.encode(exponeaInstance.flushingMode)
+        result(mode)
     }
     
     private func setFlushMode(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
-        let mode = args as! String
-        switch mode {
-        case "APP_CLOSE":
-            exponeaInstance.flushingMode = .automatic
+        let encoder = FlushModeEncoder()
+        do {
+            let data = args as! String
+            let mode = try encoder.decode(data)
+            exponeaInstance.flushingMode = mode
             result(nil)
-        case "IMMEDIATE":
-            exponeaInstance.flushingMode = .immediate
-            result(nil)
-        case "PERIOD":
-            exponeaInstance.flushingMode = .periodic(defaultFlushPeriod)
-            result(nil)
-        case "MANUAL":
-            exponeaInstance.flushingMode = .manual
-            result(nil)
-        default:
-            let error = FlutterError(code: errorCode, message: ExponeaDataError.invalidValue(for: "flush mode").localizedDescription, details: nil)
+        } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -274,7 +282,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             }
         }
     }
-    
+
     private func fetchRecommendations(_ args: Any?, with result: @escaping FlutterResult) {
         guard requireConfigured(with: result) else { return }
         do {
@@ -303,7 +311,55 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
+    private func getLogLevel(with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        let encoder = LogLevelEncoder()
+        let logLevel = encoder.encode(ExponeaSDK.Exponea.logger.logLevel)
+        result(logLevel)
+    }
+
+    private func setLogLevel(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        let encoder = LogLevelEncoder()
+        do {
+            let data = args as! String
+            let logLevel = try encoder.decode(data)
+            ExponeaSDK.Exponea.logger.logLevel = logLevel
+            result(nil)
+        } catch {
+            let error = FlutterError(code: "2", message: error.localizedDescription, details: nil)
+            result(error)
+        }
+    }
+
+    private func checkPushSetup(with result: FlutterResult) {
+        guard requireNotConfigured(with: result) else { return }
+        exponeaInstance.checkPushSetup = true
+        result(nil)
+    }
+
+    private func requestPushAuthorization(with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { (granted, _) in
+            DispatchQueue.main.async {
+                if granted {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+                result(granted)
+            }
+        }
+    }
+
+    private func requireNotConfigured(with result: FlutterResult) -> Bool {
+        guard !exponeaInstance.isConfigured else {
+            let error = FlutterError(code: "2", message: ExponeaError.alreadyConfigured.localizedDescription, details: nil)
+            result(error)
+            return false
+        }
+        return true
+    }
+
     private func requireConfigured(with result: FlutterResult) -> Bool {
         guard exponeaInstance.isConfigured else {
             let error = FlutterError(code: errorCode, message: ExponeaError.notConfigured.localizedDescription, details: nil)
@@ -311,5 +367,62 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             return false
         }
         return true
+    }
+    
+}
+
+extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
+    
+    public func pushNotificationOpened(with action: ExponeaNotificationActionType, value: String?, extraData: [AnyHashable : Any]?) {
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: extraData ?? [:], options: []),
+              let rawData = try? JSONDecoder.snakeCase.decode(RawData.self, from: jsonData) else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
+            return
+        }
+        
+        let openedPush = OpenedPush(
+            action: PushAction.from(actionType: action),
+            url: value,
+            data: rawData.data
+        )
+        _ = OpenedPushStreamHandler.handle(push: openedPush)
+    }
+    
+    public func silentPushNotificationReceived(extraData: [AnyHashable : Any]?) {
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: extraData ?? [:], options: []),
+              let rawData = try? JSONDecoder.snakeCase.decode(RawData.self, from: jsonData) else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
+            return
+        }
+        
+        let receivedPush = ReceivedPush(data: rawData.data)
+        _ = ReceivedPushStreamHandler.handle(push: receivedPush)
+    }
+    
+    @objc
+    public static func handlePushNotificationToken(deviceToken: Data) {
+        ExponeaSDK.Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)
+    }
+    
+    @objc
+    public static func handlePushNotificationOpened(userInfo: [AnyHashable: Any]) {
+        ExponeaSDK.Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)
+    }
+    
+    @objc
+    public static func handlePushNotificationOpened(response: UNNotificationResponse) {
+        ExponeaSDK.Exponea.shared.handlePushNotificationOpened(response: response)
+    }
+}
+
+extension PushAction {
+    static func from(actionType: ExponeaNotificationActionType) -> PushAction {
+        switch actionType {
+        case .none: return .app
+        case .openApp: return .app
+        case .deeplink: return .deeplink
+        case .browser: return .web
+        case .selfCheck: return .app
+        }
     }
 }

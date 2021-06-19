@@ -9,7 +9,7 @@ void main() {
     final encode = OpenedPushEncoder.encode;
     final decode = OpenedPushEncoder.decode;
 
-    final data = readMapData('push');
+    final data = readMapData('push_opened');
     test('check data', () async {
       expect(data.length, 4);
     });
@@ -27,7 +27,7 @@ void main() {
       test('deeplink', () async {
         final push = OpenedPush(
           action: PushActionType.deeplink,
-          additionalData: {
+          data: {
             'test': true,
             'num': 1.23,
           },
@@ -62,13 +62,13 @@ void main() {
 
         expect(decoded.action, expected.action);
         expect(decoded.url, expected.url);
-        expect(decoded.additionalData, expected.additionalData);
+        expect(decoded.data, expected.data);
       });
 
       test('deeplink', () async {
         final expected = OpenedPush(
           action: PushActionType.deeplink,
-          additionalData: {
+          data: {
             'test': true,
             'num': 1.23,
           },
@@ -77,7 +77,7 @@ void main() {
 
         expect(decoded.action, expected.action);
         expect(decoded.url, expected.url);
-        expect(decoded.additionalData, expected.additionalData);
+        expect(decoded.data, expected.data);
       });
 
       test('web', () async {
@@ -89,7 +89,7 @@ void main() {
 
         expect(decoded.action, expected.action);
         expect(decoded.url, expected.url);
-        expect(decoded.additionalData, expected.additionalData);
+        expect(decoded.data, expected.data);
       });
     });
   });

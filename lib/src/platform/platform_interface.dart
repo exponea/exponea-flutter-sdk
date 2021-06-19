@@ -9,6 +9,8 @@ import '../data/model/customer.dart';
 import '../data/model/event.dart';
 import '../data/model/flush_mode.dart';
 import '../data/model/log_level.dart';
+import '../data/model/push_opened.dart';
+import '../data/model/push_received.dart';
 import '../data/model/recommendation.dart';
 import '../interface.dart';
 import 'method_channel.dart';
@@ -107,16 +109,6 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  void removePushOpenedListener() {
-    throw UnimplementedError();
-  }
-
-  @override
-  void removePushReceivedListener() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<bool> requestIosPushAuthorization() async {
     throw UnimplementedError();
   }
@@ -142,16 +134,6 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  void setPushOpenedListener(OpenedPushListener listener) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void setPushReceivedListener(PushReceivedListener listener) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> trackEvent(Event event) async {
     throw UnimplementedError();
   }
@@ -165,4 +147,10 @@ abstract class ExponeaPlatform extends PlatformInterface
   Future<void> trackSessionStart({DateTime? timestamp}) async {
     throw UnimplementedError();
   }
+
+  @override
+  Stream<OpenedPush> get openedPushStream => throw UnimplementedError();
+
+  @override
+  Stream<ReceivedPush> get receivedPushStream => throw UnimplementedError();
 }
