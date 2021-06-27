@@ -14,6 +14,8 @@
 		31B4AE4A267A244D009655A3 /* ExponeaConfigurationChangeSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B4AE49267A244D009655A3 /* ExponeaConfigurationChangeSpec.swift */; };
 		31B4AE4E267A26E3009655A3 /* ExponeaCustomerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B4AE4D267A26E3009655A3 /* ExponeaCustomerSpec.swift */; };
 		31B4AE51267A2928009655A3 /* ExponeaEventSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B4AE50267A2928009655A3 /* ExponeaEventSpec.swift */; };
+		31BE44EF268A60900074229D /* ConsentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BE44EE268A60900074229D /* ConsentSpec.swift */; };
+		31C2AE91268B8E4C00C00CC5 /* RecommendationOptionsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C2AE90268B8E4C00C00CC5 /* RecommendationOptionsSpec.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -58,6 +60,8 @@
 		31B4AE49267A244D009655A3 /* ExponeaConfigurationChangeSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaConfigurationChangeSpec.swift; sourceTree = "<group>"; };
 		31B4AE4D267A26E3009655A3 /* ExponeaCustomerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaCustomerSpec.swift; sourceTree = "<group>"; };
 		31B4AE50267A2928009655A3 /* ExponeaEventSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaEventSpec.swift; sourceTree = "<group>"; };
+		31BE44EE268A60900074229D /* ConsentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentSpec.swift; sourceTree = "<group>"; };
+		31C2AE90268B8E4C00C00CC5 /* RecommendationOptionsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationOptionsSpec.swift; sourceTree = "<group>"; };
 		32441AB1A37CBB6ADE1CEB12 /* Pods-ExponeaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExponeaTests.release.xcconfig"; path = "Target Support Files/Pods-ExponeaTests/Pods-ExponeaTests.release.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		40F5D3A04DAF0EC0D2045CED /* Pods-ExponeaTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExponeaTests.profile.xcconfig"; path = "Target Support Files/Pods-ExponeaTests/Pods-ExponeaTests.profile.xcconfig"; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 				31B4AE49267A244D009655A3 /* ExponeaConfigurationChangeSpec.swift */,
 				31B4AE4D267A26E3009655A3 /* ExponeaCustomerSpec.swift */,
 				31B4AE50267A2928009655A3 /* ExponeaEventSpec.swift */,
+				31BE44EE268A60900074229D /* ConsentSpec.swift */,
+				31C2AE90268B8E4C00C00CC5 /* RecommendationOptionsSpec.swift */,
 			);
 			path = ExponeaTests;
 			sourceTree = "<group>";
@@ -402,7 +408,9 @@
 				31B4AE4A267A244D009655A3 /* ExponeaConfigurationChangeSpec.swift in Sources */,
 				31B4AE232679F4D4009655A3 /* TestUtil.swift in Sources */,
 				31B4AE51267A2928009655A3 /* ExponeaEventSpec.swift in Sources */,
+				31C2AE91268B8E4C00C00CC5 /* RecommendationOptionsSpec.swift in Sources */,
 				31B4AE4E267A26E3009655A3 /* ExponeaCustomerSpec.swift in Sources */,
+				31BE44EF268A60900074229D /* ConsentSpec.swift in Sources */,
 				31B4AE172679F46E009655A3 /* JsonDataParserSpec.swift in Sources */,
 				31B4AE342679F71B009655A3 /* ExponeaConfigurationSpec.swift in Sources */,
 			);
@@ -488,7 +496,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -503,15 +511,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.example;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Exponea iOS SDK Example App Notification Content";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -529,6 +541,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ExponeaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -559,6 +572,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ExponeaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -586,6 +600,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ExponeaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -649,7 +664,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -698,7 +713,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -715,15 +730,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.example;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Exponea iOS SDK Example App Notification Content";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -737,15 +756,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.example;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Exponea iOS SDK Example App Notification Content";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

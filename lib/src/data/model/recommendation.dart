@@ -17,6 +17,18 @@ class RecommendationOptions {
     this.noTrack,
     this.catalogAttributesWhitelist,
   });
+
+  @override
+  String toString() {
+    return 'RecommendationOptions{'
+        'id: $id, '
+        'fillWithRandom: $fillWithRandom, '
+        'size: $size, '
+        'items: $items, '
+        'noTrack: $noTrack, '
+        'catalogAttributesWhitelist: $catalogAttributesWhitelist'
+        '}';
+  }
 }
 
 @immutable
@@ -24,7 +36,7 @@ class Recommendation {
   final String engineName;
   final String itemId;
   final String recommendationId;
-  final String recommendationVariantId;
+  final String? recommendationVariantId;
   final Map<String, dynamic> data;
 
   const Recommendation({
@@ -34,4 +46,15 @@ class Recommendation {
     required this.recommendationVariantId,
     required this.data,
   });
+
+  @override
+  String toString() {
+    return 'Recommendation{'
+        'engineName: $engineName, '
+        'itemId: $itemId, '
+        'recommendationId: $recommendationId, '
+        'recommendationVariantId: $recommendationVariantId, '
+        'data: $data'
+        '}';
+  }
 }

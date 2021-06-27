@@ -1,6 +1,5 @@
 package com.exponea.data
 
-import com.exponea.ExponeaConfigurationParser
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration
 import org.junit.Assert.assertEquals

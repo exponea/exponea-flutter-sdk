@@ -2,7 +2,7 @@ extension ObjectExt<T> on T {
   R let<R>(R function(T value)) => function.call(this);
 }
 
-extension MapExt on Map<String, dynamic> {
+extension MapExt on Map<dynamic, dynamic> {
   T? getOptional<T>(String key) {
     return this[key];
   }

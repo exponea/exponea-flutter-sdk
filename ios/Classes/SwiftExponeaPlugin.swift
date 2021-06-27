@@ -18,8 +18,12 @@ private let methodSetFlushPeriod = "setFlushPeriod"
 private let methodTrackEvent = "trackEvent"
 private let methodTrackSessionStart = "trackSessionStart"
 private let methodTrackSessionEnd = "trackSessionEnd"
+private let methodFetchConsents = "fetchConsents"
+private let methodFetchRecommendations = "fetchRecommendations"
 
 private let defaultFlushPeriod = 5 * 60 // 5 minutes
+
+private let errorCode = "ExponeaPlugin"
 
 public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
     
@@ -64,8 +68,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             trackSessionStart(call.arguments, with: result)
         case methodTrackSessionEnd:
             trackSessionEnd(call.arguments, with: result)
+        case methodFetchConsents:
+            fetchConsents(with: result)
+        case methodFetchRecommendations:
+            fetchRecommendations(call.arguments, with: result)
         default:
-            let error = FlutterError(code: "1", message: "\(call.method) is not supported by iOS", details: nil)
+            let error = FlutterError(code: errorCode, message: "\(call.method) is not supported by iOS", details: nil)
             result(error)
         }
     }
@@ -91,7 +99,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             // FIXME : Exponea.shared.pushNotificationsDelegate = self
             result(nil)
         } catch {
-            let error = FlutterError(code: "2", message: error.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -113,7 +121,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             exponeaInstance.identifyCustomer(customerIds: customer.ids, properties: customer.properties, timestamp: nil)
             result(nil)
         } catch {
-            let error = FlutterError(code: "2", message: error.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -131,7 +139,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             }
             result(nil)
         } catch {
-            let error = FlutterError(code: "2", message: error.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -149,7 +157,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             exponeaInstance.defaultProperties = props
             result(nil)
         } catch {
-            let error = FlutterError(code: "2", message: error.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -187,7 +195,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             exponeaInstance.flushingMode = .manual
             result(nil)
         default:
-            let error = FlutterError(code: "2", message: ExponeaDataError.invalidValue(for: "flush mode").localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: ExponeaDataError.invalidValue(for: "flush mode").localizedDescription, details: nil)
             result(error)
         }
     }
@@ -198,7 +206,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         case .periodic(let period):
             result(period)
         default:
-            let error = FlutterError(code: "2", message: ExponeaError.flushModeNotPeriodic.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: ExponeaError.flushModeNotPeriodic.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -211,7 +219,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             exponeaInstance.flushingMode = .periodic(period)
             result(nil)
         default:
-            let error = FlutterError(code: "2", message: ExponeaError.flushModeNotPeriodic.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: ExponeaError.flushModeNotPeriodic.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -224,7 +232,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             exponeaInstance.trackEvent(properties: event.properties, timestamp: event.timestamp, eventType: event.name)
             result(nil)
         } catch {
-            let error = FlutterError(code: "2", message: error.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -233,7 +241,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         guard requireConfigured(with: result) else { return }
         let timestamp = args as? Double
         guard timestamp == nil else {
-            let error = FlutterError(code: "2", message: ExponeaError.notAvailableForPlatform(name: "Setting session start timestamp").localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: ExponeaError.notAvailableForPlatform(name: "Setting session start timestamp").localizedDescription, details: nil)
             result(error)
             return
         }
@@ -245,7 +253,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         guard requireConfigured(with: result) else { return }
         let timestamp = args as? Double
         guard timestamp == nil else {
-            let error = FlutterError(code: "2", message: ExponeaError.notAvailableForPlatform(name: "Setting session start timestamp").localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: ExponeaError.notAvailableForPlatform(name: "Setting session start timestamp").localizedDescription, details: nil)
             result(error)
             return
         }
@@ -253,9 +261,52 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         result(nil)
     }
     
+    private func fetchConsents(with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        exponeaInstance.fetchConsents { fetchResult in
+            switch fetchResult {
+            case .success(let response):
+                let outData = response.consents.map { ConsentEncoder.encode($0) }
+                result(outData)
+            case .failure(let error):
+                let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
+                result(error)
+            }
+        }
+    }
+    
+    private func fetchRecommendations(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        do {
+            let data = args as! [String:Any?]
+            let options = try RecommendationOptionsEncoder.decode(data)
+            exponeaInstance.fetchRecommendation(
+                with: options,
+                completion: {(fetchResult: Result<RecommendationResponse<AllRecommendationData>>) in
+                    switch fetchResult {
+                    case .success(let response):
+                        guard let responseValue = response.value else {
+                            let error = FlutterError(code: errorCode, message: ExponeaError.fetchError(description: "Empty result.").localizedDescription, details: nil)
+                            result(error)
+                            return
+                        }
+                        let outData = responseValue.map { $0.userData.formattedData() }
+                        result(outData)
+                    case .failure(let error):
+                        let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
+                        result(error)
+                    }
+                }
+            )
+        } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
+            result(error)
+        }
+    }
+    
     private func requireConfigured(with result: FlutterResult) -> Bool {
         guard exponeaInstance.isConfigured else {
-            let error = FlutterError(code: "2", message: ExponeaError.notConfigured.localizedDescription, details: nil)
+            let error = FlutterError(code: errorCode, message: ExponeaError.notConfigured.localizedDescription, details: nil)
             result(error)
             return false
         }

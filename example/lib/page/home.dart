@@ -35,146 +35,183 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Exponea Demo'),
       ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _checkIsConfigured(context),
-              child: Text('Configured?'),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _getCustomerCookie(context),
-              child: Text('Get customer cookie'),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _identifyCustomer(context),
-              child: Text('Identify customer'),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _anonymize(context),
-              child: Text('Anonymize'),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _getDefaultProps(context),
-              child: Text('Get default properties'),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _setDefaultProps(context),
-              child: Text('Set default properties'),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _getFlushMode(context),
-              child: Text('Get flush mode'),
-            ),
-          ),
-          ListTile(
-            title: ValueListenableBuilder<FlushMode?>(
-              valueListenable: _flushModeController,
-              builder: (context, selectedMode, _) => Row(
-                children: [
-                  DropdownButton<FlushMode>(
-                    value: selectedMode,
-                    onChanged: (value) => _flushModeController.value = value,
-                    items: FlushMode.values
-                        .map(
-                          (mode) => DropdownMenuItem<FlushMode>(
-                            value: mode,
-                            child: Text(mode.toString()),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    onPressed: (selectedMode != null)
-                        ? () => _setFlushMode(context)
-                        : null,
-                    child: Text('Set flush mode'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _flush(context),
-              child: Text('Flush'),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _getFlushPeriod(context),
-              child: Text('Get flush period'),
-            ),
-          ),
-          ListTile(
-            title: ValueListenableBuilder<int>(
-              valueListenable: _flushPeriodController,
-              builder: (context, period, _) => Row(
-                children: [
-                  SizedBox(
-                    width: 50,
-                    child: Text('$period min'),
-                  ),
-                  Expanded(
-                    child: Slider(
-                      value: period.toDouble(),
-                      min: 1,
-                      max: 60,
-                      onChanged: (value) =>
-                          _flushPeriodController.value = value.toInt(),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _setFlushPeriod(context),
-                    child: Text('Set flush period'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ListTile(
-            title: ElevatedButton(
-              onPressed: () => _trackEvent(context),
-              child: Text('Track event'),
-            ),
-          ),
-          ListTile(
-            title: Row(
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: ListView(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: (widget.config.automaticSessionTracking ?? true)
-                        ? null
-                        : () => _trackSessionStart(context),
-                    child: Text('Track session start'),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => _checkIsConfigured(context),
+                    child: Text('Configured?'),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: (widget.config.automaticSessionTracking ?? true)
-                        ? null
-                        : () => _trackSessionEnd(context),
-                    child: Text('Track session end'),
+                ListTile(
+                  title: Text('Customer'),
+                  subtitle: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _getCustomerCookie(context),
+                        child: Text('Get Cookie'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => _identifyCustomer(context),
+                        child: Text('Identify'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => _anonymize(context),
+                        child: Text('Anonymize'),
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: Text('Default Properties'),
+                  subtitle: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _getDefaultProps(context),
+                        child: Text('Get'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => _setDefaultProps(context),
+                        child: Text('Set'),
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: Text('Fetch'),
+                  subtitle: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _fetchConsents(context),
+                        child: Text('Consents'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => _fetchRecommendations(context),
+                        child: Text('Recommendations'),
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: Text('Flush Mode'),
+                  subtitle: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _getFlushMode(context),
+                        child: Text('Get'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => _setFlushMode(context),
+                        child: Text('Set'),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ValueListenableBuilder<FlushMode?>(
+                          valueListenable: _flushModeController,
+                          builder: (context, selectedMode, _) =>
+                              DropdownButton<FlushMode>(
+                            value: selectedMode,
+                            onChanged: (value) =>
+                                _flushModeController.value = value,
+                            items: FlushMode.values
+                                .map(
+                                  (mode) => DropdownMenuItem<FlushMode>(
+                                    value: mode,
+                                    child: Text(mode.toString()),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => _flush(context),
+                    child: Text('Flush'),
+                  ),
+                ),
+                ListTile(
+                  title: Text('Flush Period'),
+                  subtitle: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _getFlushPeriod(context),
+                        child: Text('Get'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => _setFlushPeriod(context),
+                        child: Text('Set'),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ValueListenableBuilder<int>(
+                          valueListenable: _flushPeriodController,
+                          builder: (context, period, _) => Row(
+                            children: [
+                              SizedBox(
+                                width: 50,
+                                child: Text('$period min'),
+                              ),
+                              Expanded(
+                                child: Slider(
+                                  value: period.toDouble(),
+                                  min: 1,
+                                  max: 60,
+                                  onChanged: (value) => _flushPeriodController
+                                      .value = value.toInt(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: Text('Track'),
+                  subtitle: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _trackEvent(context),
+                        child: Text('Event'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed:
+                            (widget.config.automaticSessionTracking ?? true)
+                                ? null
+                                : () => _trackSessionStart(context),
+                        child: Text('Session Start'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed:
+                            (widget.config.automaticSessionTracking ?? true)
+                                ? null
+                                : () => _trackSessionEnd(context),
+                        child: Text('Session End'),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -221,6 +258,22 @@ class _HomePageState extends State<HomePage> {
         await _plugin.setDefaultProperties({
           'default_prop_1': 'test',
         });
+      });
+
+  Future<void> _fetchConsents(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        return await _plugin.fetchConsents();
+      });
+
+  Future<void> _fetchRecommendations(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        const options = RecommendationOptions(
+          id: '60db38da9887668875998c49',
+          fillWithRandom: true,
+          items: {
+          }
+        );
+        return await _plugin.fetchRecommendations(options);
       });
 
   Future<void> _getFlushMode(BuildContext context) =>

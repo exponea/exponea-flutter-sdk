@@ -11,4 +11,13 @@ class Event {
     this.properties = const {},
     this.timestamp,
   });
+
+  @override
+  String toString() {
+    return 'Event{'
+        'name: $name, '
+        'properties: $properties, '
+        'timestamp: $timestamp'
+        '}';
+  }
 }

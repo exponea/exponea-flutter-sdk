@@ -1,0 +1,6 @@
+[
+  {},
+  {"id":"mock-id"},
+  {"id":"mock-id","legitimateInterest":true,"sources":{"createdFromCRM":false,"imported":true,"fromConsentPage":false,"privateAPI":true,"publicAPI":false,"trackedFromScenario":true},"translations":{}},
+  {"id":"mock-id","legitimateInterest":true,"sources":{"createdFromCRM":false,"imported":true,"fromConsentPage":false,"privateAPI":true,"publicAPI":false,"trackedFromScenario":true},"translations":{"cz":{"test":"aaaa","desc":""}}}
+]

@@ -1,6 +1,5 @@
 package com.exponea.data
 
-import com.exponea.ExponeaConfigurationParser
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.BeforeClass

@@ -1,4 +1,4 @@
-package com.exponea
+package com.exponea.data
 
 import com.exponea.exception.ExponeaDataException
 

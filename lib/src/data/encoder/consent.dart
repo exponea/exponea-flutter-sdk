@@ -2,12 +2,19 @@ import '../model/consent.dart';
 import '../util/object.dart';
 
 abstract class ConsentEncoder {
-  static Consent decode(Map<String, dynamic> data) {
+  static Consent decode(Map<dynamic, dynamic> data) {
     return Consent(
       id: data.getRequired('id'),
       legitimateInterest: data.getRequired('legitimateInterest'),
       sources: ConsentSourcesEncoder.decode(data.getRequired('sources')),
-      translations: data.getRequired('translations'),
+      translations: data.getRequired<Map>('translations').map(
+            (key, value) => MapEntry(
+              key.toString(),
+              (value as Map).map(
+                (k, v) => MapEntry(k.toString(), v?.toString()),
+              ),
+            ),
+          ),
     );
   }
 
@@ -22,14 +29,14 @@ abstract class ConsentEncoder {
 }
 
 abstract class ConsentSourcesEncoder {
-  static ConsentSources decode(Map<String, dynamic> data) {
+  static ConsentSources decode(Map<dynamic, dynamic> data) {
     return ConsentSources(
-      createdFromCRM: data['createdFromCRM'] as bool,
-      imported: data['imported'] as bool,
-      fromConsentPage: data['fromConsentPage'] as bool,
-      privateAPI: data['privateAPI'] as bool,
-      publicAPI: data['publicAPI'] as bool,
-      trackedFromScenario: data['trackedFromScenario'] as bool,
+      createdFromCRM: data.getRequired('createdFromCRM'),
+      imported: data.getRequired('imported'),
+      fromConsentPage: data.getRequired('fromConsentPage'),
+      privateAPI: data.getRequired('privateAPI'),
+      publicAPI: data.getRequired('publicAPI'),
+      trackedFromScenario: data.getRequired('trackedFromScenario'),
     );
   }
 

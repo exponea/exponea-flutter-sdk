@@ -5,7 +5,7 @@ class Consent {
   final String id;
   final bool legitimateInterest;
   final ConsentSources sources;
-  final Map<String, Map<String, String>> translations;
+  final Map<String, Map<String, String?>> translations;
 
   const Consent({
     required this.id,
@@ -13,6 +13,16 @@ class Consent {
     required this.sources,
     this.translations = const {},
   });
+
+  @override
+  String toString() {
+    return 'Consent{'
+        'id: $id, '
+        'legitimateInterest: $legitimateInterest, '
+        'sources: $sources, '
+        'translations: $translations'
+        '}';
+  }
 }
 
 @immutable
@@ -32,4 +42,16 @@ class ConsentSources {
     this.publicAPI = false,
     this.trackedFromScenario = false,
   });
+
+  @override
+  String toString() {
+    return 'ConsentSources{'
+        'createdFromCRM: $createdFromCRM, '
+        'imported: $imported, '
+        'fromConsentPage: $fromConsentPage, '
+        'privateAPI: $privateAPI, '
+        'publicAPI: $publicAPI, '
+        'trackedFromScenario: $trackedFromScenario'
+        '}';
+  }
 }

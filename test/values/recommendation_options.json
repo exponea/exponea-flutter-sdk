@@ -1,0 +1,6 @@
+[
+  {},
+  {"id":"mock-id"},
+  {"id":"mock-id","fillWithRandom":true},
+  {"id":"mock-id","fillWithRandom":false,"size":5,"items":{"a":"b","c":"d"},"noTrack":true,"catalogAttributesWhitelist":["1","test","...mock"]}
+]

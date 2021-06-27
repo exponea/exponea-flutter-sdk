@@ -1,5 +1,7 @@
 PODS:
+  - AnyCodable-FlightSchool (0.4.1)
   - exponea (0.0.1):
+    - AnyCodable-FlightSchool (~> 0.4.0)
     - ExponeaSDK (~> 2.11.0)
     - Flutter
   - ExponeaSDK (2.11.0)
@@ -18,6 +20,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AnyCodable-FlightSchool
     - ExponeaSDK
     - Nimble
     - Quick
@@ -31,7 +34,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
 
 SPEC CHECKSUMS:
-  exponea: ee7749550221672fd96f2a8f911d5dfacf2fc008
+  AnyCodable-FlightSchool: d27283db6e9feaddb0fa73a25835e5cdf41b3213
+  exponea: aed2bd8c715fd1cab17c6f3c08943dfc3b3a6b70
   ExponeaSDK: ddb7bc9e47b3ca983c376ca18d8a245238eca390
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b

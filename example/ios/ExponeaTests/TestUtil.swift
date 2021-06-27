@@ -61,4 +61,9 @@ struct TestUtil {
         }
         return jsonString
     }
+
+    static func dictToJsonString(_ data: [String:Any?]) throws -> String? {
+        let jsonData = try JSONSerialization.data(withJSONObject: data, options: [.sortedKeys])
+        return String(data: jsonData, encoding: .utf8)
+    }
 }

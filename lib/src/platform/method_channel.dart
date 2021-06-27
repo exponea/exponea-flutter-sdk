@@ -4,9 +4,11 @@ import '../data/encoder/configuration.dart';
 import '../data/encoder/main.dart';
 import '../data/model/configuration.dart';
 import '../data/model/configuration_change.dart';
+import '../data/model/consent.dart';
 import '../data/model/customer.dart';
 import '../data/model/event.dart';
 import '../data/model/flush_mode.dart';
+import '../data/model/recommendation.dart';
 import '../data/util/object.dart';
 import 'platform_interface.dart';
 
@@ -29,6 +31,8 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _methodTrackEvent = 'trackEvent';
   static const _methodTrackSessionStart = 'trackSessionStart';
   static const _methodTrackSessionEnd = 'trackSessionEnd';
+  static const _methodFetchConsents = 'fetchConsents';
+  static const _methodFetchRecommendations = 'fetchRecommendations';
 
   @override
   Future<void> configure(ExponeaConfiguration configuration) async {
@@ -117,5 +121,27 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   Future<void> trackSessionEnd({DateTime? timestamp}) async {
     final data = timestamp?.let(DateTimeEncoder.encode);
     await _channel.invokeMethod<void>(_methodTrackSessionEnd, data);
+  }
+
+  @override
+  Future<List<Consent>> fetchConsents() async {
+    final outData =
+        (await _channel.invokeListMethod<Map>(_methodFetchConsents))!;
+    final res =
+        outData.map((it) => ConsentEncoder.decode(it)).toList(growable: false);
+    return res;
+  }
+
+  @override
+  Future<List<Recommendation>> fetchRecommendations(
+    RecommendationOptions options,
+  ) async {
+    const method = _methodFetchRecommendations;
+    final inData = RecommendationOptionsEncoder.encode(options);
+    final outData = (await _channel.invokeListMethod<Map>(method, inData))!;
+    final res = outData
+        .map((it) => RecommendationEncoder.decode(it))
+        .toList(growable: false);
+    return res;
   }
 }

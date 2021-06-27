@@ -1,10 +1,16 @@
 package com.exponea
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
+import com.exponea.data.ConsentEncoder
 import com.exponea.data.Customer
 import com.exponea.data.Event
+import com.exponea.data.ExponeaConfigurationParser
+import com.exponea.data.RecommendationEncoder
+import com.exponea.data.RecommendationOptionsEncoder
 import com.exponea.exception.ExponeaException
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
@@ -64,9 +70,12 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_TRACK_EVENT = "trackEvent"
         private const val METHOD_TRACK_SESSION_START = "trackSessionStart"
         private const val METHOD_TRACK_SESSION_END = "trackSessionEnd"
+        private const val METHOD_FETCH_CONSENTS = "fetchConsents"
+        private const val METHOD_FETCH_RECOMMENDATIONS = "fetchRecommendations"
     }
 
     private var configuration: ExponeaConfiguration? = null
+    private val handler: Handler = Handler(Looper.getMainLooper())
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         Log.i(TAG, "onMethodCall(${call.method})")
@@ -117,6 +126,12 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             METHOD_TRACK_SESSION_END -> {
                 trackSessionEnd(call.arguments, result)
             }
+            METHOD_FETCH_CONSENTS -> {
+                fetchConsents(result)
+            }
+            METHOD_FETCH_RECOMMENDATIONS -> {
+                fetchRecommendations(call.arguments, result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -134,7 +149,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             val res = block()
             result.success(res)
         } catch (e: Exception) {
-            result.error("2", e.message, null)
+            result.error(TAG, e.message, null)
         }
     }
 
@@ -143,7 +158,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             block()
             result.success(null)
         } catch (e: Exception) {
-            result.error("2", e.message, null)
+            result.error(TAG, e.message, null)
         }
     }
 
@@ -151,7 +166,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         try {
             block()
         } catch (e: Exception) {
-            result.error("2", e.message, null)
+            result.error(TAG, e.message, null)
         }
     }
 
@@ -279,5 +294,47 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         } else {
             Exponea.trackSessionEnd()
         }
+    }
+
+    private fun fetchConsents(result: Result) = runAsync(result) {
+        requireInitialized()
+        Exponea.getConsents(
+                {
+                    val data = it.results.map { consent ->
+                        ConsentEncoder.encode(consent)
+                    }
+                    handler.post {
+                        result.success(data)
+                    }
+                },
+                {
+                    handler.post {
+                        result.error(TAG, it.results.message, null)
+                    }
+                }
+        )
+    }
+
+    private fun fetchRecommendations(args: Any?, result: Result) = runAsync(result) {
+        requireInitialized()
+        val inData = args as Map<String, Any?>
+        val options = RecommendationOptionsEncoder.decode(inData)
+        Log.i(TAG, "aaa $options")
+        Exponea.fetchRecommendation(
+                options,
+                {
+                    val outData = it.results.map { recommendation ->
+                        RecommendationEncoder.encode(recommendation)
+                    }
+                    handler.post {
+                        result.success(outData)
+                    }
+                },
+                {
+                    handler.post {
+                        result.error(TAG, it.results.message, null)
+                    }
+                }
+        )
     }
 }

@@ -53,47 +53,55 @@ class _ConfigPageState extends State<ConfigPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exponea Configuration'),
+        title: Text('Exponea Demo Configuration'),
       ),
-      body: Column(
-        children: [
-          ListTile(
-            title: TextField(
-              controller: _projectTokenController,
-              decoration: InputDecoration(labelText: 'Project Token'),
-            ),
-          ),
-          ListTile(
-            title: TextField(
-              controller: _authTokenController,
-              decoration: InputDecoration(labelText: 'Auth Token'),
-            ),
-          ),
-          ListTile(
-            title: TextField(
-              controller: _baseUrlController,
-              decoration: InputDecoration(labelText: 'Base URL'),
-            ),
-          ),
-          ValueListenableBuilder<bool>(
-            valueListenable: _sessionTrackingController,
-            builder: (context, enabled, _) => SwitchListTile(
-              title: Text('Automatic Session Tracking'),
-              value: enabled,
-              onChanged: (value) => _sessionTrackingController.value = value,
-            ),
-          ),
-          Spacer(),
-          ValueListenableBuilder<bool>(
-            valueListenable: _loading,
-            builder: (context, loading, _) => loading
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () => _configure(context),
-                    child: Text('Configure'),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: Column(
+              children: [
+                ListTile(
+                  title: TextField(
+                    controller: _projectTokenController,
+                    decoration: InputDecoration(labelText: 'Project Token'),
                   ),
+                ),
+                ListTile(
+                  title: TextField(
+                    controller: _authTokenController,
+                    decoration: InputDecoration(labelText: 'Auth Token'),
+                  ),
+                ),
+                ListTile(
+                  title: TextField(
+                    controller: _baseUrlController,
+                    decoration: InputDecoration(labelText: 'Base URL'),
+                  ),
+                ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: _sessionTrackingController,
+                  builder: (context, enabled, _) => SwitchListTile(
+                    title: Text('Automatic Session Tracking'),
+                    value: enabled,
+                    onChanged: (value) =>
+                        _sessionTrackingController.value = value,
+                  ),
+                ),
+                Spacer(),
+                ValueListenableBuilder<bool>(
+                  valueListenable: _loading,
+                  builder: (context, loading, _) => loading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: () => _configure(context),
+                          child: Text('Configure'),
+                        ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

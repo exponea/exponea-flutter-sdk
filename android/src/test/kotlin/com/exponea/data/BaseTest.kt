@@ -19,5 +19,9 @@ abstract class BaseTest {
             val expectedType = object : TypeToken<List<String>?>() {}.getType()
             return Gson().fromJson(fileData, expectedType) as List<String>
         }
+
+        fun toJson(data: Map<String, Any?>): String {
+            return Gson().toJson(data)
+        }
     }
 }

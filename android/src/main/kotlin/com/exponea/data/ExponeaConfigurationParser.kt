@@ -1,7 +1,6 @@
-package com.exponea
+package com.exponea.data
 
 import android.app.NotificationManager
-import com.exponea.data.ExponeaConfigurationChange
 import com.exponea.exception.ExponeaDataException
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration

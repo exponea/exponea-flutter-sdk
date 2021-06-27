@@ -11,6 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.from(
+        colorScheme: ColorScheme.light(
+          primary: Colors.amber,
+          secondary: Colors.blueAccent,
+        ),
+      ),
       home: Builder(
         builder: (context) => ConfigPage(
           doneCallback: (config) {

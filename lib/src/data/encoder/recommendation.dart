@@ -7,10 +7,14 @@ abstract class RecommendationOptionsEncoder {
       id: data.getRequired('id'),
       fillWithRandom: data.getRequired('fillWithRandom'),
       size: data.getOptional('size'),
-      items: data.getOptional('items'),
+      items: data
+          .getOptional<Map>('items')
+          ?.map((k, v) => MapEntry(k.toString(), v.toString())),
       noTrack: data.getOptional('noTrack'),
-      catalogAttributesWhitelist:
-          data.getOptional('catalogAttributesWhitelist'),
+      catalogAttributesWhitelist: data
+          .getOptional<List>('catalogAttributesWhitelist')
+          ?.map((it) => it.toString())
+          .toList(growable: false),
     );
   }
 
@@ -18,7 +22,7 @@ abstract class RecommendationOptionsEncoder {
     return {
       'id': options.id,
       'fillWithRandom': options.fillWithRandom,
-      'size': options.size,
+      'size': options.size?.toDouble(),
       'items': options.items,
       'noTrack': options.noTrack,
       'catalogAttributesWhitelist': options.catalogAttributesWhitelist,
@@ -27,13 +31,15 @@ abstract class RecommendationOptionsEncoder {
 }
 
 abstract class RecommendationEncoder {
-  static Recommendation decode(Map<String, dynamic> data) {
+  static Recommendation decode(Map<dynamic, dynamic> data) {
     return Recommendation(
-      engineName: data['engineName'],
-      itemId: data['itemId'],
-      recommendationId: data['recommendationId'],
-      recommendationVariantId: data['recommendationVariantId'],
-      data: data['data'],
+      engineName: data.getRequired('engineName'),
+      itemId: data.getRequired('itemId'),
+      recommendationId: data.getRequired('recommendationId'),
+      recommendationVariantId: data.getOptional('recommendationVariantId'),
+      data: data
+          .getRequired<Map>('data')
+          .map((k, v) => MapEntry(k.toString(), v)),
     );
   }
 
