@@ -38,10 +38,8 @@ class _ConfigPageState extends State<ConfigPage> {
     _baseUrlController = TextEditingController(text: '');
     _sessionTrackingController = ValueNotifier(true);
     SharedPreferences.getInstance().then((sp) async {
-      _projectTokenController.text = sp.getString(SP_KEY_PROJECT) ??
-          '2087f0ae-6b58-11e9-a353-0a580a2009c0';
-      _authTokenController.text = sp.getString(SP_KEY_AUTH) ??
-          'vqgp8d3789w9dxr1srtal7nmi6sqn9fwakhptn1kbp40lb484pbh4v5a750lf817';
+      _projectTokenController.text = sp.getString(SP_KEY_PROJECT) ?? '';
+      _authTokenController.text = sp.getString(SP_KEY_AUTH) ?? '';
       _baseUrlController.text = sp.getString(SP_KEY_BASE_URL) ?? '';
       _sessionTrackingController.value =
           sp.getBool(SP_KEY_SESSION_TRACKING) ?? true;
