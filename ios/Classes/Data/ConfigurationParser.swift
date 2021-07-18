@@ -7,8 +7,8 @@ import Foundation
 import ExponeaSDK
 
 class ConfigurationParser {
-    func parseConfig(_ data: [String:Any?], delegate: PushNotificationManagerDelegate) throws -> ExponeaConfiguration {
-        return try ExponeaConfiguration(data, parser: self, delegate: delegate)
+    func parseConfig(_ data: [String:Any?]) throws -> ExponeaConfiguration {
+        return try ExponeaConfiguration(data, parser: self)
     }
 
     func parseConfigChange(_ data: [String:Any?], defaultBaseUrl: String) throws -> ExponeaConfigurationChange {
@@ -63,7 +63,7 @@ class ConfigurationParser {
         )
     }
 
-    func parsePushNotificationTracking(_ data: [String:Any?], delegate: PushNotificationManagerDelegate) throws -> ExponeaSDK.Exponea.PushNotificationTracking {
+    func parsePushNotificationTracking(_ data: [String:Any?]) throws -> ExponeaSDK.Exponea.PushNotificationTracking {
         let iosData: [String:Any?] = try data.getOptional("ios") ?? [:]
         let appGroup: String = try iosData.getOptional("appGroup") ?? ""
         let requirePushAuthorization: Bool = try iosData.getOptional("requirePushAuthorization") ?? true
@@ -80,14 +80,12 @@ class ConfigurationParser {
         if let frequency = frequency {
             return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
                 appGroup: appGroup,
-                delegate: delegate,
                 requirePushAuthorization: requirePushAuthorization,
                 tokenTrackFrequency: frequency
             )
         } else {
             return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
                 appGroup: appGroup,
-                delegate: delegate,
                 requirePushAuthorization: requirePushAuthorization
             )
         }

@@ -105,8 +105,9 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             let data = args as! [String:Any?]
 
             let parser = ConfigurationParser()
-            let config = try parser.parseConfig(data, delegate: self) // FIXME : delegate
-            // exponeaInstance.checkPushSetup = true // FIXME
+            let config = try parser.parseConfig(data)
+
+            // exponeaInstance.checkPushSetup = true
             exponeaInstance.configure(
                 config.projectSettings,
                 pushNotificationTracking: config.pushNotificationTracking,
@@ -114,8 +115,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 defaultProperties: config.defaultProperties,
                 flushingSetup: config.flushingSetup
             )
-            
-            // FIXME : Exponea.shared.pushNotificationsDelegate = self
+            exponeaInstance.pushNotificationsDelegate = self
             result(nil)
         } catch {
             let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
@@ -372,8 +372,11 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
 }
 
 extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
-    
-    public func pushNotificationOpened(with action: ExponeaNotificationActionType, value: String?, extraData: [AnyHashable : Any]?) {
+    public func pushNotificationOpened(
+        with action: ExponeaNotificationActionType,
+        value: String?,
+        extraData: [AnyHashable: Any]?
+    ) {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: extraData ?? [:], options: []),
               let rawData = try? JSONDecoder.snakeCase.decode(RawData.self, from: jsonData) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
@@ -388,7 +391,7 @@ extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
         _ = OpenedPushStreamHandler.handle(push: openedPush)
     }
     
-    public func silentPushNotificationReceived(extraData: [AnyHashable : Any]?) {
+    public func silentPushNotificationReceived(extraData: [AnyHashable: Any]?) {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: extraData ?? [:], options: []),
               let rawData = try? JSONDecoder.snakeCase.decode(RawData.self, from: jsonData) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
