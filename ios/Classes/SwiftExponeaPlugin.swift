@@ -33,6 +33,11 @@ private let defaultFlushPeriod = 5 * 60 // 5 minutes
 
 private let errorCode = "ExponeaPlugin"
 
+// This protocol is queried using reflection by native iOS SDK to see if it's run by Flutter SDK
+@objc(IsExponeaFlutterSDK)
+protocol IsExponeaFlutterSDK {
+}
+
 public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {
