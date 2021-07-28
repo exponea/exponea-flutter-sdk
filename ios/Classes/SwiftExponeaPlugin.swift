@@ -105,7 +105,10 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
     }
     
     private func configure(_ args: Any?, with result: FlutterResult) {
-        guard requireNotConfigured(with: result) else { return }
+        guard !exponeaInstance.isConfigured else {
+            result(false)
+            return
+        }
         do {
             let data = args as! [String:Any?]
 
@@ -121,7 +124,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 flushingSetup: config.flushingSetup
             )
             exponeaInstance.pushNotificationsDelegate = self
-            result(nil)
+            result(true)
         } catch {
             let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
@@ -420,6 +423,14 @@ extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
     @objc
     public static func handlePushNotificationOpened(response: UNNotificationResponse) {
         ExponeaSDK.Exponea.shared.handlePushNotificationOpened(response: response)
+    }
+    
+    @objc
+    static func continueUserActivity(_ userActivity: NSUserActivity) {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let incomingURL = userActivity.webpageURL
+            else { return }
+        ExponeaSDK.Exponea.shared.trackCampaignClick(url: incomingURL, timestamp: nil)
     }
 }
 

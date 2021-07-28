@@ -46,7 +46,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         private const val STREAM_NAME_RECEIVED_PUSH = "$CHANNEL_NAME/received_push"
 
         fun handleCampaignIntent(intent: Intent?, context: Context) {
-            // TODO-EXF-8 : Exponea.handleCampaignIntent(intent, context)
+            Exponea.handleCampaignIntent(intent, context)
         }
     }
 
@@ -240,13 +240,18 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         }
     }
 
-    private fun configure(args: Any?, result: Result) = runWithNoResult(result) {
-        requireNotConfigured()
+    private fun configure(args: Any?, result: Result) = runWithResult<Boolean>(result) {
+        try {
+            requireNotConfigured()
+        } catch (e: Exception) {
+            return@runWithResult false
+        }
         val data = args as Map<String, Any?>
         val configuration = ExponeaConfigurationParser().parseConfig(data)
         Exponea.init(activity ?: context, configuration)
         this.configuration = configuration
         Exponea.notificationDataCallback = { ReceivedPushStreamHandler.handle(ReceivedPush(it)) }
+        return@runWithResult true
     }
 
     private fun isConfigured(result: Result) = runWithResult<Boolean>(result) {

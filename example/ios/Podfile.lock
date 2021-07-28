@@ -11,6 +11,8 @@ PODS:
   - Quick (4.0.0)
   - shared_preferences (0.0.1):
     - Flutter
+  - uni_links (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - exponea (from `.symlinks/plugins/exponea/ios`)
@@ -19,6 +21,7 @@ DEPENDENCIES:
   - Nimble (= 8.0.7)
   - Quick (= 4.0.0)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - uni_links (from `.symlinks/plugins/uni_links/ios`)
 
 SPEC REPOS:
   trunk:
@@ -35,6 +38,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  uni_links:
+    :path: ".symlinks/plugins/uni_links/ios"
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: d27283db6e9feaddb0fa73a25835e5cdf41b3213
@@ -45,6 +50,7 @@ SPEC CHECKSUMS:
   Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
 
 PODFILE CHECKSUM: 7d1d5194d74e70f57aba3a9a46925dbdf19e6d3e
 

@@ -53,7 +53,7 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  Future<void> configure(ExponeaConfiguration configuration) async {
+  Future<bool> configure(ExponeaConfiguration configuration) async {
     throw UnimplementedError();
   }
 

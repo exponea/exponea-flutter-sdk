@@ -25,7 +25,7 @@ class ExponeaPlugin implements BaseInterface {
   Future<void> checkPushSetup() => _platform.checkPushSetup();
 
   @override
-  Future<void> configure(ExponeaConfiguration configuration) =>
+  Future<bool> configure(ExponeaConfiguration configuration) =>
       _platform.configure(configuration);
 
   @override

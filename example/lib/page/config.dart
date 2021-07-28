@@ -156,7 +156,13 @@ class _ConfigPageState extends State<ConfigPage> {
       ),
     );
     try {
-      await _plugin.configure(config);
+      final configured = await _plugin.configure(config);
+      if (!configured) {
+        final snackBar = SnackBar(
+          content: Text('SDK was already configured'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
       widget.doneCallback.call(config);
     } on PlatformException catch (err) {
       final snackBar = SnackBar(

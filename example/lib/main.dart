@@ -1,16 +1,65 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-import 'page/config.dart';
-import 'page/home.dart';
+import 'package:exponea_example/page/config.dart';
+import 'package:exponea_example/page/home.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:uni_links/uni_links.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  StreamSubscription? _linkSub;
+
+  @override
+  void initState() {
+    _handleInitialLink();
+    _handleIncomingLinks();
+    super.initState();
+  }
+
+  Future<void> _handleInitialLink() async {
+    try {
+      final initialLink = await getInitialLink();
+      if (initialLink != null) {
+        _showSnackBarMessage('App opened with link: $initialLink');
+      }
+    } on PlatformException catch (err) {
+      print('initialLink: $err');
+    }
+  }
+
+  void _handleIncomingLinks() {
+    _linkSub = linkStream.listen((String? link) {
+      _showSnackBarMessage('App resumed with link: $link');
+    }, onError: (err) {
+      _showSnackBarMessage('App resume with link failed: $err');
+    });
+  }
+
+  void _showSnackBarMessage(String text) {
+    final snackBar = SnackBar(content: Text(text));
+    _scaffoldMessengerKey.currentState!.showSnackBar(snackBar);
+  }
+
+  @override
+  void dispose() {
+    _linkSub?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: _scaffoldMessengerKey,
       theme: ThemeData.from(
         colorScheme: ColorScheme.light(
           primary: Colors.amber,
@@ -29,6 +78,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
+      builder: (context, child) => child!,
     );
   }
 }

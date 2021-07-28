@@ -53,9 +53,9 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   Stream<ReceivedPush>? _receivedPushStream;
 
   @override
-  Future<void> configure(ExponeaConfiguration configuration) async {
+  Future<bool> configure(ExponeaConfiguration configuration) async {
     final data = ExponeaConfigurationEncoder.encode(configuration);
-    await _channel.invokeMethod(_methodConfigure, data);
+    return (await _channel.invokeMethod(_methodConfigure, data))!;
   }
 
   @override

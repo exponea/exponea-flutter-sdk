@@ -16,7 +16,8 @@ abstract class BaseInterface {
   /// Configure Exponea SDK.
   /// Should only be called once.
   /// You need to configure ExponeaSDK before calling most methods.
-  Future<void> configure(ExponeaConfiguration configuration);
+  /// Returns true if configuration was successful. Returns false if sdk was already configured.
+  Future<bool> configure(ExponeaConfiguration configuration);
 
   /// Check whether Exponea SDK is configured.
   Future<bool> isConfigured();

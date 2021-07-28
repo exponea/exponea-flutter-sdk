@@ -74,4 +74,13 @@ open class ExponeaFlutterAppDelegate: FlutterAppDelegate {
             completionHandler([.alert])
         }
     }
+
+    open override func application(
+        _ application: UIApplication,
+        continue userActivity: NSUserActivity,
+        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        SwiftExponeaPlugin.continueUserActivity(userActivity)
+        return super.application(application, continue: userActivity, restorationHandler: restorationHandler)
+    }
 }
