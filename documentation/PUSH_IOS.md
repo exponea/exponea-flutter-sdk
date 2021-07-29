@@ -67,7 +67,7 @@ To be able to send push notifications from Exponea backend, you need to connect 
 You'll need a special permission for notifications visible to the user. To request it, call `ExponeaPlugin().requestIosPushAuthorization()` from **dart**.
 ```dart 
 _plugin.requestIosPushAuthorization()
-.then((accepted) => print(`User has ${accepted ? 'accepted': 'rejected'} push notifications.`))
+.then((accepted) => print("User has ${accepted ? 'accepted': 'rejected'} push notifications."))
 .catchError((error) => print('Error: $error'));
 ```
 

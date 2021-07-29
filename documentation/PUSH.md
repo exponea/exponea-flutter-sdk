@@ -15,18 +15,19 @@ import 'package:exponea/exponea.dart';
 final _plugin = ExponeaPlugin();
 final subscription = _plugin.openedPushStream.listen((openedPush) {
   switch(openedPush.action) {
-    case PushAction.app:
+    case PushActionType.app:
       // last push directed user to your app with no link
 
       // log data defined on Exponea backend
-      print(openedPush.additionalData); 
+      print('app - ${openedPush.data}'); 
       break;
-    case PushAction.deeplink:
+    case PushActionType.deeplink:
       // last push directed user to your app with deeplink
-      print(openedPush.url);
+      print('deeplink - ${openedPush.url}');
       break;
-    case PushAction.web:
+    case PushActionType.web:
       // last push directed user to web, nothing to do here
+      print('web');
       break;
   }
 });
