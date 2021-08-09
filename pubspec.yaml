@@ -1,19 +1,20 @@
 name: exponea
-description: Exponea flutter plugin.
-version: 0.1.1
-author: Exponea
-homepage: https://exponea.com/
+description: Exponea Flutter SDK
+version: 0.2.0
+homepage: https://exponea.com
+repository: https://github.com/exponea/exponea-flutter-sdk
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: ^2.0.0
+  flutter: ">=2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  plugin_platform_interface: 2.0.0
+  meta: ^1.3.0
+  plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
   flutter_test:

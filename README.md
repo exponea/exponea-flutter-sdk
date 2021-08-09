@@ -1,4 +1,4 @@
-# Flutter Exponea SDK
+# Flutter Exponea SDK - Beta version
 Flutter Exponea SDK allows your application to interact with the [Exponea](https://exponea.com/) Customer Data & Experience Platform. Exponea empowers B2C marketers to raise conversion rates, improve acquisition ROI, and maximize customer lifetime value.
 
 Flutter SDK is implemented as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk).
@@ -46,4 +46,4 @@ If facing any issues, look for **Troubleshooting** section in the respective doc
 
 ## Release Notes
 
-[Release notes](./Documentation/RELEASE_NOTES.md) for the SDK.
+[Release notes](./CHANGELOG.md) for the SDK.
