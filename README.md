@@ -5,11 +5,9 @@ Flutter SDK is implemented as a wrapper around [native Android SDK](https://gith
 
 ## Getting started
 In your projects `pubspec.yaml` file, add dependency to Flutter Exponea SDK:
-
-    exponea:
-        git:
-          url: git@github.com:exponea/exponea-flutter-sdk.git
-          ref: 0.1.0
+```
+exponea: x.y.z
+```
 
 ### iOS setup
 
