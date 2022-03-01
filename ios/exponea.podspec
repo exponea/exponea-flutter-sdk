@@ -15,8 +15,8 @@ A new flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'ExponeaSDK', '~> 2.11.1'
-  s.dependency 'AnyCodable-FlightSchool', '~> 0.4.0'
+  s.dependency 'ExponeaSDK', '~> 2.11.3'
+  s.dependency 'AnyCodable-FlightSchool', '~> 0.6.3'
   s.platform = :ios, '10.3'
 
   # Flutter.framework does not contain a i386 slice.

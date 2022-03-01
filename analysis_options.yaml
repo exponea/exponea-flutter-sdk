@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_void_async: true
+    parameter_assignments: true
+    prefer_final_in_for_each: true
+    # override defaults from flutter_lints :
+    avoid_renaming_method_parameters: false
+    unnecessary_this: false
+
+analyzer:
+  errors:
+    parameter_assignments: error

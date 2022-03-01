@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('PushNotificationImportance', () {
-    final encode = PushNotificationImportanceEncoder.encode;
-    final decode = PushNotificationImportanceEncoder.decode;
+    const encode = PushNotificationImportanceEncoder.encode;
+    const decode = PushNotificationImportanceEncoder.decode;
 
     final data = readStringData('notification_importance');
     test('check data', () async {

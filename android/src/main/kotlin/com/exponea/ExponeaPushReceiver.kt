@@ -5,11 +5,10 @@ import android.content.Context
 import android.content.Intent
 import com.exponea.data.OpenedPush
 import com.exponea.data.PushAction
+import com.exponea.sdk.ExponeaExtras
 import com.exponea.sdk.models.NotificationAction
-import com.exponea.sdk.services.ExponeaPushReceiver
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.lang.RuntimeException
 
 class ExponeaPushReceiver : BroadcastReceiver() {
     /**
@@ -20,20 +19,17 @@ class ExponeaPushReceiver : BroadcastReceiver() {
      */
     override fun onReceive(context: Context, intent: Intent) {
         val action = when (intent.action) {
-            ExponeaPushReceiver.ACTION_CLICKED -> PushAction.APP
-            ExponeaPushReceiver.ACTION_DEEPLINK_CLICKED -> PushAction.DEEPLINK
-            ExponeaPushReceiver.ACTION_URL_CLICKED -> PushAction.WEB
+            ExponeaExtras.ACTION_CLICKED -> PushAction.APP
+            ExponeaExtras.ACTION_DEEPLINK_CLICKED -> PushAction.DEEPLINK
+            ExponeaExtras.ACTION_URL_CLICKED -> PushAction.WEB
             else -> throw RuntimeException("Unknown push notification action ${intent.action}")
         }
-        val url = (intent.getSerializableExtra(ExponeaPushReceiver.EXTRA_ACTION_INFO) as? NotificationAction)?.url
-        val pushData = intent.getSerializableExtra(ExponeaPushReceiver.EXTRA_CUSTOM_DATA) as Map<String, String>
+
+        val actionInfo = intent.getSerializableExtra(ExponeaExtras.EXTRA_ACTION_INFO) as? NotificationAction
+        val url = actionInfo?.url
+        val pushData = intent.getSerializableExtra(ExponeaExtras.EXTRA_CUSTOM_DATA) as Map<String, String>
         val additionalDataType = object : TypeToken<Map<String, Any?>?>() {}.getType()
         val additionalData = Gson().fromJson(pushData["attributes"], additionalDataType) as Map<String, Any?>?
         OpenedPushStreamHandler.handle(OpenedPush(action, url, additionalData))
-
-        if (intent.action == ExponeaPushReceiver.ACTION_CLICKED) {
-            val actionIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-            context.startActivity(actionIntent)
-        }
     }
 }

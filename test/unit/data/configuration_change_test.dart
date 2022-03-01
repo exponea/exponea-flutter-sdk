@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('ExponeaConfigurationChange', () {
-    final encode = ExponeaConfigurationChangeEncoder.encode;
-    final decode = ExponeaConfigurationChangeEncoder.decode;
+    const encode = ExponeaConfigurationChangeEncoder.encode;
+    const decode = ExponeaConfigurationChangeEncoder.decode;
 
     final data = readMapData('configuration_change');
     test('check data', () async {
@@ -20,7 +20,7 @@ void main() {
 
     group('encode', () {
       test('minimal', () async {
-        final change = ExponeaConfigurationChange(
+        const change = ExponeaConfigurationChange(
           project: ExponeaProject(
             projectToken: 'mock-project-token',
             authorizationToken: 'mock-auth-token',
@@ -31,7 +31,7 @@ void main() {
       });
 
       test('with base url', () async {
-        final change = ExponeaConfigurationChange(
+        const change = ExponeaConfigurationChange(
           project: ExponeaProject(
             projectToken: 'mock-project-token',
             authorizationToken: 'mock-auth-token',
@@ -43,7 +43,7 @@ void main() {
       });
 
       test('full', () async {
-        final change = ExponeaConfigurationChange(
+        const change = ExponeaConfigurationChange(
           project: ExponeaProject(
             projectToken: 'mock-project-token',
             authorizationToken: 'mock-auth-token',

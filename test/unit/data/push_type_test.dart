@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('PushActionType', () {
-    final encode = PushActionTypeEncoder.encode;
-    final decode = PushActionTypeEncoder.decode;
+    const encode = PushActionTypeEncoder.encode;
+    const decode = PushActionTypeEncoder.decode;
 
     final data = readStringData('push_type');
     test('check data', () async {

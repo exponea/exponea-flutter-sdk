@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('OpenedPush', () {
-    final encode = OpenedPushEncoder.encode;
-    final decode = OpenedPushEncoder.decode;
+    const encode = OpenedPushEncoder.encode;
+    const decode = OpenedPushEncoder.decode;
 
     final data = readMapData('push_opened');
     test('check data', () async {
@@ -20,12 +20,12 @@ void main() {
 
     group('encode', () {
       test('app', () async {
-        final push = OpenedPush(action: PushActionType.app);
+        const push = OpenedPush(action: PushActionType.app);
         expect(encode(push), appData);
       });
 
       test('deeplink', () async {
-        final push = OpenedPush(
+        const push = OpenedPush(
           action: PushActionType.deeplink,
           data: {
             'test': true,
@@ -36,7 +36,7 @@ void main() {
       });
 
       test('web', () async {
-        final push = OpenedPush(
+        const push = OpenedPush(
           action: PushActionType.web,
           url: 'https://a.b.c',
         );
@@ -57,7 +57,7 @@ void main() {
       });
 
       test('app', () async {
-        final expected = OpenedPush(action: PushActionType.app);
+        const expected = OpenedPush(action: PushActionType.app);
         final decoded = decode(appData);
 
         expect(decoded.action, expected.action);
@@ -66,7 +66,7 @@ void main() {
       });
 
       test('deeplink', () async {
-        final expected = OpenedPush(
+        const expected = OpenedPush(
           action: PushActionType.deeplink,
           data: {
             'test': true,
@@ -81,7 +81,7 @@ void main() {
       });
 
       test('web', () async {
-        final expected = OpenedPush(
+        const expected = OpenedPush(
           action: PushActionType.web,
           url: 'https://a.b.c',
         );

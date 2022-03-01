@@ -1,4 +1,11 @@
 ## Release Notes
+## Release Notes for 1.0.0
+#### March 23, 2022
+* Features
+  * Flutter SDK upgraded to 2.10
+  * Native Android SDK updated to 3.0.3 - [Android SDK Release notes](https://github.com/exponea/exponea-android-sdk/blob/3.0.3/Documentation/RELEASE_NOTES.md)
+  * Native iOS SDK updated to 2.11.3 - [iOS SDK Release notes](https://github.com/exponea/exponea-ios-sdk/blob/2.11.3/Documentation/RELEASE_NOTES.md)
+
 ## Release Notes for 0.2.1
 #### August 12, 2021
 * Fixes

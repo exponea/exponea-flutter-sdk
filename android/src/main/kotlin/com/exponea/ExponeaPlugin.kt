@@ -1,5 +1,6 @@
 package com.exponea
 
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -45,8 +46,39 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         private const val STREAM_NAME_OPENED_PUSH = "$CHANNEL_NAME/opened_push"
         private const val STREAM_NAME_RECEIVED_PUSH = "$CHANNEL_NAME/received_push"
 
-        fun handleCampaignIntent(intent: Intent?, context: Context) {
-            Exponea.handleCampaignIntent(intent, context)
+        fun handleCampaignIntent(intent: Intent?, applicationContext: Context) {
+            Log.d(TAG, "handleCampaignIntent()")
+            Exponea.handleCampaignIntent(intent, applicationContext)
+        }
+
+        fun handleRemoteMessage(
+            applicationContext: Context,
+            messageData: Map<String, String>?,
+            manager: NotificationManager,
+            showNotification: Boolean = true
+        ) {
+            Log.d(TAG, "handleRemoteMessage()")
+            Exponea.handleRemoteMessage(applicationContext, messageData, manager, showNotification)
+        }
+
+        fun trackGmsPushToken(token: String) {
+            Log.d(TAG, "trackGmsPushToken($token)")
+            Exponea.trackPushToken(token)
+        }
+
+        fun trackHmsPushToken(token: String) {
+            Log.d(TAG, "trackHmsPushToken($token)")
+            Exponea.trackHmsPushToken(token)
+        }
+
+        fun handleNewGmsToken(context: Context, token: String) {
+            Log.d(TAG, "handleNewGmsToken($token)")
+            Exponea.handleNewToken(context, token)
+        }
+
+        fun handleNewHmsToken(context: Context, token: String) {
+            Log.d(TAG, "handleNewHmsToken($token)")
+            Exponea.handleNewHmsToken(context, token)
         }
     }
 

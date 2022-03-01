@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('ExponeaProject', () {
-    final encode = ExponeaProjectEncoder.encode;
-    final decode = ExponeaProjectEncoder.decode;
+    const encode = ExponeaProjectEncoder.encode;
+    const decode = ExponeaProjectEncoder.decode;
 
     final data = readMapData('project');
     test('check data', () async {
@@ -21,7 +21,7 @@ void main() {
 
     group('encode', () {
       test('no baseUrl', () async {
-        final project = ExponeaProject(
+        const project = ExponeaProject(
           projectToken: '1234567890',
           authorizationToken: '0987654321',
         );
@@ -29,7 +29,7 @@ void main() {
       });
 
       test('with baseUrl', () async {
-        final project = ExponeaProject(
+        const project = ExponeaProject(
           projectToken: '1234567890',
           authorizationToken: '0987654321',
           baseUrl: 'http://a.b.c',
@@ -62,7 +62,7 @@ void main() {
       });
 
       test('no baseUrl', () async {
-        final expected = ExponeaProject(
+        const expected = ExponeaProject(
           projectToken: '1234567890',
           authorizationToken: '0987654321',
         );
@@ -74,7 +74,7 @@ void main() {
       });
 
       test('null baseUrl', () async {
-        final expected = ExponeaProject(
+        const expected = ExponeaProject(
           projectToken: '1234567890',
           authorizationToken: '0987654321',
         );
@@ -86,7 +86,7 @@ void main() {
       });
 
       test('with baseUrl', () async {
-        final expected = ExponeaProject(
+        const expected = ExponeaProject(
           projectToken: '1234567890',
           authorizationToken: '0987654321',
           baseUrl: 'http://a.b.c',

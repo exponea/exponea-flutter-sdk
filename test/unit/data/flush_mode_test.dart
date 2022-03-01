@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('FlushMode', () {
-    final encode = FlushModeEncoder.encode;
-    final decode = FlushModeEncoder.decode;
+    const encode = FlushModeEncoder.encode;
+    const decode = FlushModeEncoder.decode;
 
     final data = readStringData('flush_mode');
     test('check data', () async {

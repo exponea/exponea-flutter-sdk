@@ -12,13 +12,13 @@ class LinkPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Link'),
+        title: const Text('Link'),
       ),
       body: Center(
         child: Text(link),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.done),
+        child: const Icon(Icons.done),
         onPressed: () => Navigator.of(context).pop(),
       ),
     );

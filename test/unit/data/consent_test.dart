@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('Consent', () {
-    final encode = ConsentEncoder.encode;
-    final decode = ConsentEncoder.decode;
+    const encode = ConsentEncoder.encode;
+    const decode = ConsentEncoder.decode;
 
     final data = readMapData('consent');
     test('check data', () async {
@@ -80,7 +80,7 @@ void main() {
       });
 
       test('min', () async {
-        final expected = Consent(
+        const expected = Consent(
           id: 'mock-id',
           legitimateInterest: true,
           sources: ConsentSources(
@@ -109,7 +109,7 @@ void main() {
       });
 
       test('full', () async {
-        final expected = Consent(
+        const expected = Consent(
           id: 'mock-id',
           legitimateInterest: true,
           sources: ConsentSources(

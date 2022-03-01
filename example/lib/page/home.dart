@@ -48,16 +48,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exponea Demo'),
+        title: const Text('Exponea Demo'),
       ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(maxWidth: 400),
             child: ListView(
               children: [
                 ListTile(
-                  title: Text('Push events'),
+                  title: const Text('Push events'),
                   subtitle: ValueListenableBuilder<String>(
                     valueListenable: _pushController,
                     builder: (context, value, _) => Text(value),
@@ -67,80 +67,80 @@ class _HomePageState extends State<HomePage> {
                   ListTile(
                     title: ElevatedButton(
                       onPressed: () => _requestIosPushAuthorization(context),
-                      child: Text('Request Push Authorization'),
+                      child: const Text('Request Push Authorization'),
                     ),
                   ),
                 ListTile(
                   title: ElevatedButton(
                     onPressed: () => _checkIsConfigured(context),
-                    child: Text('Configured?'),
+                    child: const Text('Configured?'),
                   ),
                 ),
                 ListTile(
-                  title: Text('Customer'),
+                  title: const Text('Customer'),
                   subtitle: Row(
                     children: [
                       ElevatedButton(
                         onPressed: () => _getCustomerCookie(context),
-                        child: Text('Get Cookie'),
+                        child: const Text('Get Cookie'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _identifyCustomer(context),
-                        child: Text('Identify'),
+                        child: const Text('Identify'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _anonymize(context),
-                        child: Text('Anonymize'),
+                        child: const Text('Anonymize'),
                       ),
                     ],
                   ),
                 ),
                 ListTile(
-                  title: Text('Default Properties'),
+                  title: const Text('Default Properties'),
                   subtitle: Row(
                     children: [
                       ElevatedButton(
                         onPressed: () => _getDefaultProps(context),
-                        child: Text('Get'),
+                        child: const Text('Get'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _setDefaultProps(context),
-                        child: Text('Set'),
+                        child: const Text('Set'),
                       ),
                     ],
                   ),
                 ),
                 ListTile(
-                  title: Text('Fetch'),
+                  title: const Text('Fetch'),
                   subtitle: Row(
                     children: [
                       ElevatedButton(
                         onPressed: () => _fetchConsents(context),
-                        child: Text('Consents'),
+                        child: const Text('Consents'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _fetchRecommendations(context),
-                        child: Text('Recommendations'),
+                        child: const Text('Recommendations'),
                       ),
                     ],
                   ),
                 ),
                 ListTile(
-                  title: Text('Flush Mode'),
+                  title: const Text('Flush Mode'),
                   subtitle: Row(
                     children: [
                       ElevatedButton(
                         onPressed: () => _getFlushMode(context),
-                        child: Text('Get'),
+                        child: const Text('Get'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _setFlushMode(context),
-                        child: Text('Set'),
+                        child: const Text('Set'),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -168,21 +168,21 @@ class _HomePageState extends State<HomePage> {
                 ListTile(
                   title: ElevatedButton(
                     onPressed: () => _flush(context),
-                    child: Text('Flush'),
+                    child: const Text('Flush'),
                   ),
                 ),
                 ListTile(
-                  title: Text('Flush Period'),
+                  title: const Text('Flush Period'),
                   subtitle: Row(
                     children: [
                       ElevatedButton(
                         onPressed: () => _getFlushPeriod(context),
-                        child: Text('Get'),
+                        child: const Text('Get'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _setFlushPeriod(context),
-                        child: Text('Set'),
+                        child: const Text('Set'),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -211,12 +211,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 ListTile(
-                  title: Text('Track'),
+                  title: const Text('Track'),
                   subtitle: Row(
                     children: [
                       ElevatedButton(
                         onPressed: () => _trackEvent(context),
-                        child: Text('Event'),
+                        child: const Text('Event'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                             (widget.config.automaticSessionTracking ?? true)
                                 ? null
                                 : () => _trackSessionStart(context),
-                        child: Text('Session Start'),
+                        child: const Text('Session Start'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
@@ -232,51 +232,51 @@ class _HomePageState extends State<HomePage> {
                             (widget.config.automaticSessionTracking ?? true)
                                 ? null
                                 : () => _trackSessionEnd(context),
-                        child: Text('Session End'),
+                        child: const Text('Session End'),
                       ),
                     ],
                   ),
                 ),
                 ListTile(
-                  title: Text('Trigger in-app message by event:'),
+                  title: const Text('Trigger in-app message by event:'),
                   subtitle: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
                         onPressed: () =>
                             _triggerInAppMessage(context, 'test_msg_modal'),
-                        child: Text('Modal'),
+                        child: const Text('Modal'),
                       ),
                       ElevatedButton(
                         onPressed: () => _triggerInAppMessage(
                             context, 'test_msg_fullscreen'),
-                        child: Text('Fullscreen'),
+                        child: const Text('Fullscreen'),
                       ),
                       ElevatedButton(
                         onPressed: () =>
                             _triggerInAppMessage(context, 'test_msg_slide'),
-                        child: Text('Slide-in'),
+                        child: const Text('Slide-in'),
                       ),
                       ElevatedButton(
                         onPressed: () =>
                             _triggerInAppMessage(context, 'test_msg_alert'),
-                        child: Text('Alert'),
+                        child: const Text('Alert'),
                       ),
                     ],
                   ),
                 ),
                 ListTile(
-                  title: Text('Log Level'),
+                  title: const Text('Log Level'),
                   subtitle: Row(
                     children: [
                       ElevatedButton(
                         onPressed: () => _getLogLevel(context),
-                        child: Text('Get'),
+                        child: const Text('Get'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _setLogLevel(context),
-                        child: Text('Set'),
+                        child: const Text('Set'),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -324,9 +324,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _identifyCustomer(BuildContext context) =>
       _runAndShowResult(context, () async {
-        // final email = 'user.${Random().nextInt(10000)}@test.com';
-        final email = 'user.125@test.com';
-        final customer = Customer(
+        const email = 'test-user-1@test.com';
+        const customer = Customer(
           ids: {
             'registered': email,
           },
@@ -401,7 +400,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _trackEvent(BuildContext context) =>
       _runAndShowResult(context, () async {
-        final event = Event(
+        const event = Event(
           name: 'test_name',
           properties: {
             'bool': true,
@@ -446,7 +445,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _runAndShowResult(
     BuildContext context,
-    Future<dynamic> block(),
+    Future<dynamic> Function() block,
   ) async {
     String msg;
     try {
@@ -461,7 +460,7 @@ class _HomePageState extends State<HomePage> {
     }
     final snackBar = SnackBar(
       content: Text(msg),
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

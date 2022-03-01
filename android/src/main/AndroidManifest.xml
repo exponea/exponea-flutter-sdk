@@ -3,9 +3,8 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <meta-data android:name="ExponeaFlutterSDK" android:value="true" />
-
     <application>
+        <meta-data android:name="ExponeaFlutterSDK" android:value="true" />
         <receiver
             android:name=".ExponeaPushReceiver"
             android:enabled="true"

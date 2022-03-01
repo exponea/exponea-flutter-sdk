@@ -7,10 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:uni_links/uni_links.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -33,6 +35,7 @@ class _MyAppState extends State<MyApp> {
         _showSnackBarMessage('App opened with link: $initialLink');
       }
     } on PlatformException catch (err) {
+      // ignore: avoid_print
       print('initialLink: $err');
     }
   }
@@ -61,7 +64,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       scaffoldMessengerKey: _scaffoldMessengerKey,
       theme: ThemeData.from(
-        colorScheme: ColorScheme.light(
+        colorScheme: const ColorScheme.light(
           primary: Colors.amber,
           secondary: Colors.blueAccent,
         ),

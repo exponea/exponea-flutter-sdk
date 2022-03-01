@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('ReceivedPush', () {
-    final encode = ReceivedPushEncoder.encode;
-    final decode = ReceivedPushEncoder.decode;
+    const encode = ReceivedPushEncoder.encode;
+    const decode = ReceivedPushEncoder.decode;
 
     final data = readMapData('push_received');
     test('check data', () async {
@@ -25,7 +25,7 @@ void main() {
       });
 
       test('full data', () async {
-        final push = ReceivedPush(
+        const push = ReceivedPush(
           data: {
             'test': true,
             'num': 1.23,
@@ -66,7 +66,7 @@ void main() {
       });
 
       test('full data', () async {
-        final expected = ReceivedPush(
+        const expected = ReceivedPush(
           data: {
             'test': true,
             'num': 1.23,

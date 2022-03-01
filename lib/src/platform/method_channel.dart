@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 
-import '../data/encoder/configuration.dart';
 import '../data/encoder/main.dart';
 import '../data/model/configuration.dart';
 import '../data/model/configuration_change.dart';
@@ -163,23 +162,21 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
     return res;
   }
 
+  @override
   Stream<OpenedPush> get openedPushStream {
-    if (_openedPushStream == null) {
-      _openedPushStream = _openedPushEventChannel
-          .receiveBroadcastStream()
-          .cast<Map<dynamic, dynamic>>()
-          .map((event) => OpenedPushEncoder.decode(event));
-    }
+    _openedPushStream ??= _openedPushEventChannel
+        .receiveBroadcastStream()
+        .cast<Map<dynamic, dynamic>>()
+        .map((event) => OpenedPushEncoder.decode(event));
     return _openedPushStream!;
   }
 
+  @override
   Stream<ReceivedPush> get receivedPushStream {
-    if (_receivedPushStream == null) {
-      _receivedPushStream = _receivedPushEventChannel
-          .receiveBroadcastStream()
-          .cast<Map<dynamic, dynamic>>()
-          .map((event) => ReceivedPushEncoder.decode(event));
-    }
+    _receivedPushStream ??= _receivedPushEventChannel
+        .receiveBroadcastStream()
+        .cast<Map<dynamic, dynamic>>()
+        .map((event) => ReceivedPushEncoder.decode(event));
     return _receivedPushStream!;
   }
 

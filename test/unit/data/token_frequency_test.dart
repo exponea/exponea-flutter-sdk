@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('TokenFrequency', () {
-    final encode = TokenFrequencyEncoder.encode;
-    final decode = TokenFrequencyEncoder.decode;
+    const encode = TokenFrequencyEncoder.encode;
+    const decode = TokenFrequencyEncoder.decode;
 
     final data = readStringData('token_frequency');
     test('check data', () async {

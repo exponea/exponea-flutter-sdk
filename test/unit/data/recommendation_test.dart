@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('Recommendation', () {
-    final encode = RecommendationEncoder.encode;
-    final decode = RecommendationEncoder.decode;
+    const encode = RecommendationEncoder.encode;
+    const decode = RecommendationEncoder.decode;
 
     final data = readMapData('recommendation');
     test('check data', () async {
@@ -20,7 +20,7 @@ void main() {
 
     group('encode', () {
       test('min', () async {
-        final recommendation = Recommendation(
+        const recommendation = Recommendation(
           engineName: "mock-engine",
           itemId: "mock-item",
           recommendationId: "mock-rec-id",
@@ -31,7 +31,7 @@ void main() {
       });
 
       test('full', () async {
-        final recommendation = Recommendation(
+        const recommendation = Recommendation(
           engineName: "mock-engine",
           itemId: "mock-item",
           recommendationId: "mock-rec-id",
@@ -102,8 +102,8 @@ void main() {
   });
 
   group('RecommendationOptions', () {
-    final encode = RecommendationOptionsEncoder.encode;
-    final decode = RecommendationOptionsEncoder.decode;
+    const encode = RecommendationOptionsEncoder.encode;
+    const decode = RecommendationOptionsEncoder.decode;
 
     final data = readMapData('recommendation_options');
     test('check data', () async {
@@ -116,7 +116,7 @@ void main() {
 
     group('encode', () {
       test('min', () async {
-        final options = RecommendationOptions(
+        const options = RecommendationOptions(
           id: 'mock-id',
           fillWithRandom: true,
         );
@@ -124,7 +124,7 @@ void main() {
       });
 
       test('full', () async {
-        final options = RecommendationOptions(
+        const options = RecommendationOptions(
           id: 'mock-id',
           fillWithRandom: false,
           size: 5,
@@ -160,7 +160,7 @@ void main() {
       });
 
       test('min', () async {
-        final expected = RecommendationOptions(
+        const expected = RecommendationOptions(
           id: 'mock-id',
           fillWithRandom: true,
         );
@@ -176,7 +176,7 @@ void main() {
       });
 
       test('full', () async {
-        final expected = RecommendationOptions(
+        const expected = RecommendationOptions(
           id: 'mock-id',
           fillWithRandom: false,
           size: 5,

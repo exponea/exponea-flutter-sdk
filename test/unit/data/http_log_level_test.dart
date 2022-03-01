@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('HttpLoggingLevel', () {
-    final encode = HttpLoggingLevelEncoder.encode;
-    final decode = HttpLoggingLevelEncoder.decode;
+    const encode = HttpLoggingLevelEncoder.encode;
+    const decode = HttpLoggingLevelEncoder.decode;
 
     final data = readStringData('http_log_level');
     test('check data', () async {

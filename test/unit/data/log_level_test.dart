@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('LogLevel', () {
-    final encode = LogLevelEncoder.encode;
-    final decode = LogLevelEncoder.decode;
+    const encode = LogLevelEncoder.encode;
+    const decode = LogLevelEncoder.decode;
 
     final data = readStringData('log_level');
     test('check data', () async {

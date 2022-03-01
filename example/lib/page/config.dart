@@ -20,10 +20,10 @@ class ConfigPage extends StatefulWidget {
 }
 
 class _ConfigPageState extends State<ConfigPage> {
-  static const SP_KEY_PROJECT = 'project_token';
-  static const SP_KEY_AUTH = 'auth_token';
-  static const SP_KEY_BASE_URL = 'base_url';
-  static const SP_KEY_SESSION_TRACKING = 'session_tracking';
+  static const _spKeyProject = 'project_token';
+  static const _spKeyAuth = 'auth_token';
+  static const _spKeyBaseUrl = 'base_url';
+  static const _spKeySessionTracking = 'session_tracking';
 
   final _loading = ValueNotifier(false);
   late final TextEditingController _projectTokenController;
@@ -38,11 +38,11 @@ class _ConfigPageState extends State<ConfigPage> {
     _baseUrlController = TextEditingController(text: '');
     _sessionTrackingController = ValueNotifier(true);
     SharedPreferences.getInstance().then((sp) async {
-      _projectTokenController.text = sp.getString(SP_KEY_PROJECT) ?? '';
-      _authTokenController.text = sp.getString(SP_KEY_AUTH) ?? '';
-      _baseUrlController.text = sp.getString(SP_KEY_BASE_URL) ?? '';
+      _projectTokenController.text = sp.getString(_spKeyProject) ?? '';
+      _authTokenController.text = sp.getString(_spKeyAuth) ?? '';
+      _baseUrlController.text = sp.getString(_spKeyBaseUrl) ?? '';
       _sessionTrackingController.value =
-          sp.getBool(SP_KEY_SESSION_TRACKING) ?? true;
+          sp.getBool(_spKeySessionTracking) ?? true;
     });
     super.initState();
   }
@@ -51,49 +51,51 @@ class _ConfigPageState extends State<ConfigPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exponea Demo Configuration'),
+        title: const Text('Exponea Demo Configuration'),
       ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Column(
               children: [
                 ListTile(
                   title: TextField(
                     controller: _projectTokenController,
-                    decoration: InputDecoration(labelText: 'Project Token'),
+                    decoration: const InputDecoration(
+                      labelText: 'Project Token',
+                    ),
                   ),
                 ),
                 ListTile(
                   title: TextField(
                     controller: _authTokenController,
-                    decoration: InputDecoration(labelText: 'Auth Token'),
+                    decoration: const InputDecoration(labelText: 'Auth Token'),
                   ),
                 ),
                 ListTile(
                   title: TextField(
                     controller: _baseUrlController,
-                    decoration: InputDecoration(labelText: 'Base URL'),
+                    decoration: const InputDecoration(labelText: 'Base URL'),
                   ),
                 ),
                 ValueListenableBuilder<bool>(
                   valueListenable: _sessionTrackingController,
                   builder: (context, enabled, _) => SwitchListTile(
-                    title: Text('Automatic Session Tracking'),
+                    title: const Text('Automatic Session Tracking'),
                     value: enabled,
                     onChanged: (value) =>
                         _sessionTrackingController.value = value,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 ValueListenableBuilder<bool>(
                   valueListenable: _loading,
                   builder: (context, loading, _) => loading
-                      ? CircularProgressIndicator()
+                      ? const CircularProgressIndicator()
                       : ElevatedButton(
                           onPressed: () => _configure(context),
-                          child: Text('Configure'),
+                          child: const Text('Configure'),
                         ),
                 ),
               ],
@@ -113,10 +115,10 @@ class _ConfigPageState extends State<ConfigPage> {
     final sessionTracking = _sessionTrackingController.value;
 
     final sp = await SharedPreferences.getInstance();
-    await sp.setString(SP_KEY_PROJECT, projectToken);
-    await sp.setString(SP_KEY_AUTH, authToken);
-    await sp.setString(SP_KEY_BASE_URL, rawBaseUrl);
-    await sp.setBool(SP_KEY_SESSION_TRACKING, sessionTracking);
+    await sp.setString(_spKeyProject, projectToken);
+    await sp.setString(_spKeyAuth, authToken);
+    await sp.setString(_spKeyBaseUrl, rawBaseUrl);
+    await sp.setBool(_spKeySessionTracking, sessionTracking);
 
     final config = ExponeaConfiguration(
       projectToken: projectToken,
@@ -126,7 +128,7 @@ class _ConfigPageState extends State<ConfigPage> {
       flushMaxRetries: 11,
       automaticSessionTracking: sessionTracking,
       sessionTimeout: 22.5,
-      defaultProperties: {
+      defaultProperties: const {
         'string': 'string',
         'double': 1.2,
         'int': 10,
@@ -140,7 +142,7 @@ class _ConfigPageState extends State<ConfigPage> {
       //     ExponeaProject(projectToken: '2', authorizationToken: '22'),
       //   ],
       // },
-      android: AndroidExponeaConfiguration(
+      android: const AndroidExponeaConfiguration(
         automaticPushNotifications: true,
         httpLoggingLevel: HttpLoggingLevel.body,
         pushChannelDescription: 'test-channel-desc',
@@ -150,7 +152,7 @@ class _ConfigPageState extends State<ConfigPage> {
         // pushAccentColor: 10,
         // pushIcon: 11,
       ),
-      ios: IOSExponeaConfiguration(
+      ios: const IOSExponeaConfiguration(
         requirePushAuthorization: true,
         appGroup: 'group.com.exponea.ExponeaSDK-Example2',
       ),
@@ -158,7 +160,7 @@ class _ConfigPageState extends State<ConfigPage> {
     try {
       final configured = await _plugin.configure(config);
       if (!configured) {
-        final snackBar = SnackBar(
+        const snackBar = SnackBar(
           content: Text('SDK was already configured'),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

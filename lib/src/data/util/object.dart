@@ -1,5 +1,5 @@
 extension ObjectExt<T> on T {
-  R let<R>(R function(T value)) => function.call(this);
+  R let<R>(R Function(T value) function) => function.call(this);
 }
 
 extension MapExt on Map<dynamic, dynamic> {

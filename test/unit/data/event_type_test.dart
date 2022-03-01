@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('EventType', () {
-    final encode = EventTypeEncoder.encode;
-    final decode = EventTypeEncoder.decode;
+    const encode = EventTypeEncoder.encode;
+    const decode = EventTypeEncoder.decode;
 
     final data = readStringData('event_type');
     test('check data', () async {

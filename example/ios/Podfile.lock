@@ -1,15 +1,15 @@
 PODS:
-  - AnyCodable-FlightSchool (0.4.1)
+  - AnyCodable-FlightSchool (0.6.3)
   - exponea (0.0.1):
-    - AnyCodable-FlightSchool (~> 0.4.0)
-    - ExponeaSDK (~> 2.11.1)
+    - AnyCodable-FlightSchool (~> 0.6.3)
+    - ExponeaSDK (~> 2.11.3)
     - Flutter
-  - ExponeaSDK (2.11.1)
+  - ExponeaSDK (2.11.3)
   - ExponeaSDK-Notifications (2.11.1)
   - Flutter (1.0.0)
-  - Nimble (8.0.7)
+  - Nimble (9.2.1)
   - Quick (4.0.0)
-  - shared_preferences (0.0.1):
+  - shared_preferences_ios (0.0.1):
     - Flutter
   - uni_links (0.0.1):
     - Flutter
@@ -18,9 +18,9 @@ DEPENDENCIES:
   - exponea (from `.symlinks/plugins/exponea/ios`)
   - ExponeaSDK-Notifications
   - Flutter (from `Flutter`)
-  - Nimble (= 8.0.7)
+  - Nimble (= 9.2.1)
   - Quick (= 4.0.0)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
 
 SPEC REPOS:
@@ -36,22 +36,22 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/exponea/ios"
   Flutter:
     :path: Flutter
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
 
 SPEC CHECKSUMS:
-  AnyCodable-FlightSchool: d27283db6e9feaddb0fa73a25835e5cdf41b3213
-  exponea: 90027dc1451b5cf79f3a293e770709601d3523ed
-  ExponeaSDK: 0d94e874bd71c63e730443292a4263a47d6d0b83
+  AnyCodable-FlightSchool: 1c9890be5884140c60da5fde1b66380dec4c244a
+  exponea: bc5a7ee34d24a51530fa679b49488916ddca0277
+  ExponeaSDK: 0b5ada84e3d643af657662ec87389af378cd009b
   ExponeaSDK-Notifications: 6a616340c122ce1fa5dddc76495d375c434948af
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
-  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
 
-PODFILE CHECKSUM: 7d1d5194d74e70f57aba3a9a46925dbdf19e6d3e
+PODFILE CHECKSUM: f747eaa5345ceba3fe7c164df391627cce65a161
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3

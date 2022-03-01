@@ -8,7 +8,7 @@ import com.exponea.sdk.models.ExponeaProject
 import java.lang.Exception
 
 @Suppress("UNCHECKED_CAST")
-internal class ExponeaConfigurationParser {
+class ExponeaConfigurationParser {
     fun parseConfig(map: Map<String, Any?>): ExponeaConfiguration {
         return ExponeaConfiguration().apply {
             projectToken = map.getRequired("projectToken")

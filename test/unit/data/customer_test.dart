@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('Customer', () {
-    final encode = CustomerEncoder.encode;
-    final decode = CustomerEncoder.decode;
+    const encode = CustomerEncoder.encode;
+    const decode = CustomerEncoder.decode;
 
     final data = readMapData('customer');
     test('check data', () async {
@@ -20,12 +20,12 @@ void main() {
 
     group('encode', () {
       test('empty', () async {
-        final customer = Customer();
+        const customer = Customer();
         expect(encode(customer), emptyData);
       });
 
       test('with email', () async {
-        final customer = Customer(
+        const customer = Customer(
           ids: {
             'registered': 'test@mail.com',
           },
@@ -34,7 +34,7 @@ void main() {
       });
 
       test('full', () async {
-        final customer = Customer(
+        const customer = Customer(
           ids: {
             'registered': 'test@mail.com',
           },

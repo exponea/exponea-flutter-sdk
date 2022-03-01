@@ -41,7 +41,7 @@ target 'ExponeaTests' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   pod 'Quick', '4.0.0'
-  pod 'Nimble', '8.0.7'
+  pod 'Nimble', '9.2.1'
 end
 
 target 'ExampleNotificationService' do

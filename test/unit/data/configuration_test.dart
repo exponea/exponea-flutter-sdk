@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('ExponeaConfiguration', () {
-    final encode = ExponeaConfigurationEncoder.encode;
-    final decode = ExponeaConfigurationEncoder.decode;
+    const encode = ExponeaConfigurationEncoder.encode;
+    const decode = ExponeaConfigurationEncoder.decode;
 
     final data = readMapData('configuration');
     test('check data', () async {
@@ -19,7 +19,7 @@ void main() {
 
     group('encode', () {
       test('minimal', () async {
-        final config = ExponeaConfiguration(
+        const config = ExponeaConfiguration(
           projectToken: 'mock-project-token',
           authorizationToken: 'mock-auth-token',
         );
@@ -27,7 +27,7 @@ void main() {
       });
 
       test('full', () async {
-        final config = ExponeaConfiguration(
+        const config = ExponeaConfiguration(
           projectToken: 'mock-project-token',
           authorizationToken: 'mock-auth-token',
           baseUrl: 'http://mock.base.url.com',

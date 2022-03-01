@@ -2,6 +2,11 @@
 
 Demonstrates how to use the exponea plugin.
 
+# flavors
+
+This example application contains 2 flavors: `gms` and `hms`.
+So make to use `---flavor gms` or `--flavor hms` when running the app.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

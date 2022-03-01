@@ -6,8 +6,8 @@ import 'base.dart';
 
 void main() {
   group('Event', () {
-    final encode = EventEncoder.encode;
-    final decode = EventEncoder.decode;
+    const encode = EventEncoder.encode;
+    const decode = EventEncoder.decode;
 
     final data = readMapData('event');
     test('check data', () async {
@@ -20,14 +20,14 @@ void main() {
 
     group('encode', () {
       test('empty', () async {
-        final event = Event(name: 'test_event');
+        const event = Event(name: 'test_event');
         expect(encode(event), emptyData);
       });
 
       test('full', () async {
         final event = Event(
           name: 'test_event',
-          properties: {
+          properties: const {
             'str_test': 'abc-123',
             'double_test': 123.987,
             'int_test': 109,

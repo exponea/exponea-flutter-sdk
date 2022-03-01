@@ -4,15 +4,15 @@ version '1.0.0-SNAPSHOT'
 buildscript {
     ext {
         androidGradlePluginVersion = '4.1.0'
-        kotlinVersion = '1.3.50'
+        kotlinVersion = '1.5.30'
 
-        exponeaSdkVersion = '2.9.5'
+        exponeaSdkVersion = '3.0.3'
         gsonVersion = '2.8.6'
     }
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -24,7 +24,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -32,7 +32,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -47,6 +47,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.exponea.sdk:sdk:$exponeaSdkVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
-
-    testImplementation 'junit:junit:4.12'
 }
