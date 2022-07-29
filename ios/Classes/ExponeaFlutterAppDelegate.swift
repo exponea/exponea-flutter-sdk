@@ -16,11 +16,6 @@ open class ExponeaFlutterAppDelegate: FlutterAppDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         super.application(application, didFinishLaunchingWithOptions: launchOptions)
-        // process push notification from launch options - when app is not running while push is received
-        if let launchOptions = launchOptions,
-           let userInfo = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
-            SwiftExponeaPlugin.handlePushNotificationOpened(userInfo: userInfo)
-        }
         UNUserNotificationCenter.current().delegate = self
         return true
     }
