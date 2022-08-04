@@ -86,7 +86,7 @@ dependencies {
 
     // tests :
     testImplementation 'junit:junit:4.12'
-    testImplementation 'com.exponea.sdk:sdk:3.0.3'
+    testImplementation 'com.exponea.sdk:sdk:3.0.6'
     testImplementation 'com.google.code.gson:gson:2.8.6'
 }
 
