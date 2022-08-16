@@ -1,21 +1,24 @@
 PODS:
   - AnyCodable-FlightSchool (0.6.3)
   - exponea (0.0.1):
-    - AnyCodable-FlightSchool (~> 0.6.3)
-    - ExponeaSDK (~> 2.11.3)
+    - AnyCodable-FlightSchool (= 0.6.3)
+    - ExponeaSDK (= 2.12.0)
     - Flutter
-  - ExponeaSDK (2.11.3)
-  - ExponeaSDK-Notifications (2.11.1)
+  - ExponeaSDK (2.12.0):
+    - SwiftSoup (= 2.4.3)
+  - ExponeaSDK-Notifications (2.12.0)
   - Flutter (1.0.0)
   - Nimble (9.2.1)
   - Quick (4.0.0)
   - shared_preferences_ios (0.0.1):
     - Flutter
+  - SwiftSoup (2.4.3)
   - uni_links (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - exponea (from `.symlinks/plugins/exponea/ios`)
+  - "ExponeaSDK (from `git@github.com:panaxeo/exponea_ios-sdk.git`, branch `fix/expi-245`)"
   - ExponeaSDK-Notifications
   - Flutter (from `Flutter`)
   - Nimble (= 9.2.1)
@@ -26,14 +29,17 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AnyCodable-FlightSchool
-    - ExponeaSDK
     - ExponeaSDK-Notifications
     - Nimble
     - Quick
+    - SwiftSoup
 
 EXTERNAL SOURCES:
   exponea:
     :path: ".symlinks/plugins/exponea/ios"
+  ExponeaSDK:
+    :branch: fix/expi-245
+    :git: "git@github.com:panaxeo/exponea_ios-sdk.git"
   Flutter:
     :path: Flutter
   shared_preferences_ios:
@@ -41,17 +47,23 @@ EXTERNAL SOURCES:
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
 
+CHECKOUT OPTIONS:
+  ExponeaSDK:
+    :commit: 4eab4be581d7835527716bd1c2b9f608f34468cc
+    :git: "git@github.com:panaxeo/exponea_ios-sdk.git"
+
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 1c9890be5884140c60da5fde1b66380dec4c244a
-  exponea: bc5a7ee34d24a51530fa679b49488916ddca0277
-  ExponeaSDK: 0b5ada84e3d643af657662ec87389af378cd009b
-  ExponeaSDK-Notifications: 6a616340c122ce1fa5dddc76495d375c434948af
+  exponea: 968734f6fa19d07e89a6be4be9bc81f27bd119a1
+  ExponeaSDK: a458d3ac7357ca09f89e9df9536704f91a3d53f2
+  ExponeaSDK-Notifications: 2720402056330b4d377d8cb905a229cc017fd3f5
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  SwiftSoup: 3384f2e618cfc1b3cbc7852c16692fe8de13fb8f
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
 
-PODFILE CHECKSUM: f747eaa5345ceba3fe7c164df391627cce65a161
+PODFILE CHECKSUM: 1e92a271f85cb1d6c232098962d336b5be143088
 
 COCOAPODS: 1.11.3

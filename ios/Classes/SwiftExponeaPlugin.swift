@@ -2,6 +2,7 @@ import Flutter
 import UIKit
 import ExponeaSDK
 import UserNotifications
+import Foundation
 
 private let channelName = "com.exponea"
 private let openedPushStreamName = "\(channelName)/opened_push"
@@ -38,8 +39,16 @@ private let errorCode = "ExponeaPlugin"
 protocol IsExponeaFlutterSDK {
 }
 
+@objc(ExponeaFlutterVersion)
+public class ExponeaFlutterVersion: NSObject, ExponeaVersionProvider {
+    required public override init() { }
+    public func getVersion() -> String {
+        "1.0.0"
+    }
+}
+
 public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
-    
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
         let instance = SwiftExponeaPlugin()
@@ -51,9 +60,9 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         let receivedPushEventChannel = FlutterEventChannel(name: receivedPushStreamName, binaryMessenger: registrar.messenger())
         receivedPushEventChannel.setStreamHandler(ReceivedPushStreamHandler.newInstance())
     }
-    
+
     var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
-    
+
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case methodConfigure:
@@ -103,7 +112,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func configure(_ args: Any?, with result: FlutterResult) {
         guard !exponeaInstance.isConfigured else {
             result(false)
@@ -130,16 +139,16 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func isConfigured(with result: FlutterResult) {
         result(exponeaInstance.isConfigured)
     }
-    
+
     private func getCustomerCookie(with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         result(exponeaInstance.customerCookie)
     }
-    
+
     private func identifyCustomer(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         do {
@@ -152,7 +161,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func anonymize(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         do {
@@ -170,12 +179,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func getDefaultProperties(with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         result(exponeaInstance.defaultProperties)
     }
-    
+
     private func setDefaultProperties(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         do {
@@ -188,20 +197,20 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func flush(with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         exponeaInstance.flushData()
         result(nil)
     }
-    
+
     private func getFlushMode(with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         let encoder = FlushModeEncoder()
         let mode = encoder.encode(exponeaInstance.flushingMode)
         result(mode)
     }
-    
+
     private func setFlushMode(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         let encoder = FlushModeEncoder()
@@ -215,7 +224,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func getFlushPeriod(with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         switch exponeaInstance.flushingMode {
@@ -226,7 +235,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func setFlushPeriod(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         let period = args as! Int
@@ -239,7 +248,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func trackEvent(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         do {
@@ -252,7 +261,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(error)
         }
     }
-    
+
     private func trackSessionStart(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         let timestamp = args as? Double
@@ -264,7 +273,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         exponeaInstance.trackSessionStart()
         result(nil)
     }
-    
+
     private func trackSessionEnd(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         let timestamp = args as? Double
@@ -276,7 +285,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         exponeaInstance.trackSessionEnd()
         result(nil)
     }
-    
+
     private func fetchConsents(with result: @escaping FlutterResult) {
         guard requireConfigured(with: result) else { return }
         exponeaInstance.fetchConsents { fetchResult in
@@ -376,7 +385,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         }
         return true
     }
-    
+
 }
 
 extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
@@ -390,7 +399,7 @@ extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
             return
         }
-        
+
         let openedPush = OpenedPush(
             action: PushAction.from(actionType: action),
             url: value,
@@ -398,33 +407,33 @@ extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
         )
         _ = OpenedPushStreamHandler.handle(push: openedPush)
     }
-    
+
     public func silentPushNotificationReceived(extraData: [AnyHashable: Any]?) {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: extraData ?? [:], options: []),
               let rawData = try? JSONDecoder.snakeCase.decode(RawData.self, from: jsonData) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
             return
         }
-        
+
         let receivedPush = ReceivedPush(data: rawData.data)
         _ = ReceivedPushStreamHandler.handle(push: receivedPush)
     }
-    
+
     @objc
     public static func handlePushNotificationToken(deviceToken: Data) {
         ExponeaSDK.Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)
     }
-    
+
     @objc
     public static func handlePushNotificationOpened(userInfo: [AnyHashable: Any]) {
         ExponeaSDK.Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)
     }
-    
+
     @objc
     public static func handlePushNotificationOpened(response: UNNotificationResponse) {
         ExponeaSDK.Exponea.shared.handlePushNotificationOpened(response: response)
     }
-    
+
     @objc
     static func continueUserActivity(_ userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
