@@ -1,6 +1,15 @@
-## Release Notes
-
 ## :arrow_double_up: [SDK version update guide](./documentation/VERSION_UPDATE.md)
+
+## Release Notes
+## Release Notes for 1.1.0
+#### September 02, 2022
+* Features
+  * Added a support of HTML InApp messages
+  * Shows a warn log for developer if old SDK version is used
+* Bug Fixes
+  * Fixed: Version upgrade guide is linked from README and Release Notes documentations
+  * Fixed: License established to MIT
+  * Fixed: Duplicated push open action track is not called on app cold start
 
 ## Release Notes for 1.0.0
 #### March 23, 2022
