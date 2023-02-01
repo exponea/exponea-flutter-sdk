@@ -32,6 +32,9 @@ class ExponeaConfigurationParser {
             map.getOptional<Boolean>("automaticSessionTracking")?.let {
                 automaticSessionTracking = it
             }
+            map.getOptional<Boolean>("allowDefaultCustomerProperties")?.let {
+                allowDefaultCustomerProperties = it
+            }
             map.getOptional<String>("pushTokenTrackingFrequency")?.let {
                 try {
                     tokenTrackFrequency = ExponeaConfiguration.TokenFrequency.valueOf(it)

@@ -14,7 +14,7 @@ exponea: x.y.z
 * `$ cd ios`
 * `$ pod install`
 
-Minimal supported iOS version for Exponea SDK is 10.3, you may need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '10.3'`, or higher.
+Minimal supported iOS version for Exponea SDK is 11.0, you may need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '11.0'`, or higher.
 
 ### Android setup
 You'll most likely need to enable multidex. Edit `android/app/build.gradle` and add `multiDexEnabled true` to android defaultConfig.

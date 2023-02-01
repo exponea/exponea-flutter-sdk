@@ -134,6 +134,7 @@ class _ConfigPageState extends State<ConfigPage> {
         'int': 10,
         'bool': true,
       },
+      allowDefaultCustomerProperties: false,
       // projectMapping: {
       //   EventType.banner: [
       //     ExponeaProject(projectToken: '1', authorizationToken: '11'),
@@ -165,6 +166,7 @@ class _ConfigPageState extends State<ConfigPage> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
+      _plugin.setLogLevel(LogLevel.verbose);
       widget.doneCallback.call(config);
     } on PlatformException catch (err) {
       final snackBar = SnackBar(

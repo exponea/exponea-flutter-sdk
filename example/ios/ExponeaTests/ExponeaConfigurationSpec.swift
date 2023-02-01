@@ -54,6 +54,8 @@ class ExponeaConfigurationParserSpec: QuickSpec {
                 expect(notifTracking.appGroup).to(equal(""))
                 expect(notifTracking.requirePushAuthorization).to(equal(true))
                 expect(notifTracking.isEnabled).to(equal(true))
+                
+                expect(config.allowDefaultCustomerProperties).to(beNil())
             }
             
             it("full") {
@@ -96,6 +98,8 @@ class ExponeaConfigurationParserSpec: QuickSpec {
                 expect(notifTracking.appGroup).to(equal("mock-app-group"))
                 expect(notifTracking.requirePushAuthorization).to(equal(false))
                 expect(notifTracking.delegate).to(beNil())
+                
+                expect(config.allowDefaultCustomerProperties).to(equal(true))
             }
         }
     }
