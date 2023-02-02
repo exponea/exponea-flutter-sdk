@@ -67,6 +67,10 @@ You'll need to set the Firebase server key so Exponea can use it to send push no
 ### That's it
 After these steps, you should be able to receive push notifications from Exponea. To learn how to send one, check a [Sending Push notifications guide](./PUSH_SEND.md).
 
+> **Quick Tip:** If you are integrating Exponea SDK to existing project, you may face an issue that your 'HmsMessageService' is not called automatically.
+> To retrieve a fresh Push token, you should consider to request a token manually as soon as possible after application start init.
+> Please read a HMS guide how to retrieve current Push token https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-client-dev-0000001050042041
+
 ## Huawei integration
 Newer phones manufactured by [Huawei](https://huaweimobileservices.com/) come with Huawei Mobile Services (HMS). It's a service used to deliver push _instead of_ Google's Firebase Cloud Messaging (FCM).
 
@@ -169,3 +173,22 @@ If battery optimization is on for devices with MIUI, it can make push notificati
 -   Turn off any battery optimizations in Settings->Battery & Performance you can
 -   Set the "No restrictions" option in battery saver options for your app
 -   And (probably) most important, turn off Memory and MIUI Optimization under Developer Options
+
+### Push notification token is missing after anonymization
+
+There is principal usage of `ExponeaPlugin().anonymize()` as a sign-out feature in some applications. Keep in mind that invoking of `anonymize` will remove also a Push notification token from storage. To load a current token, your application should retrieve a valid token manually before using any Push notification feature. So it may be called right after `anonymize` or before/after `identifyCustomer`, it depends on your Push notifications usage.
+
+```kotlin
+import android.os.Bundle
+import com.exponea.ExponeaPlugin
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            ExponeaPlugin.handleNewGmsToken(applicationContext, it)
+        }
+    }
+}
+```
