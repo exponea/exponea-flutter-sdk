@@ -72,5 +72,6 @@ class ConfigurationTest {
         assertEquals(config.sessionTimeout.toInt(), 20);
         assertEquals(config.automaticSessionTracking, true);
         assertEquals(config.tokenTrackFrequency, TokenFrequency.DAILY);
+        assertEquals(config.allowDefaultCustomerProperties, true);
     }
 }

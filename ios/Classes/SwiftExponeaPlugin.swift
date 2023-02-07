@@ -43,7 +43,7 @@ protocol IsExponeaFlutterSDK {
 public class ExponeaFlutterVersion: NSObject, ExponeaVersionProvider {
     required public override init() { }
     public func getVersion() -> String {
-        "1.1.0"
+        "1.2.0"
     }
 }
 
@@ -130,7 +130,8 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 pushNotificationTracking: config.pushNotificationTracking,
                 automaticSessionTracking: config.automaticSessionTracking,
                 defaultProperties: config.defaultProperties,
-                flushingSetup: config.flushingSetup
+                flushingSetup: config.flushingSetup,
+                allowDefaultCustomerProperties: config.allowDefaultCustomerProperties
             )
             exponeaInstance.pushNotificationsDelegate = self
             result(true)

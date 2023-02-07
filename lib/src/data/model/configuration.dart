@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:meta/meta.dart';
 
 import 'event_type.dart';
@@ -35,6 +37,9 @@ class ExponeaConfiguration {
   /// Defines how often should the SDK track push notification token to Exponea
   final TokenFrequency? pushTokenTrackingFrequency;
 
+  /// If true, default properties are applied also for 'identifyCustomer' event.
+  final bool? allowDefaultCustomerProperties;
+
   /// Platform specific settings for Android
   final AndroidExponeaConfiguration? android;
 
@@ -51,6 +56,7 @@ class ExponeaConfiguration {
     this.sessionTimeout,
     this.automaticSessionTracking,
     this.pushTokenTrackingFrequency,
+    this.allowDefaultCustomerProperties,
     this.android,
     this.ios,
   });

@@ -46,6 +46,7 @@ void main() {
             "array": ["value1", "value2"],
             "object": {"key": "value"},
           },
+          allowDefaultCustomerProperties: true,
           flushMaxRetries: 10,
           sessionTimeout: 20,
           automaticSessionTracking: true,
@@ -115,6 +116,7 @@ void main() {
         expect(decoded.flushMaxRetries, 10);
         expect(decoded.sessionTimeout, 20.0);
         expect(decoded.automaticSessionTracking, true);
+        expect(decoded.allowDefaultCustomerProperties, true);
         expect(decoded.pushTokenTrackingFrequency, TokenFrequency.daily);
         expect(decoded.android != null, true);
         final android = decoded.android!;

@@ -23,6 +23,7 @@ abstract class ExponeaConfigurationEncoder {
       pushTokenTrackingFrequency: data
           .getOptional<String>('pushTokenTrackingFrequency')
           ?.let(TokenFrequencyEncoder.decode),
+      allowDefaultCustomerProperties: data.getOptional('allowDefaultCustomerProperties'),
       android: data
           .getOptional<Map<String, dynamic>>('android')
           ?.let(AndroidExponeaConfigurationEncoder.decode),
@@ -43,6 +44,7 @@ abstract class ExponeaConfigurationEncoder {
       'flushMaxRetries': config.flushMaxRetries?.toDouble(),
       'sessionTimeout': config.sessionTimeout,
       'automaticSessionTracking': config.automaticSessionTracking,
+      'allowDefaultCustomerProperties': config.allowDefaultCustomerProperties,
       'pushTokenTrackingFrequency':
           config.pushTokenTrackingFrequency?.let(TokenFrequencyEncoder.encode),
       'android': config.android?.let(AndroidExponeaConfigurationEncoder.encode),
