@@ -15,7 +15,7 @@ A new flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'ExponeaSDK', '2.13.1'
+  s.dependency 'ExponeaSDK', '2.15.1'
   s.dependency 'AnyCodable-FlightSchool', '0.6.3'
   s.platform = :ios, '11.0'
 

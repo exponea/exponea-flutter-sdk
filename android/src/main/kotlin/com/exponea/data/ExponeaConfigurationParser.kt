@@ -45,6 +45,9 @@ class ExponeaConfigurationParser {
             map.getOptional<Map<String, Any?>>("android")?.let {
                 parseAndroidConfig(it, this)
             }
+            map.getOptional<Boolean>("advancedAuthEnabled")?.let {
+                advancedAuthEnabled = it
+            }
         }
     }
 

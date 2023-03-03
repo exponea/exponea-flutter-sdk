@@ -50,5 +50,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+                android:name="ExponeaAuthProvider"
+                android:value="com.exponea.example.services.ExampleAuthProvider"
+        />
     </application>
 </manifest>

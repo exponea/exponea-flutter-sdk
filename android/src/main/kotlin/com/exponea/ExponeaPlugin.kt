@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
+import com.exponea.data.AppInboxCoder
 import com.exponea.data.ConsentEncoder
 import com.exponea.data.Customer
 import com.exponea.data.Event
@@ -23,6 +24,8 @@ import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
 import com.exponea.sdk.util.Logger
+import com.exponea.style.AppInboxStyleParser
+import com.exponea.widget.FlutterAppInboxButton
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -105,6 +108,9 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
             val handler = ReceivedPushStreamHandler()
             setStreamHandler(handler)
         }
+        binding
+            .platformViewRegistry
+            .registerViewFactory("FluffView", FlutterAppInboxButton.Factory())
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -158,6 +164,14 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_GET_LOG_LEVEL = "getLogLevel"
         private const val METHOD_SET_LOG_LEVEL = "setLogLevel"
         private const val METHOD_CHECK_PUSH_SETUP = "checkPushSetup"
+        private const val METHOD_SET_APP_INBOX_PROVIDER = "setAppInboxProvider"
+        private const val METHOD_TRACK_APP_INBOX_OPENED = "trackAppInboxOpened"
+        private const val METHOD_TRACK_APP_INBOX_OPENED_WITHOUT_TRACKING_CONSENT = "trackAppInboxOpenedWithoutTrackingConsent"
+        private const val METHOD_TRACK_APP_INBOX_CLICK = "trackAppInboxClick"
+        private const val METHOD_TRACK_APP_INBOX_CLICK_WITHOUT_TRACKING_CONSENT = "trackAppInboxClickWithoutTrackingConsent"
+        private const val METHOD_MARK_APP_INBOX_AS_READ = "markAppInboxAsRead"
+        private const val METHOD_FETCH_APP_INBOX = "fetchAppInbox"
+        private const val METHOD_FETCH_APP_INBOX_ITEM = "fetchAppInboxItem"
     }
 
     var activity: Context? = null
@@ -228,8 +242,136 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             METHOD_CHECK_PUSH_SETUP -> {
                 checkPushSetup(result)
             }
+            METHOD_SET_APP_INBOX_PROVIDER -> {
+                setAppInboxProvider(call.arguments, result)
+            }
+            METHOD_TRACK_APP_INBOX_OPENED -> {
+                trackAppInboxOpened(call.arguments, result)
+            }
+            METHOD_TRACK_APP_INBOX_OPENED_WITHOUT_TRACKING_CONSENT -> {
+                trackAppInboxOpenedWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_TRACK_APP_INBOX_CLICK -> {
+                trackAppInboxClick(call.arguments, result)
+            }
+            METHOD_TRACK_APP_INBOX_CLICK_WITHOUT_TRACKING_CONSENT -> {
+                trackAppInboxClickWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_MARK_APP_INBOX_AS_READ -> {
+                markAppInboxAsRead(call.arguments, result)
+            }
+            METHOD_FETCH_APP_INBOX -> {
+                fetchAppInbox(result)
+            }
+            METHOD_FETCH_APP_INBOX_ITEM -> {
+                fetchAppInboxItem(call.arguments, result)
+            }
             else -> {
                 result.notImplemented()
+            }
+        }
+    }
+
+    private fun trackAppInboxOpened(args: Any?, result: Result) = runAsync(result) {
+        requireNotConfigured()
+        val messageData = args as Map<String, Any?>
+        Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
+                result.error(TAG, "AppInbox message data are invalid. See logs", null)
+                return@fetchAppInboxItem
+            }
+            Exponea.trackAppInboxOpened(nativeMessage)
+            result.success(null)
+        }
+    }
+
+    private fun trackAppInboxOpenedWithoutTrackingConsent(args: Any?, result: Result) = runAsync(result) {
+        requireNotConfigured()
+        val messageData = args as Map<String, Any?>
+        Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
+                result.error(TAG, "AppInbox message data are invalid. See logs", null)
+                return@fetchAppInboxItem
+            }
+            Exponea.trackAppInboxOpenedWithoutTrackingConsent(nativeMessage)
+            result.success(null)
+        }
+    }
+
+    private fun trackAppInboxClick(args: Any?, result: Result) = runAsync(result) {
+        requireNotConfigured()
+        val inputData = args as Map<String, Any?>
+        val messageData = inputData.getRequired<Map<String, Any?>>("message")
+        val action = AppInboxCoder.decodeAction(inputData.getRequired("action"))
+            ?: throw ExponeaException.common("AppInbox message action data are invalid. See logs")
+        Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
+                result.error(TAG, "AppInbox message data are invalid. See logs", null)
+                return@fetchAppInboxItem
+            }
+            Exponea.trackAppInboxClick(action, nativeMessage)
+            result.success(null)
+        }
+    }
+
+    private fun trackAppInboxClickWithoutTrackingConsent(args: Any?, result: Result) = runAsync(result) {
+        requireNotConfigured()
+        val inputData = args as Map<String, Any?>
+        val messageData = inputData.getRequired<Map<String, Any?>>("message")
+        val action = AppInboxCoder.decodeAction(inputData.getRequired("action"))
+            ?: throw ExponeaException.common("AppInbox message action data are invalid. See logs")
+        Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
+                result.error(TAG, "AppInbox message data are invalid. See logs", null)
+                return@fetchAppInboxItem
+            }
+            Exponea.trackAppInboxClickWithoutTrackingConsent(action, nativeMessage)
+            result.success(null)
+        }
+    }
+
+    private fun markAppInboxAsRead(args: Any?, result: Result) = runAsync(result) {
+        requireNotConfigured()
+        val messageData = args as Map<String, Any?>
+        Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
+                result.error(TAG, "AppInbox message data are invalid. See logs", null)
+                return@fetchAppInboxItem
+            }
+            Exponea.markAppInboxAsRead(nativeMessage) { markedAsRead ->
+                result.success(markedAsRead)
+            }
+        }
+    }
+
+    private fun fetchAppInbox(result: Result) = runAsync(result) {
+        requireConfigured()
+        Exponea.fetchAppInbox { response ->
+            if (response == null) {
+                handler.post {
+                    result.error(TAG, "AppInbox load failed. See logs", null)
+                }
+            } else {
+                result.success(response.map { AppInboxCoder.encode(it) })
+            }
+        }
+    }
+
+    private fun fetchAppInboxItem(args: Any?, result: Result) = runAsync(result) {
+        requireNotConfigured()
+        val messageId = args as String
+        Exponea.fetchAppInboxItem(messageId = messageId) { nativeMessage ->
+            if (nativeMessage == null) {
+                handler.post {
+                    result.error(TAG, "AppInbox message not found. See logs", null)
+                }
+            } else {
+                result.success(AppInboxCoder.encode(nativeMessage))
             }
         }
     }
@@ -455,6 +597,12 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     private fun checkPushSetup(result: Result) = runWithNoResult(result) {
         requireNotConfigured()
         Exponea.checkPushSetup = true
+    }
+
+    private fun setAppInboxProvider(args: Any, result: Result) = runWithResult(result) {
+        val configMap = args as Map<String, Any?>
+        val appInboxStyle = AppInboxStyleParser(configMap).parse()
+        Exponea.appInboxProvider = FlutterAppInboxProvider(appInboxStyle)
     }
 }
 

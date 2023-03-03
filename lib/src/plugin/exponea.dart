@@ -1,15 +1,6 @@
-import '../data/model/configuration.dart';
-import '../data/model/configuration_change.dart';
-import '../data/model/consent.dart';
-import '../data/model/customer.dart';
-import '../data/model/event.dart';
-import '../data/model/flush_mode.dart';
-import '../data/model/log_level.dart';
-import '../data/model/push_opened.dart';
-import '../data/model/push_received.dart';
-import '../data/model/recommendation.dart';
+import 'package:exponea/exponea.dart';
+
 import '../interface.dart';
-import '../platform/platform_interface.dart';
 
 class ExponeaPlugin implements BaseInterface {
   ExponeaPlatform get _platform => ExponeaPlatform.instance;
@@ -90,6 +81,45 @@ class ExponeaPlugin implements BaseInterface {
   @override
   Future<void> trackSessionStart({DateTime? timestamp}) =>
       _platform.trackSessionStart(timestamp: timestamp);
+
+  @override
+  Future<void> setAppInboxProvider(AppInboxStyle style) =>
+      _platform.setAppInboxProvider(style);
+
+  @override
+  Future<void> trackAppInboxOpened(AppInboxMessage message) =>
+      _platform.trackAppInboxOpened(message);
+
+  @override
+  Future<void> trackAppInboxOpenedWithoutTrackingConsent(
+      AppInboxMessage message
+  ) =>
+      _platform.trackAppInboxOpenedWithoutTrackingConsent(message);
+
+  @override
+  Future<void> trackAppInboxClick(
+      AppInboxAction action,
+      AppInboxMessage message
+  ) =>
+      _platform.trackAppInboxClick(action, message);
+
+  @override
+  Future<void> trackAppInboxClickWithoutTrackingConsent(
+      AppInboxAction action,
+      AppInboxMessage message
+  ) =>
+      _platform.trackAppInboxClickWithoutTrackingConsent(action, message);
+
+  @override
+  Future<bool> markAppInboxAsRead(AppInboxMessage message) =>
+      _platform.markAppInboxAsRead(message);
+
+  @override
+  Future<List<AppInboxMessage>> fetchAppInbox() => _platform.fetchAppInbox();
+
+  @override
+  Future<AppInboxMessage> fetchAppInboxItem(String messageId) =>
+      _platform.fetchAppInboxItem(messageId);
 
   @override
   Stream<OpenedPush> get openedPushStream => _platform.openedPushStream;

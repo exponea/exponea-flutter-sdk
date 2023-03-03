@@ -25,6 +25,10 @@ class ExponeaException : Exception {
         fun fetchError(description: String): ExponeaException {
             return ExponeaException("Data fetching failed: $description.")
         }
+
+        fun common(description: String): ExponeaException {
+            return ExponeaException("Error occurred: $description.")
+        }
     }
 
     constructor(message: String) : super(message)

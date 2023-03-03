@@ -1,13 +1,4 @@
-import 'data/model/configuration.dart';
-import 'data/model/configuration_change.dart';
-import 'data/model/consent.dart';
-import 'data/model/customer.dart';
-import 'data/model/event.dart';
-import 'data/model/flush_mode.dart';
-import 'data/model/log_level.dart';
-import 'data/model/push_opened.dart';
-import 'data/model/push_received.dart';
-import 'data/model/recommendation.dart';
+import '../exponea.dart';
 
 ///
 /// Base interface implemented by platforms and plugin.
@@ -104,4 +95,32 @@ abstract class BaseInterface {
 
   /// Request push authorization on iOS.
   Future<bool> requestIosPushAuthorization();
+
+  /// Set AppInboxProvider
+  Future<void> setAppInboxProvider(AppInboxStyle style);
+
+  /// Track AppInbox message detail opened event
+  /// Event is tracked if parameter 'message' has TRUE value of 'hasTrackingConsent' property
+  Future<void> trackAppInboxOpened(AppInboxMessage message);
+
+  /// Track AppInbox message detail opened event
+  Future<void> trackAppInboxOpenedWithoutTrackingConsent(AppInboxMessage message);
+
+  /// Track AppInbox message click event
+  /// Event is tracked if one or both conditions met:
+  ///     - parameter 'message' has TRUE value of 'hasTrackingConsent' property
+  ///     - parameter 'buttonLink' has TRUE value of query parameter 'xnpe_force_track'
+  Future<void> trackAppInboxClick(AppInboxAction action, AppInboxMessage message);
+
+  /// Track AppInbox message click event
+  Future<void> trackAppInboxClickWithoutTrackingConsent(AppInboxAction action, AppInboxMessage message);
+
+  /// Marks AppInbox message as read
+  Future<bool> markAppInboxAsRead(AppInboxMessage message);
+
+  /// Fetches AppInbox for the current customer
+  Future<List<AppInboxMessage>> fetchAppInbox();
+
+  /// Fetches AppInbox message by ID for the current customer
+  Future<AppInboxMessage> fetchAppInboxItem(String messageId);
 }

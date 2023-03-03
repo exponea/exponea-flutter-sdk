@@ -14,9 +14,10 @@ class ExponeaConfiguration {
     let automaticSessionTracking: ExponeaSDK.Exponea.AutomaticSessionTracking
     let flushingSetup: ExponeaSDK.Exponea.FlushingSetup
     let defaultProperties: [String: JSONConvertible]?
-    let allowDefaultCustomerProperties: Bool?
+    var allowDefaultCustomerProperties: Bool? = nil
+    var advancedAuthEnabled: Bool? = nil
     
-    init(_ data: [String:Any?], parser: ConfigurationParser) throws {
+    init(_ data: [String: Any?], parser: ConfigurationParser) throws {
         self.projectSettings = try parser.parseProjectSettings(data)
         self.pushNotificationTracking = try parser.parsePushNotificationTracking(data)
         self.automaticSessionTracking = try parser.parseSessionTracking(data)
@@ -24,8 +25,9 @@ class ExponeaConfiguration {
         self.defaultProperties = try parser.parseDefaultProperties(data)
         if let allowDefaultCustomerProperties = data["allowDefaultCustomerProperties"] as? Bool {
             self.allowDefaultCustomerProperties = allowDefaultCustomerProperties
-        } else {
-            self.allowDefaultCustomerProperties = nil
+        }
+        if let advancedAuthEnabled = data["advancedAuthEnabled"] as? Bool {
+            self.advancedAuthEnabled = advancedAuthEnabled
         }
     }
 }

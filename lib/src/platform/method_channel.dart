@@ -1,18 +1,8 @@
+import 'package:exponea/exponea.dart';
 import 'package:flutter/services.dart';
 
 import '../data/encoder/main.dart';
-import '../data/model/configuration.dart';
-import '../data/model/configuration_change.dart';
-import '../data/model/consent.dart';
-import '../data/model/customer.dart';
-import '../data/model/event.dart';
-import '../data/model/flush_mode.dart';
-import '../data/model/log_level.dart';
-import '../data/model/push_opened.dart';
-import '../data/model/push_received.dart';
-import '../data/model/recommendation.dart';
 import '../data/util/object.dart';
-import 'platform_interface.dart';
 
 /// An implementation of [ExponeaPlatform] that uses method channels.
 class MethodChannelExponeaPlatform extends ExponeaPlatform {
@@ -47,6 +37,14 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _methodSetLogLevel = 'setLogLevel';
   static const _methodCheckPushSetup = 'checkPushSetup';
   static const _methodRequestPushAuthorization = 'requestPushAuthorization';
+  static const _setAppInboxProvider = 'setAppInboxProvider';
+  static const _trackAppInboxOpened = 'trackAppInboxOpened';
+  static const _trackAppInboxOpenedWithoutTrackingConsent = 'trackAppInboxOpenedWithoutTrackingConsent';
+  static const _trackAppInboxClick = 'trackAppInboxClick';
+  static const _trackAppInboxClickWithoutTrackingConsent = 'trackAppInboxClickWithoutTrackingConsent';
+  static const _markAppInboxAsRead = 'markAppInboxAsRead';
+  static const _fetchAppInbox = 'fetchAppInbox';
+  static const _fetchAppInboxItem = 'fetchAppInboxItem';
 
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
@@ -201,5 +199,58 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   Future<void> setLogLevel(LogLevel level) async {
     final data = LogLevelEncoder.encode(level);
     await _channel.invokeMethod<void>(_methodSetLogLevel, data);
+  }
+
+  @override
+  Future<void> setAppInboxProvider(AppInboxStyle style) async {
+    final data = style.encodeClean();
+    await _channel.invokeMethod<void>(_setAppInboxProvider, data);
+  }
+
+  @override
+  Future<void> trackAppInboxOpened(AppInboxMessage message) async {
+    final data = AppInboxCoder.encodeMessage(message);
+    await _channel.invokeMethod<void>(_trackAppInboxOpened, data);
+  }
+
+  @override
+  Future<void> trackAppInboxOpenedWithoutTrackingConsent(AppInboxMessage message) async {
+    final data = AppInboxCoder.encodeMessage(message);
+    await _channel.invokeMethod<void>(_trackAppInboxOpenedWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackAppInboxClick(AppInboxAction action, AppInboxMessage message) async {
+    final data = AppInboxCoder.encodeActionMessage(action, message);
+    await _channel.invokeMethod<void>(_trackAppInboxClick, data);
+  }
+
+  @override
+  Future<void> trackAppInboxClickWithoutTrackingConsent(AppInboxAction action, AppInboxMessage message) async {
+    final data = AppInboxCoder.encodeActionMessage(action, message);
+    await _channel.invokeMethod<void>(_trackAppInboxClickWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<bool> markAppInboxAsRead(AppInboxMessage message) async {
+    final data = AppInboxCoder.encodeMessage(message);
+    return (await _channel.invokeMethod<bool>(_markAppInboxAsRead, data))!;
+  }
+
+  @override
+  Future<List<AppInboxMessage>> fetchAppInbox() async {
+    final outData =
+    (await _channel.invokeListMethod<Map>(_fetchAppInbox))!;
+    final res =
+    outData.map((it) => AppInboxCoder.decodeMessage(it)).toList(growable: false);
+    return res;
+  }
+
+  @override
+  Future<AppInboxMessage> fetchAppInboxItem(String messageId) async {
+    const method = _fetchAppInboxItem;
+    final inData = messageId;
+    final outData = (await _channel.invokeMapMethod<String, dynamic>(method, inData))!;
+    return AppInboxCoder.decodeMessage(outData);
   }
 }

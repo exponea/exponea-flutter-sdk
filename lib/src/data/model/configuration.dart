@@ -40,6 +40,9 @@ class ExponeaConfiguration {
   /// If true, default properties are applied also for 'identifyCustomer' event.
   final bool? allowDefaultCustomerProperties;
 
+  /// If true, Customer Token authentication is used
+  final bool? advancedAuthEnabled;
+
   /// Platform specific settings for Android
   final AndroidExponeaConfiguration? android;
 
@@ -57,6 +60,7 @@ class ExponeaConfiguration {
     this.automaticSessionTracking,
     this.pushTokenTrackingFrequency,
     this.allowDefaultCustomerProperties,
+    this.advancedAuthEnabled,
     this.android,
     this.ios,
   });

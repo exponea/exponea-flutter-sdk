@@ -31,6 +31,8 @@
 		31C2AE91268B8E4C00C00CC5 /* RecommendationOptionsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C2AE90268B8E4C00C00CC5 /* RecommendationOptionsSpec.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		4C260E0D59EF40A9D6B37888 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362BFA2D4F75F0F70FA2FD20 /* Pods_Runner.framework */; };
+		5531B70929B1514F00BF354F /* ExampleAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5531B70829B1514F00BF354F /* ExampleAuthProvider.swift */; };
+		5531B70B29B1519300BF354F /* CustomerTokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5531B70A29B1519300BF354F /* CustomerTokenStorage.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -124,6 +126,8 @@
 		3253A0E9A7047ED9F79FD763 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		362BFA2D4F75F0F70FA2FD20 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		5531B70829B1514F00BF354F /* ExampleAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleAuthProvider.swift; sourceTree = "<group>"; };
+		5531B70A29B1519300BF354F /* CustomerTokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerTokenStorage.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -304,6 +308,8 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				5531B70829B1514F00BF354F /* ExampleAuthProvider.swift */,
+				5531B70A29B1519300BF354F /* CustomerTokenStorage.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -667,6 +673,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5531B70929B1514F00BF354F /* ExampleAuthProvider.swift in Sources */,
+				5531B70B29B1519300BF354F /* CustomerTokenStorage.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);

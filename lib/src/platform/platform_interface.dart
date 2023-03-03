@@ -1,17 +1,8 @@
 import 'dart:async';
 
+import 'package:exponea/exponea.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../data/model/configuration.dart';
-import '../data/model/configuration_change.dart';
-import '../data/model/consent.dart';
-import '../data/model/customer.dart';
-import '../data/model/event.dart';
-import '../data/model/flush_mode.dart';
-import '../data/model/log_level.dart';
-import '../data/model/push_opened.dart';
-import '../data/model/push_received.dart';
-import '../data/model/recommendation.dart';
 import '../interface.dart';
 import 'method_channel.dart';
 
@@ -145,6 +136,46 @@ abstract class ExponeaPlatform extends PlatformInterface
 
   @override
   Future<void> trackSessionStart({DateTime? timestamp}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setAppInboxProvider(AppInboxStyle style) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackAppInboxOpened(AppInboxMessage message) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackAppInboxOpenedWithoutTrackingConsent(AppInboxMessage message) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackAppInboxClick(AppInboxAction action, AppInboxMessage message) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackAppInboxClickWithoutTrackingConsent(AppInboxAction action, AppInboxMessage message) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> markAppInboxAsRead(AppInboxMessage message) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<AppInboxMessage>> fetchAppInbox() async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<AppInboxMessage> fetchAppInboxItem(String messageId) async {
     throw UnimplementedError();
   }
 

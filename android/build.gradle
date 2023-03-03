@@ -6,7 +6,7 @@ buildscript {
         androidGradlePluginVersion = '4.1.0'
         kotlinVersion = '1.5.30'
 
-        exponeaSdkVersion = '3.2.1'
+        exponeaSdkVersion = '3.4.0'
         gsonVersion = '2.8.6'
     }
 
@@ -33,7 +33,13 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 31
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -47,4 +53,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.exponea.sdk:sdk:$exponeaSdkVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 }

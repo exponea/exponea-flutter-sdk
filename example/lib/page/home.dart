@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exponea/exponea.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final _plugin = ExponeaPlugin();
 
@@ -175,10 +177,6 @@ class _HomePageState extends State<HomePage> {
                   title: const Text('Flush Period'),
                   subtitle: Row(
                     children: [
-                      ElevatedButton(
-                        onPressed: () => _getFlushPeriod(context),
-                        child: const Text('Get'),
-                      ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => _setFlushPeriod(context),
@@ -274,11 +272,6 @@ class _HomePageState extends State<HomePage> {
                         child: const Text('Get'),
                       ),
                       const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () => _setLogLevel(context),
-                        child: const Text('Set'),
-                      ),
-                      const SizedBox(width: 8),
                       Expanded(
                         child: ValueListenableBuilder<LogLevel?>(
                           valueListenable: _logLevelController,
@@ -304,6 +297,26 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+                ListTile(
+                  title: const Text('App Inbox'),
+                  subtitle: Row(
+                      children: const [
+                        SizedBox(width: 150, height: 50, child: AppInboxProvider()),
+                      ]
+                  )
+                ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => _fetchAppInbox(context),
+                    child: const Text('Fetch all'),
+                  ),
+                ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => _fetchAppInboxItem(context),
+                    child: const Text('Fetch first'),
+                  ),
+                ),
               ],
             ),
           ),
@@ -311,6 +324,18 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future<void> _fetchAppInbox(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        return await _plugin.fetchAppInbox();
+      });
+
+  Future<void> _fetchAppInboxItem(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        var messages = await _plugin.fetchAppInbox();
+        if (messages.isEmpty) return "EMPTY APPINBOX";
+        return messages[0];
+      });
 
   Future<void> _checkIsConfigured(BuildContext context) =>
       _runAndShowResult(context, () async {
@@ -325,11 +350,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> _identifyCustomer(BuildContext context) =>
       _runAndShowResult(context, () async {
         const email = 'test-user-1@test.com';
-        const customer = Customer(
-          ids: {
-            'registered': email,
-          },
-        );
+        const customerIds = {'registered': email};
+        const customer = Customer(ids: customerIds);
+        final sp = await SharedPreferences.getInstance();
+        var customerIdsString = json.encode(customerIds);
+        await sp.setString("customer_ids", customerIdsString);
         await _plugin.identifyCustomer(customer);
         return email;
       });

@@ -24,6 +24,7 @@ abstract class ExponeaConfigurationEncoder {
           .getOptional<String>('pushTokenTrackingFrequency')
           ?.let(TokenFrequencyEncoder.decode),
       allowDefaultCustomerProperties: data.getOptional('allowDefaultCustomerProperties'),
+      advancedAuthEnabled: data.getOptional('advancedAuthEnabled'),
       android: data
           .getOptional<Map<String, dynamic>>('android')
           ?.let(AndroidExponeaConfigurationEncoder.decode),
@@ -45,6 +46,7 @@ abstract class ExponeaConfigurationEncoder {
       'sessionTimeout': config.sessionTimeout,
       'automaticSessionTracking': config.automaticSessionTracking,
       'allowDefaultCustomerProperties': config.allowDefaultCustomerProperties,
+      'advancedAuthEnabled': config.advancedAuthEnabled,
       'pushTokenTrackingFrequency':
           config.pushTokenTrackingFrequency?.let(TokenFrequencyEncoder.encode),
       'android': config.android?.let(AndroidExponeaConfigurationEncoder.encode),

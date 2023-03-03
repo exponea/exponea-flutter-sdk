@@ -22,12 +22,14 @@ class ConfigPage extends StatefulWidget {
 class _ConfigPageState extends State<ConfigPage> {
   static const _spKeyProject = 'project_token';
   static const _spKeyAuth = 'auth_token';
+  static const _spKeyAdvancedAuth = 'advanced_auth_token';
   static const _spKeyBaseUrl = 'base_url';
   static const _spKeySessionTracking = 'session_tracking';
 
   final _loading = ValueNotifier(false);
   late final TextEditingController _projectTokenController;
   late final TextEditingController _authTokenController;
+  late final TextEditingController _advancedAuthTokenController;
   late final TextEditingController _baseUrlController;
   late final ValueNotifier<bool> _sessionTrackingController;
 
@@ -35,11 +37,13 @@ class _ConfigPageState extends State<ConfigPage> {
   void initState() {
     _projectTokenController = TextEditingController(text: '');
     _authTokenController = TextEditingController(text: '');
+    _advancedAuthTokenController = TextEditingController(text: '');
     _baseUrlController = TextEditingController(text: '');
     _sessionTrackingController = ValueNotifier(true);
     SharedPreferences.getInstance().then((sp) async {
       _projectTokenController.text = sp.getString(_spKeyProject) ?? '';
       _authTokenController.text = sp.getString(_spKeyAuth) ?? '';
+      _advancedAuthTokenController.text = sp.getString(_spKeyAdvancedAuth) ?? '';
       _baseUrlController.text = sp.getString(_spKeyBaseUrl) ?? '';
       _sessionTrackingController.value =
           sp.getBool(_spKeySessionTracking) ?? true;
@@ -71,6 +75,12 @@ class _ConfigPageState extends State<ConfigPage> {
                   title: TextField(
                     controller: _authTokenController,
                     decoration: const InputDecoration(labelText: 'Auth Token'),
+                  ),
+                ),
+                ListTile(
+                  title: TextField(
+                    controller: _advancedAuthTokenController,
+                    decoration: const InputDecoration(labelText: 'Advanced Auth Token'),
                   ),
                 ),
                 ListTile(
@@ -110,6 +120,7 @@ class _ConfigPageState extends State<ConfigPage> {
     _loading.value = true;
     final projectToken = _projectTokenController.text.trim();
     final authToken = _authTokenController.text.trim();
+    final advancedAuthToken = _advancedAuthTokenController.text.trim();
     final rawBaseUrl = _baseUrlController.text.trim();
     final baseUrl = rawBaseUrl.isNotEmpty ? rawBaseUrl : null;
     final sessionTracking = _sessionTrackingController.value;
@@ -117,6 +128,7 @@ class _ConfigPageState extends State<ConfigPage> {
     final sp = await SharedPreferences.getInstance();
     await sp.setString(_spKeyProject, projectToken);
     await sp.setString(_spKeyAuth, authToken);
+    await sp.setString(_spKeyAdvancedAuth, advancedAuthToken);
     await sp.setString(_spKeyBaseUrl, rawBaseUrl);
     await sp.setBool(_spKeySessionTracking, sessionTracking);
 
@@ -133,6 +145,7 @@ class _ConfigPageState extends State<ConfigPage> {
         'double': 1.2,
         'int': 10,
         'bool': true,
+        'fontWeight': "normal"
       },
       allowDefaultCustomerProperties: false,
       // projectMapping: {
@@ -143,6 +156,7 @@ class _ConfigPageState extends State<ConfigPage> {
       //     ExponeaProject(projectToken: '2', authorizationToken: '22'),
       //   ],
       // },
+      advancedAuthEnabled: advancedAuthToken.isNotEmpty,
       android: const AndroidExponeaConfiguration(
         automaticPushNotifications: true,
         httpLoggingLevel: HttpLoggingLevel.body,
@@ -159,6 +173,43 @@ class _ConfigPageState extends State<ConfigPage> {
       ),
     );
     try {
+      _plugin.setAppInboxProvider(AppInboxStyle(
+        appInboxButton: SimpleButtonStyle(
+          backgroundColor: 'rgb(245, 195, 68)',
+          borderRadius: '10dp',
+          showIcon: 'iVBORw0KGgoAAAANSUhEUgAAAEUAAABICAMAAACXzcjFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAITgAACE4AUWWMWAAAAA/UExURUdwTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALoT4l0AAAAUdFJOUwDvMHAgvxDfn0Bgz4BQr5B/j7CgEZfI5wAAAcJJREFUWMPtl9mWhCAMRBtFNlF74f+/dZBwRoNBQftpxnrpPqjXUFRQH49bt74o0ejrEC6dk+IqRTkve5XSzRR1U/4oRRirlHphih9RduDFcQ1J85HFFBh0qozTMLdHcZLXQHKUEszcfQeUAgxAWMu9MMUPNC0U2h1AnunNkpWOpT53IQNUAhCR1AK2waT0sSltdLkXC4V3scIWqhUHQY319/6fx0RK4L9XJ41lpnRg42f+mUS/mMrZUjAhjaYMuXnZcMW4siua55o9UyyOX+iGUJf8vWzasWZcopamOFl9Afd7ZU1hnM4xzmtc7q01nDqwYJLQt9tbrpKvMl216ZyO7ASTaTPAEOOMijBYa+iV64gehjlNeDCkyvUKK1B1WGGTHOqpKTlaGrfpRrKIYvAETlIm9OpwlsIESlMRha3tg0T0YhX5cX08S0FjIt7NaN1K4pIySuzclewZipDHHhSMNTKzM1RR0M6w6YJiis99FxnbJ0cFxbujB9NQe2MVJat/RHEVXw2corCad7Z56eLmSO3pHl6oePobU6w7pWS7F+wMRNJPhkoNG7/q58QMtXYfWTUbK/Lfq4Xilz9Ib926qB8ZxV6DpmAIowAAAABJRU5ErkJggg==',
+          textColor: 'white',
+        ),
+        detailView: DetailViewStyle(
+          button: SimpleButtonStyle(
+            backgroundColor: 'red'
+          ),
+          title: TextViewStyle(
+            textSize: '20sp',
+            textOverride: 'TEST',
+            textWeight: 'bold',
+            textColor: 'rgba(100, 100, 100, 1.0)'
+          )
+        ),
+        listView: ListScreenStyle(
+          errorTitle: TextViewStyle(
+            textColor: 'red'
+          ),
+          errorMessage: TextViewStyle(
+            textColor: 'red'
+          ),
+          list: AppInboxListViewStyle(
+            backgroundColor: 'blue',
+            item: AppInboxListItemStyle(
+              backgroundColor: 'yellow',
+              content: TextViewStyle(
+                textColor: '#FFF',
+                textWeight: '700'
+              )
+            )
+          )
+        )
+      ));
       final configured = await _plugin.configure(config);
       if (!configured) {
         const snackBar = SnackBar(

@@ -68,6 +68,8 @@ You can see the dart definition for Configuration object at [lib/src/data/model/
 
 * **pushTokenTrackingFrequency** You can define your policy for tracking push notification token. Default value `TokenFrequency.onTokenChange` is recommended.
 
+* **advancedAuthEnabled** If true, Customer Token authentication is used for communication with BE for API listed in [Authorization](./AUTHORIZATION.md) document.
+
 * **android** Specific configuration for Android
 
 * **ios** Specific configuration for iOS

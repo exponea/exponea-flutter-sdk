@@ -16,3 +16,4 @@ export 'push_received.dart';
 export 'push_type.dart';
 export 'recommendation.dart';
 export 'token_frequency.dart';
+export 'app_inbox.dart';
