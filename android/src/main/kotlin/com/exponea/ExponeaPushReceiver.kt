@@ -27,9 +27,11 @@ class ExponeaPushReceiver : BroadcastReceiver() {
 
         val actionInfo = intent.getSerializableExtra(ExponeaExtras.EXTRA_ACTION_INFO) as? NotificationAction
         val url = actionInfo?.url
-        val pushData = intent.getSerializableExtra(ExponeaExtras.EXTRA_CUSTOM_DATA) as Map<String, String>
-        val additionalDataType = object : TypeToken<Map<String, Any?>?>() {}.getType()
-        val additionalData = Gson().fromJson(pushData["attributes"], additionalDataType) as Map<String, Any?>?
+        val pushData = intent.getSerializableExtra(ExponeaExtras.EXTRA_CUSTOM_DATA) as? Map<String, String>
+        val additionalData = pushData?.let {
+            val additionalDataType = object : TypeToken<Map<String, Any?>?>() {}.getType()
+            Gson().fromJson(it["attributes"], additionalDataType) as? Map<String, Any?>
+        }
         OpenedPushStreamHandler.handle(OpenedPush(action, url, additionalData))
     }
 }
