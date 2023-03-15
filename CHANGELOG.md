@@ -1,6 +1,13 @@
 ## :arrow_double_up: [SDK version update guide](./documentation/VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.3.1
+#### March 15, 2023
+* Bug Fixes
+  * Fixed: Parsing pushAccentColor with support of ARGB format
+  * Fixed: Handles empty/null push notification data correctly
+
+
 ## Release Notes for 1.3.0
 #### March 03, 2023
 * Features
