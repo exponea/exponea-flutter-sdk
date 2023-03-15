@@ -164,7 +164,7 @@ class _ConfigPageState extends State<ConfigPage> {
         pushChannelId: 'test-channel-id',
         pushChannelName: 'test-channel-name',
         pushNotificationImportance: PushNotificationImportance.normal,
-        // pushAccentColor: 10,
+        pushAccentColor: 0x3000FF00,
         // pushIcon: 11,
       ),
       ios: const IOSExponeaConfiguration(

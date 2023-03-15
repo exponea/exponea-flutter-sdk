@@ -70,7 +70,7 @@ class ExponeaConfigurationParser {
                 pushIcon = it.toInt()
             }
             map.getOptional<Double>("pushAccentColor")?.let {
-                pushAccentColor = it.toInt()
+                pushAccentColor = it.toUInt().toInt()
             }
             map.getOptional<String>("pushChannelId")?.let {
                 pushChannelId = it

@@ -54,7 +54,7 @@ void main() {
           android: AndroidExponeaConfiguration(
             automaticPushNotifications: true,
             pushIcon: 12345,
-            pushAccentColor: 123,
+            pushAccentColor: 0xFF112233,
             pushChannelName: 'mock-push-channel-name',
             pushChannelDescription: 'mock-push-channel-description',
             pushChannelId: 'mock-push-channel-id',
@@ -122,7 +122,7 @@ void main() {
         final android = decoded.android!;
         expect(android.automaticPushNotifications, true);
         expect(android.pushIcon, 12345);
-        expect(android.pushAccentColor, 123);
+        expect(android.pushAccentColor, 0xFF112233);
         expect(android.pushChannelName, 'mock-push-channel-name');
         expect(android.pushChannelDescription, 'mock-push-channel-description');
         expect(android.pushChannelId, 'mock-push-channel-id');
