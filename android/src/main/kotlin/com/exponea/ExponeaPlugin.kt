@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.NonNull
 import com.exponea.data.AppInboxCoder
@@ -26,6 +27,7 @@ import com.exponea.sdk.models.PropertiesList
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
 import com.exponea.widget.FlutterAppInboxButton
+import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -82,6 +84,32 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         fun handleNewHmsToken(context: Context, token: String) {
             Log.d(TAG, "handleNewHmsToken($token)")
             Exponea.handleNewHmsToken(context, token)
+        }
+
+        // Returns the current saved ExponeaConfiguration if available otherwise null
+        // This can be used to initialize Exponea SDK from a service
+        fun getExponeaConfiguration(context: Context): ExponeaConfiguration? {
+            Log.d(TAG, "getExponeaConfiguration()")
+            val configJsonString = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+                .getString("ExponeaConfigurationPref", "")
+            if (configJsonString == null || configJsonString.isEmpty()) {
+                return null
+            }
+            return try {
+                Gson().fromJson(configJsonString, ExponeaConfiguration::class.java)
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+        fun tryToInitializeFromExistingConfiguration(context: Context) {
+            Log.d(TAG, "tryToInitializeFromExistingConfiguration()")
+            if (Exponea.isInitialized) {
+                return
+            }
+            getExponeaConfiguration(context)?.let {
+                Exponea.init(context.applicationContext, it)
+            }
         }
     }
 
@@ -418,6 +446,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         try {
             requireNotConfigured()
         } catch (e: Exception) {
+            configuration = ExponeaPlugin.getExponeaConfiguration(context)
             return@runWithResult false
         }
         val data = args as Map<String, Any?>
