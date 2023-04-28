@@ -1,6 +1,12 @@
 ## :arrow_double_up: [SDK version update guide](./documentation/VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.4.0
+#### April 28, 2023
+* Features
+  * Native SDK updated - Android to 3.5.0
+  * Support section added to main Readme
+
 ## Release Notes for 1.3.1
 #### March 15, 2023
 * Bug Fixes
