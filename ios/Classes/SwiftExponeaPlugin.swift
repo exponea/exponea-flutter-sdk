@@ -89,6 +89,8 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
 
         let receivedPushEventChannel = FlutterEventChannel(name: receivedPushStreamName, binaryMessenger: registrar.messenger())
         receivedPushEventChannel.setStreamHandler(ReceivedPushStreamHandler.newInstance())
+
+        registrar.register(FluffViewFactory(), withId: "FluffView")
     }
 
     var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared

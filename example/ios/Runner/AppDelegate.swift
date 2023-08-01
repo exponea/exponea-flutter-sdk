@@ -12,9 +12,6 @@ import exponea
         GeneratedPluginRegistrant.register(with: self)
         
         
-        registrar(forPlugin: "AppInbox")?.register(FluffViewFactory(), withId: "FluffView")
-        
-        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 }
