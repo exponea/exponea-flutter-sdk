@@ -11,8 +11,8 @@ class AppInboxCoder {
             return mapOf(
                 "id" to source.id,
                 "type" to source.rawType,
-                "is_read" to source.read,
-                "create_time" to source.receivedTime,
+                "isRead" to source.read,
+                "createTime" to source.receivedTime,
                 "content" to source.rawContent
             )
         }
