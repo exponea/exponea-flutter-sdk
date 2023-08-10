@@ -1,0 +1,8 @@
+[
+    {},
+    {"id":"mock-id","type":"mock-type"},
+    {"id":"mock-id","type":"mock-type","isRead": true},
+    {"id":"mock-id","type":"mock-type","isRead": true,"createTime": 1.0},
+    {"id":"mock-id","type":"mock-type","isRead": true,"createTime": 1.0,"content": {}},
+    {"id":"mock-id","type":"mock-type","isRead": true,"createTime": 1.0,"content": {"mock-content-param": "mock-content"}}
+]
