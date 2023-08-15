@@ -1,6 +1,13 @@
 ## :arrow_double_up: [SDK version update guide](./documentation/VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.4.1
+#### August 15, 2023
+* Bug Fixes
+  * Fixed: Mapping of is_read vs isRead and create_time vs createTime
+  * Fixed: Registration of App Inbox button for iOS part
+
+
 ## Release Notes for 1.4.0
 #### April 28, 2023
 * Features
