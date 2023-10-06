@@ -273,7 +273,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun trackAppInboxOpened(args: Any?, result: Result) = runAsync(result) {
-        requireNotConfigured()
+        requireConfigured()
         val messageData = args as Map<String, Any?>
         Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
             // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
@@ -287,7 +287,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun trackAppInboxOpenedWithoutTrackingConsent(args: Any?, result: Result) = runAsync(result) {
-        requireNotConfigured()
+        requireConfigured()
         val messageData = args as Map<String, Any?>
         Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
             // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
@@ -301,7 +301,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun trackAppInboxClick(args: Any?, result: Result) = runAsync(result) {
-        requireNotConfigured()
+        requireConfigured()
         val inputData = args as Map<String, Any?>
         val messageData = inputData.getRequired<Map<String, Any?>>("message")
         val action = AppInboxCoder.decodeAction(inputData.getRequired("action"))
@@ -318,7 +318,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun trackAppInboxClickWithoutTrackingConsent(args: Any?, result: Result) = runAsync(result) {
-        requireNotConfigured()
+        requireConfigured()
         val inputData = args as Map<String, Any?>
         val messageData = inputData.getRequired<Map<String, Any?>>("message")
         val action = AppInboxCoder.decodeAction(inputData.getRequired("action"))
@@ -335,7 +335,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun markAppInboxAsRead(args: Any?, result: Result) = runAsync(result) {
-        requireNotConfigured()
+        requireConfigured()
         val messageData = args as Map<String, Any?>
         Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
             // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
@@ -363,7 +363,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun fetchAppInboxItem(args: Any?, result: Result) = runAsync(result) {
-        requireNotConfigured()
+        requireConfigured()
         val messageId = args as String
         Exponea.fetchAppInboxItem(messageId = messageId) { nativeMessage ->
             if (nativeMessage == null) {

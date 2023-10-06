@@ -317,6 +317,12 @@ class _HomePageState extends State<HomePage> {
                     child: const Text('Fetch first'),
                   ),
                 ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => _markFirstAppInboxItemAsRead(context),
+                    child: const Text('Mark first as read'),
+                  ),
+                ),
               ],
             ),
           ),
@@ -335,6 +341,13 @@ class _HomePageState extends State<HomePage> {
         var messages = await _plugin.fetchAppInbox();
         if (messages.isEmpty) return "EMPTY APPINBOX";
         return messages[0];
+      });
+
+  Future<void> _markFirstAppInboxItemAsRead(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        var messages = await _plugin.fetchAppInbox();
+        if (messages.isEmpty) return "EMPTY APPINBOX";
+        return await _plugin.markAppInboxAsRead(messages.first);
       });
 
   Future<void> _checkIsConfigured(BuildContext context) =>
