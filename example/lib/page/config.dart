@@ -20,6 +20,8 @@ class ConfigPage extends StatefulWidget {
 }
 
 class _ConfigPageState extends State<ConfigPage> {
+  static const _platform = MethodChannel('com.exponea.example/utils');
+
   static const _spKeyProject = 'project_token';
   static const _spKeyAuth = 'auth_token';
   static const _spKeyAdvancedAuth = 'advanced_auth_token';
@@ -32,6 +34,14 @@ class _ConfigPageState extends State<ConfigPage> {
   late final TextEditingController _advancedAuthTokenController;
   late final TextEditingController _baseUrlController;
   late final ValueNotifier<bool> _sessionTrackingController;
+
+  Future<int?> getAndroidPushIcon() async {
+    try {
+      return await _platform.invokeMethod<int?>('getAndroidPushIcon');
+    } catch (e) {
+      return null;
+    }
+  }
 
   @override
   void initState() {
@@ -117,6 +127,8 @@ class _ConfigPageState extends State<ConfigPage> {
   }
 
   Future<void> _configure(BuildContext context) async {
+    final pushIcon = await getAndroidPushIcon();
+
     _loading.value = true;
     final projectToken = _projectTokenController.text.trim();
     final authToken = _authTokenController.text.trim();
@@ -157,15 +169,15 @@ class _ConfigPageState extends State<ConfigPage> {
       //   ],
       // },
       advancedAuthEnabled: advancedAuthToken.isNotEmpty,
-      android: const AndroidExponeaConfiguration(
+      android: AndroidExponeaConfiguration(
         automaticPushNotifications: true,
         httpLoggingLevel: HttpLoggingLevel.body,
         pushChannelDescription: 'test-channel-desc',
         pushChannelId: 'test-channel-id',
         pushChannelName: 'test-channel-name',
         pushNotificationImportance: PushNotificationImportance.normal,
-        pushAccentColor: 0x3000FF00,
-        // pushIcon: 11,
+        pushAccentColor: 0xFFFFD500,
+        pushIcon: pushIcon,
       ),
       ios: const IOSExponeaConfiguration(
         requirePushAuthorization: true,
