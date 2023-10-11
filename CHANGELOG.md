@@ -1,6 +1,12 @@
 ## :arrow_double_up: [SDK version update guide](./documentation/VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.4.2
+#### October 11, 2023
+* Bug Fixes
+  * Fixed: requireNotConfigured() used in isRead and other methods
+
+
 ## Release Notes for 1.4.1
 #### August 15, 2023
 * Bug Fixes
