@@ -181,10 +181,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                     self.exponeaInstance.trackAppInboxOpened(message: nativeMessage)
                     result(nil)
                 case .failure(let error):
+                    let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                     result(error)
                 }
             }
         } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -207,10 +209,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                     self.exponeaInstance.trackAppInboxOpenedWithoutTrackingConsent(message: nativeMessage)
                     result(nil)
                 case .failure(let error):
+                    let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                     result(error)
                 }
             }
         } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -241,13 +245,16 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                         self.exponeaInstance.trackAppInboxClick(action: action, message: nativeMessage)
                         result(nil)
                     } catch {
+                        let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                         result(error)
                     }
                 case .failure(let error):
+                    let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                     result(error)
                 }
             }
         } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -278,13 +285,16 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                         self.exponeaInstance.trackAppInboxClickWithoutTrackingConsent(action: action, message: nativeMessage)
                         result(nil)
                     } catch {
+                        let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                         result(error)
                     }
                 case .failure(let error):
+                    let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                     result(error)
                 }
             }
         } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -308,10 +318,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                         result(marked)
                     }
                 case .failure(let error):
+                    let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                     result(error)
                 }
             }
         } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
         }
     }
@@ -327,9 +339,11 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                     })
                     result(outData)
                 } catch {
+                    let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                     result(error)
                 }
             case .failure(let error):
+                let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                 result(error)
             }
         }
@@ -350,9 +364,11 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 do {
                     result(try AppInboxCoder.encode(message))
                 } catch {
+                    let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                     result(error)
                 }
             case .failure(let error):
+                let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
                 result(error)
             }
         }
