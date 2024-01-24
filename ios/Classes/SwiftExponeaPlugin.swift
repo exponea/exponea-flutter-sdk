@@ -3,6 +3,7 @@ import UIKit
 import ExponeaSDK
 import UserNotifications
 import Foundation
+import WebKit
 
 private let channelName = "com.exponea"
 private let openedPushStreamName = "\(channelName)/opened_push"
@@ -77,6 +78,153 @@ public class FluffView: NSObject, FlutterPlatformView {
     }
 }
 
+public class FlutterInAppContentBlockPlaceholderFactory: NSObject, FlutterPlatformViewFactory {
+    private var messenger: FlutterBinaryMessenger
+    
+    init(messenger: FlutterBinaryMessenger) {
+        self.messenger = messenger
+        super.init()
+    }
+    
+    public func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId") else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "Unable to parse placeholder identifier.")
+            return FlutterInAppContentBlockPlaceholder(
+                frame: frame,
+                viewIdentifier: viewId,
+                placeholderIdentifier: "",
+                inAppContentBlockPlaceholderView: nil,
+                binaryMessenger: messenger)
+        }
+        let inAppContentBlockPlaceholder = StaticInAppContentBlockView(placeholder: placeholderId, deferredLoad: true)
+        return FlutterInAppContentBlockPlaceholder(
+            frame: frame,
+            viewIdentifier: viewId,
+            placeholderIdentifier: placeholderId,
+            inAppContentBlockPlaceholderView: inAppContentBlockPlaceholder,
+            binaryMessenger: messenger)
+    }
+    
+    public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+        return FlutterStandardMessageCodec.sharedInstance()
+    }
+}
+
+public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView {
+    
+    private let channelName = "com.exponea/InAppContentBlockPlaceholder"
+    private let methodHandleInAppContentBlockClick = "handleInAppContentBlockClick"
+    
+    private let inAppContentBlockPlaceholder: StaticInAppContentBlockView?
+    private let placeholderId: String
+    private var channel: FlutterMethodChannel?
+    
+    init(frame: CGRect, viewIdentifier viewId: Int64, placeholderIdentifier placeholderId: String, inAppContentBlockPlaceholderView inAppContentBlockPlaceholder: StaticInAppContentBlockView?, binaryMessenger messenger: FlutterBinaryMessenger?) {
+        self.inAppContentBlockPlaceholder = inAppContentBlockPlaceholder
+        self.placeholderId = placeholderId
+        super.init()
+        
+        if let inAppContentBlockPlaceholder,
+            let messenger {
+            channel = FlutterMethodChannel(name: "\(channelName)/\(viewId)", binaryMessenger: messenger)
+            guard let channel else { return }
+            channel.setMethodCallHandler(onMethodCall)
+            
+            let origBehaviour = inAppContentBlockPlaceholder.behaviourCallback
+            inAppContentBlockPlaceholder.behaviourCallback = CustomInAppContentBlockCallback(originalBehaviour: origBehaviour, channel: channel)
+            inAppContentBlockPlaceholder.reload()
+        }
+    }
+    
+    func onMethodCall(call : FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        case methodHandleInAppContentBlockClick:
+            if inAppContentBlockPlaceholder == nil {
+                result(FlutterError(
+                    code: "InAppCB",
+                    message: "Handling of url was invoked even when InAppCB is not initialized", details: nil
+                ))
+                return
+            }
+            guard let data = call.arguments as? NSDictionary,
+                  let actionUrl: String = try? data.getRequiredSafely(property: "actionUrl") else {
+                result(FlutterError(
+                    code: "InAppCB",
+                    message: "unable to parse action URL ", details: nil
+                ))
+                return
+            }
+            inAppContentBlockPlaceholder?.invokeActionClick(actionUrl:actionUrl)
+        default:
+            let error = FlutterError(code: errorCode, message: "\(call.method) is not supported by iOS", details: nil)
+            result(error)
+            return
+        }
+    }
+    
+    public func view() -> UIView {
+        return inAppContentBlockPlaceholder ?? UIView()
+    }
+}
+
+public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
+    
+    private let originalBehaviour: InAppContentBlockCallbackType
+    
+    private let channel: FlutterMethodChannel
+    private let methodOnInAppContentBlockHtmlChanged = "onInAppContentBlockHtmlChanged"
+    
+    init(originalBehaviour: InAppContentBlockCallbackType, channel: FlutterMethodChannel) {
+        self.originalBehaviour = originalBehaviour
+        self.channel = channel
+    }
+    
+    public func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
+        originalBehaviour.onMessageShown(placeholderId: placeholderId, contentBlock: contentBlock)
+        let htmlContent = contentBlock.content?.html ?? contentBlock.personalizedMessage?.content?.html
+        let normalizerConf = HtmlNormalizerConfig(makeResourcesOffline: true, ensureCloseButton: false)
+        if let htmlContent,
+            var normalizedHtml = HtmlNormalizer(htmlContent).normalize(normalizerConf).html {
+            let arguments: [String: Any?] = ["htmlContent": normalizedHtml]
+            DispatchQueue.main.async {
+                self.channel.invokeMethod(self.methodOnInAppContentBlockHtmlChanged, arguments: arguments)
+            }
+        }
+    }
+    
+    public func onNoMessageFound(placeholderId: String) {
+        originalBehaviour.onNoMessageFound(placeholderId: placeholderId)
+        let arguments: [String: Any?] = ["htmlContent": nil]
+        DispatchQueue.main.async {
+            self.channel.invokeMethod(self.methodOnInAppContentBlockHtmlChanged, arguments: arguments)
+        }
+    }
+    
+    public func onError(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, errorMessage: String) {
+        guard let contentBlock else {
+            return
+        }
+        Exponea.shared.trackInAppContentBlockError(
+            placeholderId: placeholderId,
+            message: contentBlock,
+            errorMessage: errorMessage
+        )
+    }
+    
+    public func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
+        Exponea.shared.trackInAppContentBlockClose(placeholderId: placeholderId,message: contentBlock)
+    }
+    
+    public func onActionClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse, action: ExponeaSDK.InAppContentBlockAction) {
+        Exponea.shared.trackInAppContentBlockClick(
+            placeholderId: placeholderId,
+            action: action,
+            message: contentBlock
+        )
+    }
+}
+
 public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
 
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -91,6 +239,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         receivedPushEventChannel.setStreamHandler(ReceivedPushStreamHandler.newInstance())
 
         registrar.register(FluffViewFactory(), withId: "FluffView")
+        registrar.register(FlutterInAppContentBlockPlaceholderFactory(messenger: registrar.messenger()), withId: "InAppContentBlockPlaceholder")
     }
 
     var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
@@ -400,6 +549,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 pushNotificationTracking: config.pushNotificationTracking,
                 automaticSessionTracking: config.automaticSessionTracking,
                 defaultProperties: config.defaultProperties,
+                inAppContentBlocksPlaceholders: nil,
                 flushingSetup: config.flushingSetup,
                 allowDefaultCustomerProperties: config.allowDefaultCustomerProperties,
                 advancedAuthEnabled: config.advancedAuthEnabled

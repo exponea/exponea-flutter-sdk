@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'in_app_cb_page.dart';
+
 final _plugin = ExponeaPlugin();
 
 class HomePage extends StatefulWidget {
@@ -321,6 +323,14 @@ class _HomePageState extends State<HomePage> {
                   title: ElevatedButton(
                     onPressed: () => _markFirstAppInboxItemAsRead(context),
                     child: const Text('Mark first as read'),
+                  ),
+                ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const InAppCbPage())),
+                    child: const Text('In App CB Example Page'),
                   ),
                 ),
               ],

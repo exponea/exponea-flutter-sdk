@@ -2,18 +2,20 @@ PODS:
   - AnyCodable-FlightSchool (0.6.3)
   - exponea (0.0.1):
     - AnyCodable-FlightSchool (= 0.6.3)
-    - ExponeaSDK (= 2.15.1)
+    - ExponeaSDK (= 2.21.3)
     - Flutter
-  - ExponeaSDK (2.15.1):
-    - SwiftSoup (= 2.4.3)
+  - ExponeaSDK (2.21.3):
+    - SwiftSoup (= 2.6.1)
   - ExponeaSDK-Notifications (2.15.1)
   - Flutter (1.0.0)
   - Nimble (9.2.1)
   - Quick (4.0.0)
   - shared_preferences_ios (0.0.1):
     - Flutter
-  - SwiftSoup (2.4.3)
+  - SwiftSoup (2.6.1)
   - uni_links (0.0.1):
+    - Flutter
+  - webview_flutter_wkwebview (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -24,6 +26,7 @@ DEPENDENCIES:
   - Quick (= 4.0.0)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   trunk:
@@ -43,18 +46,21 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 1c9890be5884140c60da5fde1b66380dec4c244a
-  exponea: 8560eb48420efcb6309c269dfe3db40baaae9095
-  ExponeaSDK: 0c4d548e5a425b528d54b40400bf7004ec06377b
+  exponea: ab1ea9ba4e3df7c927c061e0739af63e68400da9
+  ExponeaSDK: 137d3b31c9acc1de37b9c4e2a864b3f2aaa1c058
   ExponeaSDK-Notifications: e2392b5b0ce902beac20c65b884b604e6de7db40
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
-  SwiftSoup: 3384f2e618cfc1b3cbc7852c16692fe8de13fb8f
+  SwiftSoup: 5dd2c1b06afc964f30d99894af6ede22ede627aa
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
+  webview_flutter_wkwebview: d08f59cde5e8402c345c0bdda35ac0031352dcae
 
 PODFILE CHECKSUM: 8695be718084382918a6ae664d2c365de73c4e87
 

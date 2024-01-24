@@ -1,7 +1,6 @@
 export 'src/data/model/configuration.dart';
 export 'src/data/model/configuration_change.dart';
 export 'src/data/model/consent.dart';
-export 'src/data/model/consent.dart';
 export 'src/data/model/customer.dart';
 export 'src/data/model/event.dart';
 export 'src/data/model/event_type.dart';
@@ -28,4 +27,5 @@ export 'src/data/model/app_inbox_action.dart';
 export 'src/data/model/app_inbox_message.dart';
 export 'src/platform/platform_interface.dart';
 export 'src/widget/app_inbox_button.dart';
+export 'src/widget/in_app_content_block_placeholder.dart';
 export 'src/plugin/exponea.dart';
