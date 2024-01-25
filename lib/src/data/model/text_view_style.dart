@@ -1,13 +1,10 @@
-
-import 'dart:ffi';
-
 import 'package:exponea/exponea.dart';
 import 'package:flutter/material.dart';
 
 import '../util/Codable.dart';
 
 class TextViewStyle extends Encodable {
-  final Bool? visible;
+  final bool? visible;
   final String? textColor;
   final String? textSize;
   final String? textWeight;

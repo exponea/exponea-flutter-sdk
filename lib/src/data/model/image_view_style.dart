@@ -1,10 +1,7 @@
-
-import 'dart:ffi';
-
 import '../util/Codable.dart';
 
 class ImageViewStyle extends Encodable {
-  final Bool? visible;
+  final bool? visible;
   final String? backgroundColor;
 
   ImageViewStyle({this.visible, this.backgroundColor});

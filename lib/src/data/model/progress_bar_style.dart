@@ -1,10 +1,7 @@
-
-import 'dart:ffi';
-
 import '../util/Codable.dart';
 
 class ProgressBarStyle extends Encodable {
-  final Bool? visible;
+  final bool? visible;
   final String? progressColor;
   final String? backgroundColor;
 

@@ -57,7 +57,7 @@ _plugin.setAppInboxProvider(AppInboxStyle(
         textOverride: 'text value',
         textColor: 'color',
         backgroundColor: 'color',
-        showIcon: 'none|named_icon|base64',
+        showIcon: true,
         textSize: '12px',
         enabled: true,
         borderRadius: '5px',

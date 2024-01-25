@@ -1,15 +1,12 @@
-
-import 'dart:ffi';
-
 import '../util/Codable.dart';
 
 class SimpleButtonStyle extends Encodable {
   final String? textOverride;
   final String? textColor;
   final String? backgroundColor;
-  final String? showIcon;
+  final bool? showIcon;
   final String? textSize;
-  final Bool? enabled;
+  final bool? enabled;
   final String? borderRadius;
   final String? textWeight;
 

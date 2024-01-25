@@ -603,7 +603,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         Exponea.checkPushSetup = true
     }
 
-    private fun setAppInboxProvider(args: Any, result: Result) = runWithResult(result) {
+    private fun setAppInboxProvider(args: Any, result: Result) = runWithNoResult(result) {
         val configMap = args as Map<String, Any?>
         val appInboxStyle = AppInboxStyleParser(configMap).parse()
         Exponea.appInboxProvider = FlutterAppInboxProvider(appInboxStyle)
