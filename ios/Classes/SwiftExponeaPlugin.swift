@@ -529,7 +529,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             result(FlutterError(code: errorCode, message: "Unable to parse AppInboxStyle data", details: nil))
             return
         }
-        exponeaInstance.appInboxProvider = FlutterAppInboxProvider(appInboxStyle)
+        exponeaInstance.appInboxProvider = StyledAppInboxProvider(appInboxStyle)
         result(nil)
     }
 

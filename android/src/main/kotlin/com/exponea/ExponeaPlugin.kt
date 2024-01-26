@@ -23,6 +23,7 @@ import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
+import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
 import com.exponea.widget.FlutterAppInboxButton
@@ -606,7 +607,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     private fun setAppInboxProvider(args: Any, result: Result) = runWithNoResult(result) {
         val configMap = args as Map<String, Any?>
         val appInboxStyle = AppInboxStyleParser(configMap).parse()
-        Exponea.appInboxProvider = FlutterAppInboxProvider(appInboxStyle)
+        Exponea.appInboxProvider = StyledAppInboxProvider(appInboxStyle)
     }
 }
 
