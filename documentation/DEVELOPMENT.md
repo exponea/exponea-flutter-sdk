@@ -23,4 +23,5 @@ To test and showcase the functionality of the SDK, we provide an example applica
 1. `cd example`
 2. if you want to try an iOS app then run `pod install` in `example/ios` to install dependencies for ios application.
 2. Connect Android or iOS device.
-4. `flutter run` to build and run the Android/iOS application. 
+4. `flutter run` to build and run the iOS application.
+5. `flutter run --flavor gms` to build and run the Android application for GMS. Use `hms` to build application for Huawei devices without GooglePlay services but with HMS Core.
