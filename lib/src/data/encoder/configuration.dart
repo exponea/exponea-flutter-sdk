@@ -31,6 +31,10 @@ abstract class ExponeaConfigurationEncoder {
       ios: data
           .getOptional<Map<String, dynamic>>('ios')
           ?.let(IOSExponeaConfigurationEncoder.decode),
+      inAppContentBlockPlaceholdersAutoLoad: data
+          .getOptional<List>('inAppContentBlockPlaceholdersAutoLoad')
+          ?.map((it) => it.toString())
+          .toList(growable: false),
     );
   }
 
@@ -51,6 +55,7 @@ abstract class ExponeaConfigurationEncoder {
           config.pushTokenTrackingFrequency?.let(TokenFrequencyEncoder.encode),
       'android': config.android?.let(AndroidExponeaConfigurationEncoder.encode),
       'ios': config.ios?.let(IOSExponeaConfigurationEncoder.encode),
+      'inAppContentBlockPlaceholdersAutoLoad': config.inAppContentBlockPlaceholdersAutoLoad,
     }..removeWhere((key, value) => value == null);
   }
 }

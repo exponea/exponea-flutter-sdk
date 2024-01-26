@@ -48,6 +48,9 @@ class ExponeaConfigurationParser {
             map.getOptional<Boolean>("advancedAuthEnabled")?.let {
                 advancedAuthEnabled = it
             }
+            map.getOptional<ArrayList<String>>("inAppContentBlockPlaceholdersAutoLoad")?.let {
+                inAppContentBlockPlaceholdersAutoLoad = it
+            }
         }
     }
 

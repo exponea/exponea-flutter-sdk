@@ -16,6 +16,7 @@ class ExponeaConfiguration {
     let defaultProperties: [String: JSONConvertible]?
     var allowDefaultCustomerProperties: Bool? = nil
     var advancedAuthEnabled: Bool? = nil
+    var inAppContentBlockPlaceholdersAutoLoad: [String]? = nil
     
     init(_ data: [String: Any?], parser: ConfigurationParser) throws {
         self.projectSettings = try parser.parseProjectSettings(data)
@@ -28,6 +29,9 @@ class ExponeaConfiguration {
         }
         if let advancedAuthEnabled = data["advancedAuthEnabled"] as? Bool {
             self.advancedAuthEnabled = advancedAuthEnabled
+        }
+        if let inAppContentBlockPlaceholdersAutoLoad = data["inAppContentBlockPlaceholdersAutoLoad"] as? [String] {
+            self.inAppContentBlockPlaceholdersAutoLoad = inAppContentBlockPlaceholdersAutoLoad
         }
     }
 }

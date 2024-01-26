@@ -37,7 +37,9 @@ Minimal supported Android API level for Exponea SDK is 21.
   * [Fetching](./documentation/FETCHING.md)
   * [Push notifications](./documentation/PUSH.md)
   * [Anonymize customer](./documentation/ANONYMIZE.md)
-  * [In-app messages](./documentation/IN_APP_MESSAGES.md)
+  * In-App Personalization
+    * [In-app messages](./documentation/IN_APP_MESSAGES.md)
+    * [In-app content blocks](./documentation/IN_APP_CONTENT_BLOCKS.md)
   * [App Inbox](./documentation/APP_INBOX.md)
   * [Example/Package development documentation](./documentation/DEVELOPMENT.md) - Learn how to build example application or the package itself
   * [SDK version update guide](./documentation/VERSION_UPDATE.md)

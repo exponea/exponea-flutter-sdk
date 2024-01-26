@@ -183,6 +183,7 @@ class _ConfigPageState extends State<ConfigPage> {
         requirePushAuthorization: true,
         appGroup: 'group.com.exponea.ExponeaSDK-Example2',
       ),
+      inAppContentBlockPlaceholdersAutoLoad: const ['example_top', 'example_list']
     );
     try {
       _plugin.setAppInboxProvider(AppInboxStyle(

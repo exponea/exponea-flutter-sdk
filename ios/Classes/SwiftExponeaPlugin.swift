@@ -549,7 +549,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 pushNotificationTracking: config.pushNotificationTracking,
                 automaticSessionTracking: config.automaticSessionTracking,
                 defaultProperties: config.defaultProperties,
-                inAppContentBlocksPlaceholders: nil,
+                inAppContentBlocksPlaceholders: config.inAppContentBlockPlaceholdersAutoLoad,
                 flushingSetup: config.flushingSetup,
                 allowDefaultCustomerProperties: config.allowDefaultCustomerProperties,
                 advancedAuthEnabled: config.advancedAuthEnabled

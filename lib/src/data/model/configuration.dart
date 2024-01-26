@@ -49,6 +49,9 @@ class ExponeaConfiguration {
   /// Platform specific settings for iOS
   final IOSExponeaConfiguration? ios;
 
+  /// Automatically load content of In-app content blocks assigned to these Placeholder IDs
+  final List<String>? inAppContentBlockPlaceholdersAutoLoad;
+
   const ExponeaConfiguration({
     required this.projectToken,
     required this.authorizationToken,
@@ -63,6 +66,7 @@ class ExponeaConfiguration {
     this.advancedAuthEnabled,
     this.android,
     this.ios,
+    this.inAppContentBlockPlaceholdersAutoLoad,
   });
 }
 
