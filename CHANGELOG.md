@@ -1,6 +1,17 @@
 ## :arrow_double_up: [SDK version update guide](./documentation/VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.5.0
+#### January 29, 2024
+* Features
+  * In-app content block feature has been added into SDK
+  * Dart SDK version increased to 2.17.0
+  * Flutter minimal version increased to 3.0.0
+* Bug Fixes
+  * Fixed: Bad handling of native errors to Flutter ones causes crash
+  * Fixed: Wrong data types for App Inbox params showIcon and enabled
+
+
 ## Release Notes for 1.4.2
 #### October 11, 2023
 * Bug Fixes
