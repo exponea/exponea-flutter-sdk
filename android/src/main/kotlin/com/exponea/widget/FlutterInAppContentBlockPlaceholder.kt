@@ -194,6 +194,6 @@ class FlutterInAppContentBlockPlaceholder(
     }
 
     override fun onFlutterViewAttached(flutterView: View) {
-        inAppContentBlockPlaceholder?.refreshContent()
+        // placeholder will reload content itself
     }
 }

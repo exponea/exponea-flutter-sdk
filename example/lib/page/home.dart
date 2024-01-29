@@ -449,9 +449,9 @@ class _HomePageState extends State<HomePage> {
   Future<void> _trackEvent(BuildContext context) =>
       _runAndShowResult(context, () async {
         const event = Event(
-          name: 'test_name',
+          name: 'event_name',
           properties: {
-            'bool': true,
+            'property': '5s',
             'int': 12,
             'double': 34.56,
             'string': 'test'

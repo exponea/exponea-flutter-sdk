@@ -120,7 +120,13 @@ public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView 
     private let placeholderId: String
     private var channel: FlutterMethodChannel?
     
-    init(frame: CGRect, viewIdentifier viewId: Int64, placeholderIdentifier placeholderId: String, inAppContentBlockPlaceholderView inAppContentBlockPlaceholder: StaticInAppContentBlockView?, binaryMessenger messenger: FlutterBinaryMessenger?) {
+    init(
+        frame: CGRect,
+        viewIdentifier viewId: Int64,
+        placeholderIdentifier placeholderId: String,
+        inAppContentBlockPlaceholderView inAppContentBlockPlaceholder: StaticInAppContentBlockView?,
+        binaryMessenger messenger: FlutterBinaryMessenger?
+    ) {
         self.inAppContentBlockPlaceholder = inAppContentBlockPlaceholder
         self.placeholderId = placeholderId
         super.init()
@@ -202,26 +208,15 @@ public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
     }
     
     public func onError(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, errorMessage: String) {
-        guard let contentBlock else {
-            return
-        }
-        Exponea.shared.trackInAppContentBlockError(
-            placeholderId: placeholderId,
-            message: contentBlock,
-            errorMessage: errorMessage
-        )
+        originalBehaviour.onError(placeholderId: placeholderId, contentBlock: contentBlock, errorMessage: errorMessage)
     }
     
     public func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
-        Exponea.shared.trackInAppContentBlockClose(placeholderId: placeholderId,message: contentBlock)
+        originalBehaviour.onCloseClicked(placeholderId: placeholderId, contentBlock: contentBlock)
     }
     
     public func onActionClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse, action: ExponeaSDK.InAppContentBlockAction) {
-        Exponea.shared.trackInAppContentBlockClick(
-            placeholderId: placeholderId,
-            action: action,
-            message: contentBlock
-        )
+        originalBehaviour.onActionClicked(placeholderId: placeholderId, contentBlock: contentBlock, action: action)
     }
 }
 
