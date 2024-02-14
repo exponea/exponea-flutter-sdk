@@ -66,7 +66,13 @@ You can see the dart definition for Configuration object at [lib/src/data/model/
 
 * **automaticSessionTracking** By default, the SDK tracks sessions for you. You can opt-out and implement your own session tracking.
 
-* **pushTokenTrackingFrequency** You can define your policy for tracking push notification token. Default value `TokenFrequency.onTokenChange` is recommended.
+* **pushTokenTrackingFrequency** 
+  * Defines how often should the SDK track push notification token to Exponea
+  * Default value is `TokenFrequency.onTokenChange` and is recommended.
+  * Possible values:
+	  * `.onTokenChange` - tracks push token if differs from previous tracked one
+	  * `.everyLaunch` - tracks push token always
+	  * `.daily` - tracks push token once per day
 
 * **advancedAuthEnabled** If true, Customer Token authentication is used for communication with BE for API listed in [Authorization](./AUTHORIZATION.md) document.
 
