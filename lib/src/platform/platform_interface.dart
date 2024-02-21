@@ -190,4 +190,7 @@ abstract class ExponeaPlatform extends PlatformInterface
 
   @override
   Stream<ReceivedPush> get receivedPushStream => throw UnimplementedError();
+
+  @override
+  Stream<InAppMessageAction> inAppMessageActionStream({bool overrideDefaultBehavior = false, bool trackActions = true}) => throw UnimplementedError();
 }

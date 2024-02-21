@@ -93,6 +93,13 @@ abstract class BaseInterface {
   /// Don't forget to call cancel on the subscription when no longer listening.
   Stream<ReceivedPush> get receivedPushStream;
 
+  /// A stream of In-app message actions.
+  /// The SDK will hold last data until you set the listener.
+  /// Don't forget to call cancel on the subscription when no longer listening.
+  /// If overrideDefaultBehavior is set to true, default in-app action will not be performed ( e.g. deep link )
+  /// If trackActions is set to false, click and close in-app events will not be tracked automatically
+  Stream<InAppMessageAction> inAppMessageActionStream({bool overrideDefaultBehavior = false, bool trackActions = true});
+
   /// Request push authorization on Android or iOS.
   Future<bool> requestPushAuthorization();
 

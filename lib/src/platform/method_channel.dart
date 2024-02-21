@@ -1,6 +1,7 @@
 import 'package:exponea/exponea.dart';
 import 'package:flutter/services.dart';
 
+import '../data/encoder/in_app_message_action.dart';
 import '../data/encoder/main.dart';
 import '../data/util/object.dart';
 
@@ -13,8 +14,10 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _openedPushEventChannel = EventChannel(_openedPushStreamName);
 
   static const _receivedPushStreamName = "$_channelName/received_push";
-  static const _receivedPushEventChannel =
-      EventChannel(_receivedPushStreamName);
+  static const _receivedPushEventChannel = EventChannel(_receivedPushStreamName);
+
+  static const _inAppMessageActionStreamName = '$_channelName/in_app_messages';
+  static const _inAppMessageActionEventChannel = EventChannel(_inAppMessageActionStreamName);
 
   static const _methodConfigure = 'configure';
   static const _methodIsConfigured = 'isConfigured';
@@ -45,9 +48,11 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _markAppInboxAsRead = 'markAppInboxAsRead';
   static const _fetchAppInbox = 'fetchAppInbox';
   static const _fetchAppInboxItem = 'fetchAppInboxItem';
+  static const _setInAppMessageActionHandler = 'setInAppMessageActionHandler';
 
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
+  Stream<InAppMessageAction>? _inAppMessageActionStream;
 
   @override
   Future<bool> configure(ExponeaConfiguration configuration) async {
@@ -176,6 +181,22 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
         .cast<Map<dynamic, dynamic>>()
         .map((event) => ReceivedPushEncoder.decode(event));
     return _receivedPushStream!;
+  }
+
+  @override
+  Stream<InAppMessageAction> inAppMessageActionStream({bool overrideDefaultBehavior = false, bool trackActions = true}) {
+    _channel.invokeMethod<void>(
+      _setInAppMessageActionHandler,
+      {
+        'overrideDefaultBehavior': overrideDefaultBehavior,
+        'trackActions': trackActions,
+      },
+    );
+    _inAppMessageActionStream ??= _inAppMessageActionEventChannel
+        .receiveBroadcastStream()
+        .cast<Map<dynamic, dynamic>>()
+        .map((event) => InAppMessageActionEncoder.decode(event));
+    return _inAppMessageActionStream!;
   }
 
   @override

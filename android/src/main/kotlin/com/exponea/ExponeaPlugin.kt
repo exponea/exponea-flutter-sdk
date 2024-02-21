@@ -14,6 +14,7 @@ import com.exponea.data.Event
 import com.exponea.data.ExponeaConfigurationParser
 import com.exponea.data.OpenedPush
 import com.exponea.data.ReceivedPush
+import com.exponea.data.InAppMessageAction
 import com.exponea.data.RecommendationEncoder
 import com.exponea.data.RecommendationOptionsEncoder
 import com.exponea.exception.ExponeaException
@@ -23,6 +24,9 @@ import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
+import com.exponea.sdk.models.InAppMessage
+import com.exponea.sdk.models.InAppMessageButton
+import com.exponea.sdk.models.InAppMessageCallback
 import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
@@ -50,6 +54,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         private const val CHANNEL_NAME = "com.exponea"
         private const val STREAM_NAME_OPENED_PUSH = "$CHANNEL_NAME/opened_push"
         private const val STREAM_NAME_RECEIVED_PUSH = "$CHANNEL_NAME/received_push"
+        private const val STREAM_NAME_IN_APP_MESSAGES = "$CHANNEL_NAME/in_app_messages"
 
         fun handleCampaignIntent(intent: Intent?, applicationContext: Context) {
             Log.d(TAG, "handleCampaignIntent()")
@@ -92,6 +97,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
     private var openedPushChannel: EventChannel? = null
     private var openedPushStreamHandler: OpenedPushStreamHandler? = null
     private var receivedPushChannel: EventChannel? = null
+    private var inAppMessagesChannel: EventChannel? = null
 
     override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         val context = binding.applicationContext
@@ -108,6 +114,10 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         }
         receivedPushChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_RECEIVED_PUSH).apply {
             val handler = ReceivedPushStreamHandler()
+            setStreamHandler(handler)
+        }
+        inAppMessagesChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_IN_APP_MESSAGES).apply {
+            val handler = InAppMessageCallbackStreamHandler()
             setStreamHandler(handler)
         }
         binding
@@ -178,6 +188,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_MARK_APP_INBOX_AS_READ = "markAppInboxAsRead"
         private const val METHOD_FETCH_APP_INBOX = "fetchAppInbox"
         private const val METHOD_FETCH_APP_INBOX_ITEM = "fetchAppInboxItem"
+        private const val METHOD_SET_IN_APP_MESSAGE_ACTION_HANDLER = "setInAppMessageActionHandler"
     }
 
     var activity: Context? = null
@@ -274,6 +285,9 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_FETCH_APP_INBOX_ITEM -> {
                 fetchAppInboxItem(call.arguments, result)
+            }
+            METHOD_SET_IN_APP_MESSAGE_ACTION_HANDLER -> {
+                setInAppMessageActionHandler(call.arguments, result)
             }
             else -> {
                 result.notImplemented()
@@ -382,6 +396,17 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             } else {
                 result.success(AppInboxCoder.encode(nativeMessage))
             }
+        }
+    }
+
+    private fun setInAppMessageActionHandler(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val params = args as Map<String, Any?>
+
+        Exponea.inAppMessageActionCallback = FlutterInAppActionListener(
+            params.getRequired("overrideDefaultBehavior"), params.getRequired("trackActions")
+        ) { inAppMessageAction ->
+            InAppMessageCallbackStreamHandler.handle(inAppMessageAction)
         }
     }
 
@@ -711,6 +736,75 @@ class ReceivedPushStreamHandler : StreamHandler {
         val sink = eventSink
         if (sink != null) {
             sink.success(push.toMap())
+            return true
+        }
+        return false
+    }
+}
+
+class FlutterInAppActionListener(
+    override val overrideDefaultBehavior: Boolean,
+    override var trackActions: Boolean,
+    private val handleCallback: (InAppMessageAction) -> Unit
+) : InAppMessageCallback {
+    override fun inAppMessageAction(
+        message: InAppMessage,
+        button: InAppMessageButton?,
+        interaction: Boolean,
+        context: Context
+    ) {
+        handleCallback.invoke(
+            InAppMessageAction(
+                message = message,
+                button = button,
+                interaction = interaction
+            )
+        )
+    }
+}
+
+/**
+ * Handles listeners for in-app message actions.
+ */
+class InAppMessageCallbackStreamHandler : StreamHandler {
+    companion object {
+        private var currentInstance: InAppMessageCallbackStreamHandler? = null
+
+        // We have to hold inAppMessage until plugin is initialized and listener set
+        private var pendingData: InAppMessageAction? = null
+
+        fun handle(action: InAppMessageAction): Boolean {
+            val handled = currentInstance?.internalHandle(action) ?: false
+            if (!handled) {
+                pendingData = action
+            }
+            return handled
+        }
+    }
+
+    init {
+        currentInstance = this
+    }
+
+    private var eventSink: EventSink? = null
+
+    override fun onListen(arguments: Any?, eSink: EventSink?) {
+        eventSink = eSink
+        pendingData?.let {
+            if (handle(it)) {
+                pendingData = null
+            }
+        }
+    }
+
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
+    }
+
+    private fun internalHandle(action: InAppMessageAction): Boolean {
+        val sink = eventSink
+        if (sink != null) {
+            sink.success(action.toMap())
             return true
         }
         return false

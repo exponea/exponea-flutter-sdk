@@ -131,4 +131,8 @@ class ExponeaPlugin implements BaseInterface {
 
   @override
   Stream<ReceivedPush> get receivedPushStream => _platform.receivedPushStream;
+
+  @override
+  Stream<InAppMessageAction> inAppMessageActionStream({bool overrideDefaultBehavior = false, bool trackActions = true}) =>
+      _platform.inAppMessageActionStream(overrideDefaultBehavior: overrideDefaultBehavior, trackActions : trackActions);
 }
