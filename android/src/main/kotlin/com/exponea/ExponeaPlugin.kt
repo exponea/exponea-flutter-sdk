@@ -117,7 +117,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
             setStreamHandler(handler)
         }
         inAppMessagesChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_IN_APP_MESSAGES).apply {
-            val handler = InAppMessageCallbackStreamHandler()
+            val handler = InAppMessageActionStreamHandler.currentInstance
             setStreamHandler(handler)
         }
         binding
@@ -403,11 +403,8 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         requireConfigured()
         val params = args as Map<String, Any?>
 
-        Exponea.inAppMessageActionCallback = FlutterInAppActionListener(
-            params.getRequired("overrideDefaultBehavior"), params.getRequired("trackActions")
-        ) { inAppMessageAction ->
-            InAppMessageCallbackStreamHandler.handle(inAppMessageAction)
-        }
+        InAppMessageActionStreamHandler.currentInstance.overrideDefaultBehavior = params.getRequired("overrideDefaultBehavior")
+        InAppMessageActionStreamHandler.currentInstance.trackActions = params.getRequired("trackActions")
     }
 
     private fun requireConfigured() {
@@ -459,6 +456,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         Exponea.init(activity ?: context, configuration)
         this.configuration = configuration
         Exponea.notificationDataCallback = { ReceivedPushStreamHandler.handle(ReceivedPush(it)) }
+        Exponea.inAppMessageActionCallback = InAppMessageActionStreamHandler.currentInstance
         return@runWithResult true
     }
 
@@ -742,49 +740,20 @@ class ReceivedPushStreamHandler : StreamHandler {
     }
 }
 
-class FlutterInAppActionListener(
-    override val overrideDefaultBehavior: Boolean,
-    override var trackActions: Boolean,
-    private val handleCallback: (InAppMessageAction) -> Unit
-) : InAppMessageCallback {
-    override fun inAppMessageAction(
-        message: InAppMessage,
-        button: InAppMessageButton?,
-        interaction: Boolean,
-        context: Context
-    ) {
-        handleCallback.invoke(
-            InAppMessageAction(
-                message = message,
-                button = button,
-                interaction = interaction
-            )
-        )
-    }
-}
-
 /**
  * Handles listeners for in-app message actions.
  */
-class InAppMessageCallbackStreamHandler : StreamHandler {
+class InAppMessageActionStreamHandler private constructor(
+    override var overrideDefaultBehavior: Boolean = false,
+    override var trackActions: Boolean = true,
+) : StreamHandler, InAppMessageCallback {
     companion object {
-        private var currentInstance: InAppMessageCallbackStreamHandler? = null
-
-        // We have to hold inAppMessage until plugin is initialized and listener set
-        private var pendingData: InAppMessageAction? = null
-
-        fun handle(action: InAppMessageAction): Boolean {
-            val handled = currentInstance?.internalHandle(action) ?: false
-            if (!handled) {
-                pendingData = action
-            }
-            return handled
-        }
+        var currentInstance: InAppMessageActionStreamHandler = InAppMessageActionStreamHandler()
+            private set
     }
 
-    init {
-        currentInstance = this
-    }
+    // We have to hold inAppMessage until plugin is initialized and listener set
+    private var pendingData: InAppMessageAction? = null
 
     private var eventSink: EventSink? = null
 
@@ -799,14 +768,30 @@ class InAppMessageCallbackStreamHandler : StreamHandler {
 
     override fun onCancel(arguments: Any?) {
         eventSink = null
+        overrideDefaultBehavior = false
+        trackActions = true
     }
 
-    private fun internalHandle(action: InAppMessageAction): Boolean {
+    override fun inAppMessageAction(
+        message: InAppMessage,
+        button: InAppMessageButton?,
+        interaction: Boolean,
+        context: Context
+    ) {
+        handle(
+            InAppMessageAction(
+                message = message, button = button, interaction = interaction
+            )
+        )
+    }
+
+    private fun handle(action: InAppMessageAction): Boolean {
         val sink = eventSink
         if (sink != null) {
             sink.success(action.toMap())
             return true
         }
+        pendingData = action
         return false
     }
 }

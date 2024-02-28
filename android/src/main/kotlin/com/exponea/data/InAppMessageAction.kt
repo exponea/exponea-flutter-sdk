@@ -5,9 +5,9 @@ import com.exponea.sdk.models.InAppMessageButton
 import com.google.gson.Gson
 
 data class InAppMessageAction(
-    var message: InAppMessage,
-    var button: InAppMessageButton?,
-    var interaction: Boolean,
+    val message: InAppMessage,
+    val button: InAppMessageButton?,
+    val interaction: Boolean,
     private val gson: Gson = Gson(),
 ) {
     fun toMap(): Map<String, Any?> {
