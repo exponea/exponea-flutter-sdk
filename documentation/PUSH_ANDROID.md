@@ -164,6 +164,18 @@ You'll have to define an intent filter that can respond to URL you define when c
 </activity>
 ```
 
+### Show notification if app is in foreground
+When app is in foreground, notifications are not shown, they end up in notification drawer and notification icon is shown in status bar. To achieve showing notification when app is in foreground, you can can set up a listener for received push notifications using `ExponeaPlugin.receivedPushStream` and implement showing of notification via third party plugin as flutter_local_notifications.
+> The listener is called for both regular and silent push notifications on Android and **only** for silent push notifications on iOS due to technical limitations.
+
+```dart
+final subscription = _plugin.receivedPushStream.listen((receivedPush) {
+  _showPushNotification(receivedPush);
+});
+```
+Don't forget to call `subscription.cancel()` when no longer needed.
+
+
 ## Troubleshooting
 In case of push notifications not working for you, these are frequent issues with the most likely solutions.
 

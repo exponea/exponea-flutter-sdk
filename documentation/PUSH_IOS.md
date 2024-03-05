@@ -160,6 +160,21 @@ Messaging.messaging().token { token, error in
 }
 ```
 
+### Show notification if app is in foreground
+
+```swift
+    override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // show notification even if the app is in the foreground
+        if #available(iOS 14, *) {
+            completionHandler([.banner])
+        } else {
+            completionHandler([.alert])
+        }
+    }
+```
+
+This method is called by system if app is in foreground state. Default implementation is to show push notification. If you want to change the default behavior, override this method.
+
 #### Checklist:
  - push notification with image and buttons sent from Exponea web app should be properly displayed on your device. Push delivery tracking should work.
  - if you don't see buttons in the expanded push notification, it means the content extension is **not** running. Double check `UNNotificationExtensionCategory` in the Info.plist - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for extensions and main app.
