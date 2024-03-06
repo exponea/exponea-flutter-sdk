@@ -208,8 +208,7 @@ public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
     }
     
     public func onError(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, errorMessage: String) {
-        // uncomment when onError is fixed due to automatic handleUrlClick on action:blank on first show
-//        originalBehaviour.onError(placeholderId: placeholderId, contentBlock: contentBlock, errorMessage: errorMessage)
+        originalBehaviour.onError(placeholderId: placeholderId, contentBlock: contentBlock, errorMessage: errorMessage)
     }
     
     public func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
