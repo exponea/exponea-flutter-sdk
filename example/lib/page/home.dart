@@ -520,4 +520,9 @@ class _HomePageState extends State<HomePage> {
   void _onPushEvent(dynamic push) {
     _pushController.value = '$push\nat: ${DateTime.now().toIso8601String()}';
   }
+
+  void _onInAppMessageActionEvent(InAppMessageAction action) {
+    print('received in-app action: $action');
+  }
+
 }

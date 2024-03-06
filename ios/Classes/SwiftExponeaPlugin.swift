@@ -8,6 +8,7 @@ import WebKit
 private let channelName = "com.exponea"
 private let openedPushStreamName = "\(channelName)/opened_push"
 private let receivedPushStreamName = "\(channelName)/received_push"
+private let inAppMessagesStreamName = "\(channelName)/in_app_messages"
 
 enum METHOD_NAME: String {
     case methodConfigure = "configure"
@@ -39,6 +40,7 @@ enum METHOD_NAME: String {
     case markAppInboxAsRead = "markAppInboxAsRead"
     case fetchAppInbox = "fetchAppInbox"
     case fetchAppInboxItem = "fetchAppInboxItem"
+    case setInAppMessageActionHandler = "setInAppMessageActionHandler"
 }
 
 
@@ -232,6 +234,9 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
 
         let receivedPushEventChannel = FlutterEventChannel(name: receivedPushStreamName, binaryMessenger: registrar.messenger())
         receivedPushEventChannel.setStreamHandler(ReceivedPushStreamHandler.newInstance())
+        
+        let inAppMessagesChannel = FlutterEventChannel(name: inAppMessagesStreamName, binaryMessenger: registrar.messenger())
+        inAppMessagesChannel.setStreamHandler(InAppMessageActionStreamHandler.currentInstance)
 
         registrar.register(FluffViewFactory(), withId: "FluffView")
         registrar.register(FlutterInAppContentBlockPlaceholderFactory(messenger: registrar.messenger()), withId: "InAppContentBlockPlaceholder")
@@ -304,6 +309,8 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             fetchAppInbox(with: result)
         case .fetchAppInboxItem:
             fetchAppInboxItem(call.arguments, with: result)
+        case .setInAppMessageActionHandler:
+            setInAppMessageActionHandler(call.arguments, with: result)
         }
     }
     
@@ -518,6 +525,26 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         }
     }
     
+    private func setInAppMessageActionHandler(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        do {
+            guard let params = args as? NSDictionary,
+                  let overrideDefaultBehavior: Bool = try params.getRequiredSafely(property: "overrideDefaultBehavior"),
+                  let trackActions: Bool = try params.getRequiredSafely(property: "trackActions") else {
+                result(FlutterError(
+                    code: errorCode,
+                    message: "Requiered function params missing", details: "no overrideDefaultBehavior or trackActions"
+                ))
+                return
+            }
+            InAppMessageActionStreamHandler.currentInstance.overrideDefaultBehavior = overrideDefaultBehavior
+            InAppMessageActionStreamHandler.currentInstance.trackActions = trackActions
+        } catch {
+            let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
+            result(error)
+        }
+    }
+    
     private func setupAppInbox(_ args: Any?, with result: FlutterResult) {
         guard let configMap = args as? NSDictionary,
               let appInboxStyle = try? AppInboxStyleParser(configMap).parse() else {
@@ -550,6 +577,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 advancedAuthEnabled: config.advancedAuthEnabled
             )
             exponeaInstance.pushNotificationsDelegate = self
+            exponeaInstance.inAppMessagesDelegate = InAppMessageActionStreamHandler.currentInstance
             result(true)
         } catch {
             let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
