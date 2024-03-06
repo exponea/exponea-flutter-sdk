@@ -2,7 +2,7 @@ buildscript {
     ext {
         minSdkVersion = 21
         compileSdkVersion = 33
-        targetSdkVersion = 31
+        targetSdkVersion = 33
 
         androidGradlePluginVersion = '7.1.2'
         kotlinVersion = '1.7.10'

@@ -169,6 +169,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_GET_LOG_LEVEL = "getLogLevel"
         private const val METHOD_SET_LOG_LEVEL = "setLogLevel"
         private const val METHOD_CHECK_PUSH_SETUP = "checkPushSetup"
+        private const val METHOD_REQUEST_PUSH_AUTHORIZATION = "requestPushAuthorization"
         private const val METHOD_SET_APP_INBOX_PROVIDER = "setAppInboxProvider"
         private const val METHOD_TRACK_APP_INBOX_OPENED = "trackAppInboxOpened"
         private const val METHOD_TRACK_APP_INBOX_OPENED_WITHOUT_TRACKING_CONSENT = "trackAppInboxOpenedWithoutTrackingConsent"
@@ -246,6 +247,9 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_CHECK_PUSH_SETUP -> {
                 checkPushSetup(result)
+            }
+            METHOD_REQUEST_PUSH_AUTHORIZATION -> {
+                requestPushAuthorization(result)
             }
             METHOD_SET_APP_INBOX_PROVIDER -> {
                 setAppInboxProvider(call.arguments, result)
@@ -602,6 +606,12 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     private fun checkPushSetup(result: Result) = runWithNoResult(result) {
         requireNotConfigured()
         Exponea.checkPushSetup = true
+    }
+
+    private fun requestPushAuthorization(result: Result) = runAsync(result) {
+        Exponea.requestPushAuthorization(context) { granted ->
+            result.success(granted)
+        }
     }
 
     private fun setAppInboxProvider(args: Any, result: Result) = runWithNoResult(result) {

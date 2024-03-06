@@ -48,9 +48,9 @@ final _plugin = ExponeaPlugin();
 _plugin.identifyCustomer(Customer(ids: {'registered': 'test@test.com'}));
 ```
 
-for iOS devices, you also need to request permission for receiving push notifications. Run the following code in you app, when you want to prompt user to grant the permissions:
+for iOS devices and Android 13 and newer devices, you also need to request permission for receiving push notifications. Run the following code in your app, when you want to prompt user to grant the permissions:
 ```
-_plugin.requestIosPushAuthorization();
+_plugin.requestPushAuthorization();
 ```
 
 Then select the user by email in the notification builder preview, select platform and click **Test push notification** button. The push notification should arrive to your device shortly. Receiving push notifications also works on iOS Simulators and Android emulators. For more info about working with iOS simulaors, please visit [Work with iOS simulator](https://github.com/panaxeo/exponea_ios-sdk/blob/develop/Documentation/PUSH.md#work-with-ios-simulator)

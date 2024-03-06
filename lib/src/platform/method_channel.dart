@@ -184,6 +184,12 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   }
 
   @override
+  Future<bool> requestPushAuthorization() async {
+    return (await _channel
+        .invokeMethod<bool>(_methodRequestPushAuthorization))!;
+  }
+
+  @override
   Future<bool> requestIosPushAuthorization() async {
     return (await _channel
         .invokeMethod<bool>(_methodRequestPushAuthorization))!;

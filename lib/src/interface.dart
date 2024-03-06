@@ -93,7 +93,11 @@ abstract class BaseInterface {
   /// Don't forget to call cancel on the subscription when no longer listening.
   Stream<ReceivedPush> get receivedPushStream;
 
+  /// Request push authorization on Android or iOS.
+  Future<bool> requestPushAuthorization();
+
   /// Request push authorization on iOS.
+  @Deprecated("Will be removed in a later version of the SDK, use 'requestPushAuthorization()' instead")
   Future<bool> requestIosPushAuthorization();
 
   /// Set AppInboxProvider

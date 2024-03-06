@@ -66,9 +66,9 @@ To be able to send push notifications from Exponea backend, you need to connect 
 [Exponea web app push notification configuration](./APNS.md) guide contains screenshots showing where the data is located.
 
 ## 5. Authorizing for receiving push notifications
-You'll need a special permission for notifications visible to the user. To request it, call `ExponeaPlugin().requestIosPushAuthorization()` from **dart**.
+You'll need a special permission for notifications visible to the user. To request it, call `ExponeaPlugin().requestPushAuthorization()` from **dart**.
 ```dart 
-_plugin.requestIosPushAuthorization()
+_plugin.requestPushAuthorization()
 .then((accepted) => print("User has ${accepted ? 'accepted': 'rejected'} push notifications."))
 .catchError((error) => print('Error: $error'));
 ```

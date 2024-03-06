@@ -54,6 +54,11 @@ class ExponeaPlugin implements BaseInterface {
   Future<bool> isConfigured() => _platform.isConfigured();
 
   @override
+  Future<bool> requestPushAuthorization() =>
+      _platform.requestPushAuthorization();
+
+  @Deprecated("Will be removed in a later version of the SDK, use 'requestPushAuthorization()' instead")
+  @override
   Future<bool> requestIosPushAuthorization() =>
       _platform.requestIosPushAuthorization();
 

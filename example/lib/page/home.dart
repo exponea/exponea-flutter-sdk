@@ -67,13 +67,12 @@ class _HomePageState extends State<HomePage> {
                     builder: (context, value, _) => Text(value),
                   ),
                 ),
-                if (Platform.isIOS)
-                  ListTile(
-                    title: ElevatedButton(
-                      onPressed: () => _requestIosPushAuthorization(context),
-                      child: const Text('Request Push Authorization'),
-                    ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => _requestPushAuthorization(context),
+                    child: const Text('Request Push Authorization'),
                   ),
+                ),
                 ListTile(
                   title: ElevatedButton(
                     onPressed: () => _checkIsConfigured(context),
@@ -486,9 +485,9 @@ class _HomePageState extends State<HomePage> {
         return await _plugin.setLogLevel(level);
       });
 
-  Future<void> _requestIosPushAuthorization(BuildContext context) =>
+  Future<void> _requestPushAuthorization(BuildContext context) =>
       _runAndShowResult(context, () async {
-        return await _plugin.requestIosPushAuthorization();
+        return await _plugin.requestPushAuthorization();
       });
 
   Future<void> _runAndShowResult(

@@ -100,6 +100,12 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
+  Future<bool> requestPushAuthorization() async {
+    throw UnimplementedError();
+  }
+
+  @Deprecated("Will be removed in a later version of the SDK, use 'requestPushAuthorization()' instead")
+  @override
   Future<bool> requestIosPushAuthorization() async {
     throw UnimplementedError();
   }

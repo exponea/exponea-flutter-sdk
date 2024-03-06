@@ -175,6 +175,24 @@ final subscription = _plugin.receivedPushStream.listen((receivedPush) {
 ```
 Don't forget to call `subscription.cancel()` when no longer needed.
 
+## Notification permission
+Android 13 (API level 33) introduces a new runtime notification permission that is needed to be registered in your AndroidManifest.xml and also allowed by user, otherwise your application would not be able to show push notifications.
+First step (register `POST_NOTIFICATIONS` permission) is already registered by SDK.
+Second step (show runtime permission dialog) has to be triggered from your application. You may use SDK API for that purpose:
+
+```dart 
+_plugin.requestPushAuthorization()
+.then((accepted) => print("User has ${accepted ? 'accepted': 'rejected'} push notifications."))
+.catchError((error) => print('Error: $error'));
+```
+
+SDK will show a simple dialog for user to allow or deny `POST_NOTIFICATIONS` permission. Although this permission request is not needed for previous Android version, you are free to invoke this method anyway. Callback value `granted` is returned TRUE for older Android systems.
+Behavior if this callback is:
+* For Android older that 33
+  * you don't need permission, TRUE is returned automatically
+* For Android newer, 33+
+  * dialog prompt (from system) is shown do decide, decision is returned (true/false)
+  * for already given permission - dialog is not shown and TRUE is returned
 
 ## Troubleshooting
 In case of push notifications not working for you, these are frequent issues with the most likely solutions.
