@@ -1,0 +1,49 @@
+[
+  {},
+  {
+    "message": {
+      "id": "mock-id",
+      "name": "mock-name",
+      "frequency": "mock-frequency",
+      "variantId": 1,
+      "variantName": "mock-variantName",
+      "messageType": "mock-messageType",
+      "payload": "{\"mock-payload-param\":\"mock-payload-content\"}",
+      "trigger": "{\"mock-trigger-param\":\"mock-trigger-content\"}",
+      "dateFilter": "{\"mock-dateFilter-param\":\"mock-dateFilter-content\"}",
+      "loadPriority": 1,
+      "loadDelay": 1000,
+      "closeTimeout": 2000,
+      "payloadHtml": "mock-payloadHtml",
+      "isHtml": true,
+      "hasTrackingConsent": true,
+      "consentCategoryTracking": "mock-consentCategoryTracking"
+    },
+    "interaction": true
+  },
+  {
+    "message": {
+      "id": "mock-id",
+      "name": "mock-name",
+      "frequency": "mock-frequency",
+      "variantId": 1,
+      "variantName": "mock-variantName",
+      "messageType": "mock-messageType",
+      "payload": "{\"mock-payload-param\":\"mock-payload-content\"}",
+      "trigger": "{\"mock-trigger-param\":\"mock-trigger-content\"}",
+      "dateFilter": "{\"mock-dateFilter-param\":\"mock-dateFilter-content\"}",
+      "loadPriority": 1,
+      "loadDelay": 1000,
+      "closeTimeout": 2000,
+      "payloadHtml": "mock-payloadHtml",
+      "isHtml": true,
+      "hasTrackingConsent": true,
+      "consentCategoryTracking": "mock-consentCategoryTracking"
+    },
+    "interaction": true,
+    "button": {
+      "text": "button",
+      "url": "https://a.b.c"
+    }
+  }
+]

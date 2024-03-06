@@ -20,3 +20,19 @@ In-app messages are triggered when an event is tracked based on conditions setup
 If your application decides to present another UIViewController/start a new Activity right at the same time a race condition is created and the message might be displayed and immediately dismissed. Keep this in mind if the logs tell you your message was displayed but you don't see it.
 
 > Show on `App load` displays in-app message when a `session_start` event is tracked. If you close and quickly reopen the app, it's possible that the session did not timeout and message won't be displayed. If you use manual session tracking, the message won't be displayed unless you track `session_start` event yourself.
+
+### Custom in-app message actions
+If you want to override default SDK behavior, when in-app message action is performed (button is clicked, a message is closed), or you want to add your code to be performed along with code executed by the SDK, you can set up a listener for `inAppMessageAction` using `ExponeaPlugin.inAppMessageActionStream({bool overrideDefaultBehavior = false, bool trackActions = true})`. You can override default behavior of SDK with `overrideDefaultBehavior` and `trackActions` parameters. If overrideDefaultBehavior is set to true, default in-app action will not be performed ( e.g. deep link ). If trackActions is set to false, click and close in-app events will not be tracked automatically.
+The SDK will hold last inAppMessageAction and call the listener once it's set, but it's still recommended to set the listener as soon as possible.
+
+```dart
+// If overrideDefaultBehavior is set to true, default in-app action will not be performed ( e.g. deep link )
+const overrideDefaultBehavior = false;
+// If trackActions is set to false, click and close in-app events will not be tracked automatically
+const trackActions = true;
+final subscription = _plugin.inAppMessageActionStream(overrideDefaultBehavior: overrideDefaultBehavior, trackActions: trackActions).listen((inAppMessageAction) {
+  print(inAppMessageAction);
+});
+```
+
+Don't forget to call `subscription.cancel()` when no longer needed. If you cancel subscription from stream, SDK returns back to default behavior (default in-app action will be performed and click and close in-app events will be tracked).
