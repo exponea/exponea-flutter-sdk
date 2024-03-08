@@ -1,6 +1,15 @@
 ## :arrow_double_up: [SDK version update guide](./documentation/VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.6.0
+#### March 08, 2024
+* Features
+  * Added In-app messages callback handler to define your customised message action handling
+  * Android PUSH notification permission request support
+  * Documentation extended with PUSH notification payload structure description, PUSH handling and more
+  * Anonymize feature has been described with more details in documentation
+
+
 ## Release Notes for 1.5.0
 #### January 29, 2024
 * Features
