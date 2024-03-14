@@ -80,7 +80,7 @@
 * Features
   * Flutter SDK upgraded to 2.10
   * Native Android SDK updated to 3.0.3 - [Android SDK Release notes](https://github.com/exponea/exponea-android-sdk/blob/3.0.3/Documentation/RELEASE_NOTES.md)
-  * Native iOS SDK updated to 2.11.3 - [iOS SDK Release notes](https://github.com/exponea/exponea-ios-sdk/blob/2.11.3/Documentation/RELEASE_NOTES.md)
+  * Native iOS SDK updated to 2.11.3 - [iOS SDK Release notes](https://documentation.bloomreach.com/engagement/docs/ios-sdk-release-notes#release-notes-for-2113)
 
 ## Release Notes for 0.2.1
 #### August 12, 2021
