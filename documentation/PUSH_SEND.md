@@ -53,4 +53,4 @@ for iOS devices and Android 13 and newer devices, you also need to request permi
 _plugin.requestPushAuthorization();
 ```
 
-Then select the user by email in the notification builder preview, select platform and click **Test push notification** button. The push notification should arrive to your device shortly. Receiving push notifications also works on iOS Simulators and Android emulators. For more info about working with iOS simulaors, please visit [Work with iOS simulator](https://github.com/panaxeo/exponea_ios-sdk/blob/develop/Documentation/PUSH.md#work-with-ios-simulator)
+Then select the user by email in the notification builder preview, select platform and click **Test push notification** button. The push notification should arrive to your device shortly. Receiving push notifications also works on iOS Simulators and Android emulators. For more info about working with iOS simulaors, please visit [Work with iOS simulator](https://github.com/exponea/exponea-ios-sdk/blob/main/Documentation/push-notifications.md#debug-with-the-ios-simulator)

@@ -1,9 +1,9 @@
 # Android Push notification setup
-We rely on our native SDK to do push tracking. For more complex scenarios(multiple push providers) please can check [native Android SDK Push notification documentation](https://github.com/exponea/exponea-android-sdk/blob/develop/Documentation/PUSH.md).
+We rely on our native SDK to do push tracking. For more complex scenarios(multiple push providers) please can check [native Android SDK Push notification documentation](https://github.com/exponea/exponea-android-sdk/blob/main/Documentation/PUSH.md).
 
 > Exponea Android SDK contains self-check functionality to help you successfully setup push notifications. Self-check will try to track push token, request Exponea backend to send silent push to the device and check the app is ready to open push notifications. To enable self-check call `ExponeaPlugin().checkPushSetup()` **before** configuring the SDK.
 
-> The behaviour of Push delivery and click tracking may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Read more in [tracking consent documentation](https://github.com/exponea/exponea-android-sdk/blob/develop/Documentation/TRACKING_CONSENT.md).
+> The behaviour of Push delivery and click tracking may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Read more in [tracking consent documentation](https://github.com/exponea/exponea-android-sdk/blob/main/Documentation/TRACKING_CONSENT.md).
 
 ## Push Integrations
 Exponea Android SDK supports these integrations:
@@ -64,7 +64,7 @@ Registering in AndroidManifest.xml
 ```
  
 ### Setting the Firebase server key in the Exponea web app
-You'll need to set the Firebase server key so Exponea can use it to send push notifications to your application. Our native Android has a [guide describing how to do so](https://github.com/exponea/exponea-android-sdk/blob/develop/Guides/FIREBASE.md).
+You'll need to set the Firebase server key so Exponea can use it to send push notifications to your application. Our native Android has a [guide describing how to do so](https://github.com/exponea/exponea-android-sdk/blob/main/Guides/FIREBASE.md).
 
 ### That's it
 After these steps, you should be able to receive push notifications from Exponea. To learn how to send one, check a [Sending Push notifications guide](./PUSH_SEND.md).
