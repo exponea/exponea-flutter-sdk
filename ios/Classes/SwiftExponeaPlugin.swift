@@ -40,6 +40,14 @@ enum METHOD_NAME: String {
     case markAppInboxAsRead = "markAppInboxAsRead"
     case fetchAppInbox = "fetchAppInbox"
     case fetchAppInboxItem = "fetchAppInboxItem"
+    case trackInAppContentBlockClick = "trackInAppContentBlockClick"
+    case trackInAppContentBlockClickWithoutTrackingConsent = "trackInAppContentBlockClickWithoutTrackingConsent"
+    case trackInAppContentBlockClose = "trackInAppContentBlockClose"
+    case trackInAppContentBlockCloseWithoutTrackingConsent = "trackInAppContentBlockCloseWithoutTrackingConsent"
+    case trackInAppContentBlockShown = "trackInAppContentBlockShown"
+    case trackInAppContentBlockShownWithoutTrackingConsent = "trackInAppContentBlockShownWithoutTrackingConsent"
+    case trackInAppContentBlockError = "trackInAppContentBlockError"
+    case trackInAppContentBlockErrorWithoutTrackingConsent = "trackInAppContentBlockErrorWithoutTrackingConsent"
     case setInAppMessageActionHandler = "setInAppMessageActionHandler"
 }
 
@@ -90,12 +98,14 @@ public class FlutterInAppContentBlockPlaceholderFactory: NSObject, FlutterPlatfo
     
     public func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
         guard let data = args as? NSDictionary,
-              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId") else {
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let overrideDefaultBehavior: Bool = try? data.getRequiredSafely(property: "overrideDefaultBehavior") else {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to parse placeholder identifier.")
             return FlutterInAppContentBlockPlaceholder(
                 frame: frame,
                 viewIdentifier: viewId,
                 placeholderIdentifier: "",
+                overrideDefaultBehavior: false,
                 inAppContentBlockPlaceholderView: nil,
                 binaryMessenger: messenger)
         }
@@ -104,6 +114,7 @@ public class FlutterInAppContentBlockPlaceholderFactory: NSObject, FlutterPlatfo
             frame: frame,
             viewIdentifier: viewId,
             placeholderIdentifier: placeholderId,
+            overrideDefaultBehavior: overrideDefaultBehavior,
             inAppContentBlockPlaceholderView: inAppContentBlockPlaceholder,
             binaryMessenger: messenger)
     }
@@ -120,17 +131,20 @@ public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView 
     
     private let inAppContentBlockPlaceholder: StaticInAppContentBlockView?
     private let placeholderId: String
+    private let overrideDefaultBehavior: Bool
     private var channel: FlutterMethodChannel?
     
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
         placeholderIdentifier placeholderId: String,
+        overrideDefaultBehavior: Bool,
         inAppContentBlockPlaceholderView inAppContentBlockPlaceholder: StaticInAppContentBlockView?,
         binaryMessenger messenger: FlutterBinaryMessenger?
     ) {
         self.inAppContentBlockPlaceholder = inAppContentBlockPlaceholder
         self.placeholderId = placeholderId
+        self.overrideDefaultBehavior = overrideDefaultBehavior
         super.init()
         
         if let inAppContentBlockPlaceholder,
@@ -140,7 +154,7 @@ public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView 
             channel.setMethodCallHandler(onMethodCall)
             
             let origBehaviour = inAppContentBlockPlaceholder.behaviourCallback
-            inAppContentBlockPlaceholder.behaviourCallback = CustomInAppContentBlockCallback(originalBehaviour: origBehaviour, channel: channel)
+            inAppContentBlockPlaceholder.behaviourCallback = CustomInAppContentBlockCallback(originalBehaviour: origBehaviour, overrideOriginalBehaviour: overrideDefaultBehavior, channel: channel)
             inAppContentBlockPlaceholder.reload()
         }
     }
@@ -179,46 +193,92 @@ public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView 
 public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
     
     private let originalBehaviour: InAppContentBlockCallbackType
+    private let overrideOriginalBehaviour: Bool
     
     private let channel: FlutterMethodChannel
+    private let methodOnInAppContentBlockEvent = "onInAppContentBlockEvent"
     private let methodOnInAppContentBlockHtmlChanged = "onInAppContentBlockHtmlChanged"
     
-    init(originalBehaviour: InAppContentBlockCallbackType, channel: FlutterMethodChannel) {
+    init(originalBehaviour: InAppContentBlockCallbackType, overrideOriginalBehaviour: Bool, channel: FlutterMethodChannel) {
         self.originalBehaviour = originalBehaviour
+        self.overrideOriginalBehaviour = overrideOriginalBehaviour
         self.channel = channel
     }
     
     public func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
-        originalBehaviour.onMessageShown(placeholderId: placeholderId, contentBlock: contentBlock)
+        if !overrideOriginalBehaviour {
+            originalBehaviour.onMessageShown(placeholderId: placeholderId, contentBlock: contentBlock)
+        }
         let htmlContent = contentBlock.content?.html ?? contentBlock.personalizedMessage?.content?.html
         let normalizerConf = HtmlNormalizerConfig(makeResourcesOffline: true, ensureCloseButton: false)
         if let htmlContent,
             var normalizedHtml = HtmlNormalizer(htmlContent).normalize(normalizerConf).html {
             let arguments: [String: Any?] = ["htmlContent": normalizedHtml]
-            DispatchQueue.main.async {
-                self.channel.invokeMethod(self.methodOnInAppContentBlockHtmlChanged, arguments: arguments)
-            }
+            invokeMethod(method: methodOnInAppContentBlockHtmlChanged, arguments: arguments)
         }
+        let payload: [String: Any?] = [
+            "eventType": "onMessageShown",
+            "placeholderId": placeholderId,
+            "contentBlock": try? String(data: JSONEncoder().encode(contentBlock), encoding: .utf8),
+        ]
+        invokeMethod(method: methodOnInAppContentBlockEvent, arguments: payload)
     }
     
     public func onNoMessageFound(placeholderId: String) {
-        originalBehaviour.onNoMessageFound(placeholderId: placeholderId)
-        let arguments: [String: Any?] = ["htmlContent": nil]
-        DispatchQueue.main.async {
-            self.channel.invokeMethod(self.methodOnInAppContentBlockHtmlChanged, arguments: arguments)
+        if !overrideOriginalBehaviour {
+            originalBehaviour.onNoMessageFound(placeholderId: placeholderId)
         }
+        let arguments: [String: Any?] = ["htmlContent": nil]
+        invokeMethod(method: methodOnInAppContentBlockHtmlChanged, arguments: arguments)
+        let payload: [String: Any?] = [
+            "eventType": "onNoMessageFound",
+            "placeholderId": placeholderId
+        ]
+        invokeMethod(method: methodOnInAppContentBlockEvent, arguments: payload)
     }
     
     public func onError(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, errorMessage: String) {
-        originalBehaviour.onError(placeholderId: placeholderId, contentBlock: contentBlock, errorMessage: errorMessage)
+        if !overrideOriginalBehaviour {
+            originalBehaviour.onError(placeholderId: placeholderId, contentBlock: contentBlock, errorMessage: errorMessage)
+        }
+        let payload: [String: Any?] = [
+            "eventType": "onError",
+            "placeholderId": placeholderId,
+            "contentBlock": try? String(data: JSONEncoder().encode(contentBlock), encoding: .utf8),
+            "errorMessage": errorMessage
+        ]
+        invokeMethod(method: methodOnInAppContentBlockEvent, arguments: payload)
     }
     
     public func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
-        originalBehaviour.onCloseClicked(placeholderId: placeholderId, contentBlock: contentBlock)
+        if !overrideOriginalBehaviour {
+            originalBehaviour.onCloseClicked(placeholderId: placeholderId, contentBlock: contentBlock)
+        }
+        let payload: [String: Any?] = [
+            "eventType": "onCloseClicked",
+            "placeholderId": placeholderId,
+            "contentBlock": try? String(data: JSONEncoder().encode(contentBlock), encoding: .utf8),
+        ]
+        invokeMethod(method: methodOnInAppContentBlockEvent, arguments: payload)
     }
     
     public func onActionClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse, action: ExponeaSDK.InAppContentBlockAction) {
-        originalBehaviour.onActionClicked(placeholderId: placeholderId, contentBlock: contentBlock, action: action)
+        if !overrideOriginalBehaviour {
+            originalBehaviour.onActionClicked(placeholderId: placeholderId, contentBlock: contentBlock, action: action)
+        }
+        let payload: [String: Any?] = [
+            "eventType": "onActionClicked",
+            "placeholderId": placeholderId,
+            "contentBlock": try? String(data: JSONEncoder().encode(contentBlock), encoding: .utf8),
+            "action": try? InAppContentBlockActionCoder.encode(action)
+        ]
+        invokeMethod(method: methodOnInAppContentBlockEvent, arguments: payload)
+    }
+    
+    private func invokeMethod(method: String, arguments: [String: Any?]) {
+        DispatchQueue.main.async {
+            self.channel.invokeMethod(method, arguments: arguments)
+        }
     }
 }
 
@@ -309,6 +369,22 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             fetchAppInbox(with: result)
         case .fetchAppInboxItem:
             fetchAppInboxItem(call.arguments, with: result)
+        case .trackInAppContentBlockClick:
+            trackInAppContentBlockClick(call.arguments, with: result)
+        case .trackInAppContentBlockClickWithoutTrackingConsent:
+            trackInAppContentBlockClickWithoutTrackingConsent(call.arguments, with: result)
+        case .trackInAppContentBlockClose:
+            trackInAppContentBlockClose(call.arguments, with: result)
+        case .trackInAppContentBlockCloseWithoutTrackingConsent:
+            trackInAppContentBlockCloseWithoutTrackingConsent(call.arguments, with: result)
+        case .trackInAppContentBlockShown:
+            trackInAppContentBlockShown(call.arguments, with: result)
+        case .trackInAppContentBlockShownWithoutTrackingConsent:
+            trackInAppContentBlockShownWithoutTrackingConsent(call.arguments, with: result)
+        case .trackInAppContentBlockError:
+            trackInAppContentBlockError(call.arguments, with: result)
+        case .trackInAppContentBlockErrorWithoutTrackingConsent:
+            trackInAppContentBlockErrorWithoutTrackingConsent(call.arguments, with: result)
         case .setInAppMessageActionHandler:
             setInAppMessageActionHandler(call.arguments, with: result)
         }
@@ -523,6 +599,149 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 result(error)
             }
         }
+    }
+    
+    private func trackInAppContentBlockClick(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData),
+              let actionData: [String : Any?] = try? data.getRequiredSafely(property: "action"),
+              let action: InAppContentBlockAction = try? InAppContentBlockActionCoder.decode(actionData)
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId, contentBlock or action"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockClick(placeholderId: placeholderId, action: action, message: message)
+    }
+    
+    private func trackInAppContentBlockClickWithoutTrackingConsent(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData),
+              let actionData: [String : Any?] = try? data.getRequiredSafely(property: "action"),
+              let action: InAppContentBlockAction = try? InAppContentBlockActionCoder.decode(actionData)
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId, contentBlock or action"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockClickWithoutTrackingConsent(placeholderId: placeholderId, action: action, message: message)
+    }
+    
+    private func trackInAppContentBlockClose(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData)
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId or contentBlock"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockClose(placeholderId: placeholderId, message: message)
+    }
+    
+    private func trackInAppContentBlockCloseWithoutTrackingConsent(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData)
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId or contentBlock"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockCloseWithoutTrackingConsent(placeholderId: placeholderId, message: message)
+    }
+    
+    private func trackInAppContentBlockShown(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData)
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId or contentBlock"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockShown(placeholderId: placeholderId, message: message)
+       
+    }
+    
+    private func trackInAppContentBlockShownWithoutTrackingConsent(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData)
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId or contentBlock"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockShownWithoutTrackingConsent(placeholderId: placeholderId, message: message)
+    }
+    
+    private func trackInAppContentBlockError(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData),
+              let errorMessage: String = try? data.getRequiredSafely(property: "errorMessage")
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId, contentBlock or errorMessage"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockError(placeholderId: placeholderId, message: message, errorMessage: errorMessage)
+    }
+    
+    private func trackInAppContentBlockErrorWithoutTrackingConsent(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let placeholderId: String = try? data.getRequiredSafely(property: "placeholderId"),
+              let contentBlocString: String = try? data.getRequiredSafely(property: "contentBlock"),
+              let contentBlockData: Data = contentBlocString.data(using: .utf8),
+              let message: InAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: contentBlockData),
+              let errorMessage: String = try? data.getRequiredSafely(property: "errorMessage")
+        else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app content block data are invalid. See logs", details: "no placeholderId, contentBlock or errorMessage"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppContentBlockErrorWithoutTrackingConsent(placeholderId: placeholderId, message: message, errorMessage: errorMessage)
     }
     
     private func setInAppMessageActionHandler(_ args: Any?, with result: FlutterResult) {

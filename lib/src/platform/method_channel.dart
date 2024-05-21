@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:exponea/exponea.dart';
 import 'package:flutter/services.dart';
 
-import '../data/encoder/in_app_message_action.dart';
 import '../data/encoder/main.dart';
 import '../data/util/object.dart';
 
@@ -49,6 +50,14 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _fetchAppInbox = 'fetchAppInbox';
   static const _fetchAppInboxItem = 'fetchAppInboxItem';
   static const _setInAppMessageActionHandler = 'setInAppMessageActionHandler';
+  static const _trackInAppContentBlockClick = 'trackInAppContentBlockClick';
+  static const _trackInAppContentBlockClickWithoutTrackingConsent = 'trackInAppContentBlockClickWithoutTrackingConsent';
+  static const _trackInAppContentBlockClose = 'trackInAppContentBlockClose';
+  static const _trackInAppContentBlockCloseWithoutTrackingConsent = 'trackInAppContentBlockCloseWithoutTrackingConsent';
+  static const _trackInAppContentBlockShown = 'trackInAppContentBlockShown';
+  static const _trackInAppContentBlockShownWithoutTrackingConsent = 'trackInAppContentBlockShownWithoutTrackingConsent';
+  static const _trackInAppContentBlockError = 'trackInAppContentBlockError';
+  static const _trackInAppContentBlockErrorWithoutTrackingConsent = 'trackInAppContentBlockErrorWithoutTrackingConsent';
 
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
@@ -279,5 +288,89 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
     final inData = messageId;
     final outData = (await _channel.invokeMapMethod<String, dynamic>(method, inData))!;
     return AppInboxCoder.decodeMessage(outData);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockClick(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+      'action': InAppContentBlockActionEncoder.encode(action)
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockClick, data);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockClickWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+      'action': InAppContentBlockActionEncoder.encode(action)
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockClickWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockClose(String placeholderId, InAppContentBlock contentBlock) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockClose, data);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockCloseWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockCloseWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockShown(String placeholderId, InAppContentBlock contentBlock) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockShown, data);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockShownWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockShownWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockError(String placeholderId, InAppContentBlock contentBlock, String errorMessage) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+      'errorMessage': errorMessage,
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockError, data);
+  }
+
+  @override
+  Future<void> trackInAppContentBlockErrorWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, String errorMessage) async {
+    final contentBlockData = InAppContentBlockEncoder.encode(contentBlock);
+    final data = {
+      'placeholderId': placeholderId,
+      'contentBlock': jsonEncode(contentBlockData),
+      'errorMessage': errorMessage,
+    };
+    await _channel.invokeMethod<void>(_trackInAppContentBlockErrorWithoutTrackingConsent, data);
   }
 }

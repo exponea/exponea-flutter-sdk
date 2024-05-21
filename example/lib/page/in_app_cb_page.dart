@@ -37,8 +37,24 @@ class InAppCbPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text('Placeholder: example_top'),
-            const InAppContentBlockPlaceholder(
-                placeholderId: 'example_top'),
+            InAppContentBlockPlaceholder(
+              placeholderId: 'example_top',
+              onMessageShown: (placeholderId, contentBlock) {
+                print('InAppContentBlockPlaceholder $placeholderId: onMessageShown invoked');
+              },
+              onNoMessageFound: (placeholderId) {
+                print('InAppContentBlockPlaceholder $placeholderId: onNoMessageFound invoked');
+              },
+              onActionClicked: (placeholderId, contentBlock, action) {
+                print('InAppContentBlockPlaceholder $placeholderId: onActionClicked invoked');
+              },
+              onCloseClicked: (placeholderId, contentBlock) {
+                print('InAppContentBlockPlaceholder $placeholderId: onCloseClicked invoked');
+              },
+              onError: (placeholderId, contentBlock, errorMessage) {
+                print('InAppContentBlockPlaceholder $placeholderId: onError invoked');
+              },
+            ),
             const Text('Placeholder: platformSpecificPlaceholderId'),
             InAppContentBlockPlaceholder(
                 placeholderId: platformSpecificPlaceholderId),

@@ -19,6 +19,8 @@ export 'src/data/model/app_inbox_style.dart';
 export 'src/data/model/button_style.dart';
 export 'src/data/model/detail_view_style.dart';
 export 'src/data/model/image_view_style.dart';
+export 'src/data/model/in_app_content_block.dart';
+export 'src/data/model/in_app_content_block_action.dart';
 export 'src/data/model/in_app_message.dart';
 export 'src/data/model/in_app_message_action.dart';
 export 'src/data/model/in_app_message_button.dart';

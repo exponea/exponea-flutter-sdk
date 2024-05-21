@@ -2,6 +2,7 @@ package com.exponea.widget
 
 import android.content.Context
 import android.util.Log
+import com.exponea.getRequired
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.InAppContentBlockPlaceholderConfiguration
 import com.exponea.sdk.util.Logger
@@ -17,8 +18,12 @@ class FlutterInAppContentBlockPlaceholderFactory(private val binding: FlutterPlu
         @Suppress("UNCHECKED_CAST")
         val creationParams = args as? Map<String?, Any?>
         val placeholderId =  creationParams?.get("placeholderId") as? String
+        val overrideDefaultBehavior = creationParams?.get("overrideDefaultBehavior") as? Boolean
         if(placeholderId == null) {
             Logger.e(this, "InAppCB: Unable to parse placeholder identifier.".trimIndent())
+        }
+        if(overrideDefaultBehavior == null) {
+            Logger.e(this, "InAppCB: Unable to parse overrideDefaultBehavior parameter.".trimIndent())
         }
         val inAppContentBlockPlaceholder = Exponea.getInAppContentBlocksPlaceholder(
             placeholderId ?: "",
@@ -31,6 +36,7 @@ class FlutterInAppContentBlockPlaceholderFactory(private val binding: FlutterPlu
             viewId,
             placeholderId ?: "",
             inAppContentBlockPlaceholder,
+            overrideDefaultBehavior ?: false,
             binding,
         )
     }

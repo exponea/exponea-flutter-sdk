@@ -127,6 +127,38 @@ class ExponeaPlugin implements BaseInterface {
       _platform.fetchAppInboxItem(messageId);
 
   @override
+  Future<void> trackInAppContentBlockClick(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action) =>
+      _platform.trackInAppContentBlockClick(placeholderId, contentBlock, action);
+
+  @override
+  Future<void> trackInAppContentBlockClickWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action) =>
+      _platform.trackInAppContentBlockClickWithoutTrackingConsent(placeholderId, contentBlock, action);
+
+  @override
+  Future<void> trackInAppContentBlockClose(String placeholderId, InAppContentBlock contentBlock) =>
+      _platform.trackInAppContentBlockClose(placeholderId, contentBlock);
+
+  @override
+  Future<void> trackInAppContentBlockCloseWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock) =>
+      _platform.trackInAppContentBlockCloseWithoutTrackingConsent(placeholderId, contentBlock);
+
+  @override
+  Future<void> trackInAppContentBlockShown(String placeholderId, InAppContentBlock contentBlock) =>
+      _platform.trackInAppContentBlockShown(placeholderId, contentBlock);
+
+  @override
+  Future<void> trackInAppContentBlockShownWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock) =>
+      _platform.trackInAppContentBlockShownWithoutTrackingConsent(placeholderId, contentBlock);
+
+  @override
+  Future<void> trackInAppContentBlockError(String placeholderId, InAppContentBlock contentBlock, String errorMessage) =>
+      _platform.trackInAppContentBlockError(placeholderId, contentBlock, errorMessage);
+
+  @override
+  Future<void> trackInAppContentBlockErrorWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, String errorMessage) =>
+      _platform.trackInAppContentBlockErrorWithoutTrackingConsent(placeholderId, contentBlock, errorMessage);
+
+  @override
   Stream<OpenedPush> get openedPushStream => _platform.openedPushStream;
 
   @override

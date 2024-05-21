@@ -29,6 +29,45 @@ final config = ExponeaConfiguration(
 final configured = await _plugin.configure(config);
 ```
 
+### Customize Action Behavior
+
+When an in-app content block action (show, click, close, error) is performed, by default, the SDK tracks the appropriate event and, in case of a button click, opens a link.
+
+You can override or customize this behavior by setting `overrideDefaultBehavior` parameter to `true` and setting callbacks on the `InAppContentBlockPlaceholder`.
+
+The example below calls the original tracking methods. This is recommended but not required.
+
+```dart
+InAppContentBlockPlaceholder(
+  placeholderId: 'example_content_block',
+  overrideDefaultBehavior: true,
+  onMessageShown: (placeholderId, contentBlock) {
+    //track 'show' event.
+    _plugin.trackInAppContentBlockShown(placeholderId, contentBlock);
+    print("Content block shown: $contentBlock");
+  },
+  onNoMessageFound: (placeholderId) {
+    print('Content block for $placeholderId not found');
+    // you may set this placeholder hidden
+  },
+  onActionClicked: (placeholderId, contentBlock, action) {
+    _plugin.trackInAppContentBlockClick(placeholderId, contentBlock, action);
+
+    // content block action has to be handled for given `action.url`
+    handleUrlByYourApp(action.url);
+  },
+  onCloseClicked: (placeholderId, contentBlock) {
+    //track 'close' event.
+    _plugin.trackInAppContentBlockClose(placeholderId, contentBlock);
+    // placeholder may show another content block if is assigned to placeholder ID
+  },
+  onError: (placeholderId, contentBlock, errorMessage) {
+    _plugin.trackInAppContentBlockError(placeholderId, contentBlock, errorMessage);
+    // you may set this placeholder hidden and do any fallback
+  },
+)
+```
+
 ### In-app content block images caching
 To reduce the number of API calls, SDK is caching the images displayed in messages. Therefore, once the SDK downloads the image, an image with the same URL may not be downloaded again, and will not change, since it was already cached. For this reason, we recommend always using different URLs for different images.
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import com.exponea.data.InAppContentBlockActionCoder
 import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.InAppContentBlockAction
 import com.exponea.sdk.models.InAppContentBlockCallback
@@ -12,6 +13,7 @@ import com.exponea.sdk.util.Logger
 import com.exponea.sdk.util.HtmlNormalizer
 import com.exponea.sdk.util.HtmlNormalizer.NormalizedResult
 import com.exponea.sdk.view.InAppContentBlockPlaceholderView
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,12 +29,15 @@ class FlutterInAppContentBlockPlaceholder(
     private val id: Int,
     private val placeholderId: String,
     private val inAppContentBlockPlaceholder: InAppContentBlockPlaceholderView?,
+    private val overrideDefaultBehavior: Boolean,
     binding: FlutterPlugin.FlutterPluginBinding,
+    private val gson: Gson = Gson(),
 ) : PlatformView, MethodCallHandler {
 
     companion object {
         private const val CHANNEL_NAME = "com.exponea/InAppContentBlockPlaceholder"
         private const val METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED = "onInAppContentBlockHtmlChanged"
+        private const val METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT = "onInAppContentBlockEvent"
         private const val METHOD_HANDLE_IN_APP_CONTENT_BLOCK_CLICK = "handleInAppContentBlockClick"
     }
 
@@ -51,14 +56,31 @@ class FlutterInAppContentBlockPlaceholder(
                     contentBlock: InAppContentBlock,
                     action: InAppContentBlockAction
                 ) {
-                    origBehaviour.onActionClicked(placeholderId, contentBlock, action)
+                    if (!overrideDefaultBehavior) {
+                        origBehaviour.onActionClicked(placeholderId, contentBlock, action)
+                    }
+                    val payload: Map<String, Any?> = mapOf(
+                            "eventType" to "onActionClicked",
+                            "placeholderId" to placeholderId,
+                            "contentBlock" to gson.toJson(contentBlock),
+                            "action" to InAppContentBlockActionCoder.encode(action)
+                    )
+                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
                 }
 
                 override fun onCloseClicked(
                     placeholderId: String,
                     contentBlock: InAppContentBlock
                 ) {
-                    origBehaviour.onCloseClicked(placeholderId, contentBlock)
+                    if (!overrideDefaultBehavior) {
+                        origBehaviour.onCloseClicked(placeholderId, contentBlock)
+                    }
+                    val payload: Map<String, Any?> = mapOf(
+                            "eventType" to "onCloseClicked",
+                            "placeholderId" to placeholderId,
+                            "contentBlock" to gson.toJson(contentBlock)
+                    )
+                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
                 }
 
                 override fun onError(
@@ -66,31 +88,54 @@ class FlutterInAppContentBlockPlaceholder(
                     contentBlock: InAppContentBlock?,
                     errorMessage: String
                 ) {
-                    origBehaviour.onError(placeholderId, contentBlock, errorMessage)
+                    if (!overrideDefaultBehavior) {
+                        origBehaviour.onError(placeholderId, contentBlock, errorMessage)
+                    }
+                    val payload: Map<String, Any?> = mapOf(
+                            "eventType" to "onError",
+                            "placeholderId" to placeholderId,
+                            "contentBlock" to gson.toJson(contentBlock),
+                            "errorMessage" to errorMessage
+                    )
+                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
                 }
 
                 override fun onMessageShown(
                     placeholderId: String,
                     contentBlock: InAppContentBlock
                 ) {
-                    origBehaviour.onMessageShown(placeholderId, contentBlock)
+                    if (!overrideDefaultBehavior) {
+                        origBehaviour.onMessageShown(placeholderId, contentBlock)
+                    }
                     val normalizedResult = getNormalizedResult(contentBlock, placeholderId)
                     val arguments: Map<String, String?> =
                         mapOf("htmlContent" to normalizedResult?.html)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        channel?.invokeMethod(
-                            METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED,
-                            arguments
-                        )
-                    }
+                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED, arguments)
+                    val payload: Map<String, Any?> = mapOf(
+                            "eventType" to "onMessageShown",
+                            "placeholderId" to placeholderId,
+                            "contentBlock" to gson.toJson(contentBlock)
+                    )
+                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
                 }
 
                 override fun onNoMessageFound(placeholderId: String) {
-                    origBehaviour.onNoMessageFound(placeholderId)
+                    if (!overrideDefaultBehavior) {
+                        origBehaviour.onNoMessageFound(placeholderId)
+                    }
                     val arguments: Map<String, String?> = mapOf("htmlContent" to null)
+                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED, arguments)
+                    val payload: Map<String, Any?> = mapOf(
+                            "eventType" to "onNoMessageFound",
+                            "placeholderId" to placeholderId,
+                    )
+                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
+                }
+
+                fun invokeMethod(method: String, arguments: Map<String, Any?>) {
                     CoroutineScope(Dispatchers.Main).launch {
                         channel?.invokeMethod(
-                            METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED,
+                            method,
                             arguments
                         )
                     }

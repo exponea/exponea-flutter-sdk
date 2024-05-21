@@ -12,6 +12,7 @@ import com.exponea.data.ConsentEncoder
 import com.exponea.data.Customer
 import com.exponea.data.Event
 import com.exponea.data.ExponeaConfigurationParser
+import com.exponea.data.InAppContentBlockActionCoder
 import com.exponea.data.OpenedPush
 import com.exponea.data.ReceivedPush
 import com.exponea.data.InAppMessageAction
@@ -23,6 +24,7 @@ import com.exponea.sdk.models.CustomerIds
 import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
+import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.PropertiesList
 import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.InAppMessageButton
@@ -32,6 +34,7 @@ import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
 import com.exponea.widget.FlutterAppInboxButton
 import com.exponea.widget.FlutterInAppContentBlockPlaceholderFactory
+import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -188,6 +191,14 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_MARK_APP_INBOX_AS_READ = "markAppInboxAsRead"
         private const val METHOD_FETCH_APP_INBOX = "fetchAppInbox"
         private const val METHOD_FETCH_APP_INBOX_ITEM = "fetchAppInboxItem"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLICK = "trackInAppContentBlockClick"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLICK_WITHOUT_TRACKING_CONSENT = "trackInAppContentBlockClickWithoutTrackingConsent"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLOSE = "trackInAppContentBlockClose"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLOSE_WITHOUT_TRACKING_CONSENT = "trackInAppContentBlockCloseWithoutTrackingConsent"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_SHOWN = "trackInAppContentBlockShown"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_SHOWN_WITHOUT_TRACKING_CONSENT = "trackInAppContentBlockShownWithoutTrackingConsent"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_ERROR = "trackInAppContentBlockError"
+        private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_ERROR_WITHOUT_TRACKING_CONSENT = "trackInAppContentBlockErrorWithoutTrackingConsent"
         private const val METHOD_SET_IN_APP_MESSAGE_ACTION_HANDLER = "setInAppMessageActionHandler"
     }
 
@@ -285,6 +296,30 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_FETCH_APP_INBOX_ITEM -> {
                 fetchAppInboxItem(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLICK -> {
+                trackInAppContentBlockClick(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLICK_WITHOUT_TRACKING_CONSENT -> {
+                trackInAppContentBlockClickWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLOSE -> {
+                trackInAppContentBlockClose(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_CLOSE_WITHOUT_TRACKING_CONSENT -> {
+                trackInAppContentBlockCloseWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_SHOWN -> {
+                trackInAppContentBlockShown(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_SHOWN_WITHOUT_TRACKING_CONSENT -> {
+                trackInAppContentBlockShownWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_ERROR -> {
+                trackInAppContentBlockError(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_CONTENT_BLOCK_ERROR_WITHOUT_TRACKING_CONSENT -> {
+                trackInAppContentBlockErrorWithoutTrackingConsent(call.arguments, result)
             }
             METHOD_SET_IN_APP_MESSAGE_ACTION_HANDLER -> {
                 setInAppMessageActionHandler(call.arguments, result)
@@ -397,6 +432,82 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
                 result.success(AppInboxCoder.encode(nativeMessage))
             }
         }
+    }
+
+    private fun trackInAppContentBlockClick(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val action = InAppContentBlockActionCoder.decode(data.getRequired<HashMap<String, Any?>>("action").toMap())
+        Exponea.trackInAppContentBlockClickWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock, action = action)
+    }
+
+    private fun trackInAppContentBlockClickWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val action = InAppContentBlockActionCoder.decode(data.getRequired<HashMap<String, Any?>>("action").toMap())
+        Exponea.trackInAppContentBlockClickWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock, action = action)
+    }
+
+    private fun trackInAppContentBlockClose(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        Exponea.trackInAppContentBlockClose(placeholderId = placeholderId, message = contentBlock)
+    }
+
+    private fun trackInAppContentBlockCloseWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        Exponea.trackInAppContentBlockCloseWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock)
+    }
+
+    private fun trackInAppContentBlockShown(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        Exponea.trackInAppContentBlockShown(placeholderId = placeholderId, message = contentBlock)
+    }
+
+    private fun trackInAppContentBlockShownWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        Exponea.trackInAppContentBlockShownWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock)
+    }
+
+    private fun trackInAppContentBlockError(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val errorMessage = data.getRequired<String>("errorMessage")
+        Exponea.trackInAppContentBlockError(placeholderId = placeholderId, message = contentBlock, errorMessage = errorMessage)
+    }
+
+    private fun trackInAppContentBlockErrorWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val placeholderId = data.getRequired<String>("placeholderId")
+        val contentBlockData = data.getRequired<String>("contentBlock")
+        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val errorMessage = data.getRequired<String>("errorMessage")
+        Exponea.trackInAppContentBlockErrorWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock, errorMessage = errorMessage)
     }
 
     private fun setInAppMessageActionHandler(args: Any?, result: Result) = runWithNoResult(result) {

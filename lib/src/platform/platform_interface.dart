@@ -186,6 +186,46 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
+  Future<void> trackInAppContentBlockClick(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppContentBlockClickWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppContentBlockClose(String placeholderId, InAppContentBlock contentBlock) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppContentBlockCloseWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppContentBlockShown(String placeholderId, InAppContentBlock contentBlock) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppContentBlockShownWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppContentBlockError(String placeholderId, InAppContentBlock contentBlock, String errorMessage) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppContentBlockErrorWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, String errorMessage) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<OpenedPush> get openedPushStream => throw UnimplementedError();
 
   @override

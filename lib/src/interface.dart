@@ -134,4 +134,28 @@ abstract class BaseInterface {
 
   /// Fetches AppInbox message by ID for the current customer
   Future<AppInboxMessage> fetchAppInboxItem(String messageId);
+
+  /// Track in-app content block click event
+  Future<void> trackInAppContentBlockClick(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action);
+
+  /// Track in-app content block click event
+  Future<void> trackInAppContentBlockClickWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, InAppContentBlockAction action);
+
+  /// Track in-app content block close event
+  Future<void> trackInAppContentBlockClose(String placeholderId, InAppContentBlock contentBlock);
+
+  /// Track in-app content block close event
+  Future<void> trackInAppContentBlockCloseWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock);
+
+  /// Track in-app content block show event
+  Future<void> trackInAppContentBlockShown(String placeholderId, InAppContentBlock contentBlock);
+
+  /// Track in-app content block show event
+  Future<void> trackInAppContentBlockShownWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock);
+
+  /// Track in-app content block error event
+  Future<void> trackInAppContentBlockError(String placeholderId, InAppContentBlock contentBlock, String errorMessage);
+
+  /// Track in-app content block error event
+  Future<void> trackInAppContentBlockErrorWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, String errorMessage);
 }

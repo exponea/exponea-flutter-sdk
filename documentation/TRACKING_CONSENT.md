@@ -31,3 +31,42 @@ Event is normally tracked by calling `ExponeaPlugin().trackAppInboxClick`. This 
 > Event that is tracked because of `xnpe_force_track` (forced tracking) will contains an additional property `tracking_forced` with value `true`
 
 If you are using `ExponeaPlugin().trackAppInboxClick` method manually and you want to avoid to consider tracking, you may use `ExponeaPlugin().trackAppInboxClickWithoutTrackingConsent` instead. This method will do track event ignoring tracking consent state.
+
+### Event for shown In-app content block
+
+Event is normally tracked by calling `ExponeaPlugin().trackInAppContentBlockShown`. This method is tracking a clicked event only if:
+
+* Tracking consent feature is disabled
+* Tracking consent feature is enabled and 'hasTrackingConsent' has 'true' value
+
+If you are using `ExponeaPlugin().trackInAppContentBlockShown` method manually and you want to avoid to consider tracking, you may use `ExponeaPlugin().trackInAppContentBlockShownWithoutTrackingConsent` instead. This method will do track event ignoring tracking consent state.
+
+### Event for clicked In-app content block
+
+Event is normally tracked by calling `ExponeaPlugin().trackInAppContentBlockClick`. This method is tracking a clicked event only if:
+
+* Tracking consent feature is disabled
+* Tracking consent feature is enabled and 'hasTrackingConsent' has 'true' value
+* Action URL contains 'xnpe_force_track' with 'true' value independently from 'hasTrackingConsent' value
+
+> Event that is tracked because of `xnpe_force_track` (forced tracking) will contains an additional property `tracking_forced` with value `true`
+
+If you are using `ExponeaPlugin().trackInAppContentBlockClick` method manually and you want to avoid to consider tracking, you may use `ExponeaPlugin().trackInAppContentBlockClickWithoutTrackingConsent` instead. This method will do track event ignoring tracking consent state.
+
+### Event for closed In-app content block
+
+Event is normally tracked by calling `ExponeaPlugin().trackInAppContentBlockClose`. This method is tracking a delivered event only if:
+
+* Tracking consent feature is disabled
+* Tracking consent feature is enabled and 'hasTrackingConsent' has 'true' value
+
+If you are using `ExponeaPlugin().trackInAppContentBlockClose` method manually and you want to avoid to consider tracking, you may use `ExponeaPlugin().trackInAppContentBlockCloseWithoutTrackingConsent` instead. This method will do track event ignoring tracking consent state.
+
+### Event for error for In-app content block
+
+Event is normally tracked by calling `ExponeaPlugin().trackInAppContentBlockError` with meaningful `errorMessage` parameter. This method is tracking a delivered event only if:
+
+* Tracking consent feature is disabled
+* Tracking consent feature is enabled and 'hasTrackingConsent' has 'true' value
+
+If you are using `ExponeaPlugin().trackInAppContentBlockError` method manually and you want to avoid to consider tracking, you may use `ExponeaPlugin().trackInAppContentBlockErrorWithoutTrackingConsent` instead. This method will do track event ignoring tracking consent state.
