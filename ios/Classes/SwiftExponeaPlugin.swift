@@ -49,6 +49,10 @@ enum METHOD_NAME: String {
     case trackInAppContentBlockError = "trackInAppContentBlockError"
     case trackInAppContentBlockErrorWithoutTrackingConsent = "trackInAppContentBlockErrorWithoutTrackingConsent"
     case setInAppMessageActionHandler = "setInAppMessageActionHandler"
+    case trackInAppMessageClick = "trackInAppMessageClick"
+    case trackInAppMessageClickWithoutTrackingConsent = "trackInAppMessageClickWithoutTrackingConsent"
+    case trackInAppMessageClose = "trackInAppMessageClose"
+    case trackInAppMessageCloseWithoutTrackingConsent = "trackInAppMessageCloseWithoutTrackingConsent"
 }
 
 
@@ -387,6 +391,14 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             trackInAppContentBlockErrorWithoutTrackingConsent(call.arguments, with: result)
         case .setInAppMessageActionHandler:
             setInAppMessageActionHandler(call.arguments, with: result)
+        case .trackInAppMessageClick:
+            trackInAppMessageClick(call.arguments, with: result)
+        case .trackInAppMessageClickWithoutTrackingConsent:
+            trackInAppMessageClickWithoutTrackingConsent(call.arguments, with: result)
+        case .trackInAppMessageClose:
+            trackInAppMessageClose(call.arguments, with: result)
+        case .trackInAppMessageCloseWithoutTrackingConsent:
+            trackInAppMessageCloseWithoutTrackingConsent(call.arguments, with: result)
         }
     }
     
@@ -764,6 +776,74 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         }
     }
     
+    private func trackInAppMessageClick(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let messageData: [String : Any?] = try? data.getRequiredSafely(property: "message"),
+              let message: InAppMessage = try? InAppMessageCoder.decode(messageData),
+              let buttonData: NSDictionary = try? data.getRequiredSafely(property: "button"),
+              let buttonText: String = try? buttonData.getRequiredSafely(property: "text"),
+              let buttonUrl: String = try? buttonData.getRequiredSafely(property: "url") else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app message data are invalid. See logs. See logs", details: "no message or button"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppMessageClick(message: message, buttonText: buttonText, buttonLink: buttonUrl)
+        result(nil)
+    }
+
+    private func trackInAppMessageClickWithoutTrackingConsent(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let messageData: [String : Any?] = try? data.getRequiredSafely(property: "message"),
+              let message: InAppMessage = try? InAppMessageCoder.decode(messageData),
+              let buttonData: NSDictionary = try? data.getRequiredSafely(property: "button"),
+              let buttonText: String = try? buttonData.getRequiredSafely(property: "text"),
+              let buttonUrl: String = try? buttonData.getRequiredSafely(property: "url") else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app message data are invalid. See logs. See logs", details: "no message or button"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppMessageClickWithoutTrackingConsent(message: message, buttonText: buttonText, buttonLink: buttonUrl)
+        result(nil)
+    }
+
+    private func trackInAppMessageClose(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let messageData: [String : Any?] = try? data.getRequiredSafely(property: "message"),
+              let message: InAppMessage = try? InAppMessageCoder.decode(messageData),
+              let interaction: Bool = try? data.getRequiredSafely(property: "interaction") else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app message data are invalid. See logs. See logs", details: "no message"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppMessageClose(message: message, isUserInteraction: interaction)
+        result(nil)
+    }
+
+    private func trackInAppMessageCloseWithoutTrackingConsent(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let messageData: [String : Any?] = try? data.getRequiredSafely(property: "message"),
+              let message: InAppMessage = try? InAppMessageCoder.decode(messageData),
+              let interaction: Bool = try? data.getRequiredSafely(property: "interaction") else {
+            result(FlutterError(
+                code: errorCode,
+                message: "In-app message data are invalid. See logs. See logs", details: "no message"
+            ))
+            return
+        }
+        exponeaInstance.trackInAppMessageCloseClickWithoutTrackingConsent(message: message, isUserInteraction: interaction)
+        result(nil)
+    }
+
     private func setupAppInbox(_ args: Any?, with result: FlutterResult) {
         guard let configMap = args as? NSDictionary,
               let appInboxStyle = try? AppInboxStyleParser(configMap).parse() else {

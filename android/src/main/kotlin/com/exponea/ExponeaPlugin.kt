@@ -18,6 +18,7 @@ import com.exponea.data.ReceivedPush
 import com.exponea.data.InAppMessageAction
 import com.exponea.data.RecommendationEncoder
 import com.exponea.data.RecommendationOptionsEncoder
+import com.exponea.data.InAppMessageCoder
 import com.exponea.exception.ExponeaException
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
@@ -200,6 +201,11 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_ERROR = "trackInAppContentBlockError"
         private const val METHOD_TRACK_IN_APP_CONTENT_BLOCK_ERROR_WITHOUT_TRACKING_CONSENT = "trackInAppContentBlockErrorWithoutTrackingConsent"
         private const val METHOD_SET_IN_APP_MESSAGE_ACTION_HANDLER = "setInAppMessageActionHandler"
+        private const val METHOD_TRACK_IN_APP_MESSAGE_CLICK = "trackInAppMessageClick"
+        private const val METHOD_TRACK_IN_APP_MESSAGE_CLICK_WITHOUT_TRACKING_CONSENT = "trackInAppMessageClickWithoutTrackingConsent"
+        private const val METHOD_TRACK_IN_APP_MESSAGE_CLOSE = "trackInAppMessageClose"
+        private const val METHOD_TRACK_IN_APP_MESSAGE_CLOSE_WITHOUT_TRACKING_CONSENT = "trackInAppMessageCloseWithoutTrackingConsent"
+
     }
 
     var activity: Context? = null
@@ -323,6 +329,18 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_SET_IN_APP_MESSAGE_ACTION_HANDLER -> {
                 setInAppMessageActionHandler(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_MESSAGE_CLICK -> {
+                trackInAppMessageClick(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_MESSAGE_CLICK_WITHOUT_TRACKING_CONSENT -> {
+                trackInAppMessageClickWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_MESSAGE_CLOSE -> {
+                trackInAppMessageClose(call.arguments, result)
+            }
+            METHOD_TRACK_IN_APP_MESSAGE_CLOSE_WITHOUT_TRACKING_CONSENT -> {
+                trackInAppMessageCloseWithoutTrackingConsent(call.arguments, result)
             }
             else -> {
                 result.notImplemented()
@@ -516,6 +534,36 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
 
         InAppMessageActionStreamHandler.currentInstance.overrideDefaultBehavior = params.getRequired("overrideDefaultBehavior")
         InAppMessageActionStreamHandler.currentInstance.trackActions = params.getRequired("trackActions")
+    }
+
+    private fun trackInAppMessageClick(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val message = InAppMessageCoder.decode(data.getRequired<HashMap<String, Any?>>("message").toMap())
+        val buttonData = data.getRequired<HashMap<String, Any?>>("button").toMap()
+        Exponea.trackInAppMessageClick(message = message, buttonText = buttonData.getRequired("text"), buttonLink = buttonData.getRequired("url"))
+    }
+
+    private fun trackInAppMessageClickWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val message = InAppMessageCoder.decode(data.getRequired<HashMap<String, Any?>>("message").toMap())
+        val buttonData = data.getRequired<HashMap<String, Any?>>("button").toMap()
+        Exponea.trackInAppMessageClickWithoutTrackingConsent(message = message, buttonText = buttonData.getRequired("text"), buttonLink = buttonData.getRequired("url"))
+    }
+
+    private fun trackInAppMessageClose(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val message = InAppMessageCoder.decode(data.getRequired<HashMap<String, Any?>>("message").toMap())
+        Exponea.trackInAppMessageClose(message = message, interaction = data.getRequired("interaction"))
+    }
+
+    private fun trackInAppMessageCloseWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val message = InAppMessageCoder.decode(data.getRequired<HashMap<String, Any?>>("message").toMap())
+        Exponea.trackInAppMessageCloseWithoutTrackingConsent(message = message, interaction = data.getRequired("interaction"))
     }
 
     private fun requireConfigured() {

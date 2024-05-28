@@ -158,4 +158,16 @@ abstract class BaseInterface {
 
   /// Track in-app content block error event
   Future<void> trackInAppContentBlockErrorWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, String errorMessage);
+  
+  /// Track in-app message click event
+  Future<void> trackInAppMessageClick(InAppMessage message, InAppMessageButton button);
+
+  /// Track in-app message click event
+  Future<void> trackInAppMessageClickWithoutTrackingConsent(InAppMessage message, InAppMessageButton button);
+
+  /// Track in-app message close event
+  Future<void> trackInAppMessageClose(InAppMessage message, {bool interaction = true});
+
+  /// Track in-app message close event
+  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true});
 }

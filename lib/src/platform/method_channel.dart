@@ -58,6 +58,10 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _trackInAppContentBlockShownWithoutTrackingConsent = 'trackInAppContentBlockShownWithoutTrackingConsent';
   static const _trackInAppContentBlockError = 'trackInAppContentBlockError';
   static const _trackInAppContentBlockErrorWithoutTrackingConsent = 'trackInAppContentBlockErrorWithoutTrackingConsent';
+  static const _trackInAppMessageClick = 'trackInAppMessageClick';
+  static const _trackInAppMessageClickWithoutTrackingConsent = 'trackInAppMessageClickWithoutTrackingConsent';
+  static const _trackInAppMessageClose = 'trackInAppMessageClose';
+  static const _trackInAppMessageCloseWithoutTrackingConsent = 'trackInAppMessageCloseWithoutTrackingConsent';
 
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
@@ -372,5 +376,41 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
       'errorMessage': errorMessage,
     };
     await _channel.invokeMethod<void>(_trackInAppContentBlockErrorWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackInAppMessageClick(InAppMessage message, InAppMessageButton button) async {
+    final data = {
+      'message': InAppMessageEncoder.encode(message),
+      'button': InAppMessageButtonEncoder.encode(button),
+    };
+    await _channel.invokeMethod<void>(_trackInAppMessageClick, data);
+  }
+
+  @override
+  Future<void> trackInAppMessageClickWithoutTrackingConsent(InAppMessage message, InAppMessageButton button) async {
+    final data = {
+      'message': InAppMessageEncoder.encode(message),
+      'button': InAppMessageButtonEncoder.encode(button),
+    };
+    await _channel.invokeMethod<void>(_trackInAppMessageClickWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackInAppMessageClose(InAppMessage message, {bool interaction = true}) async {
+    final data = {
+      'message': InAppMessageEncoder.encode(message),
+      'interaction': interaction,
+    };
+    await _channel.invokeMethod<void>(_trackInAppMessageClose, data);
+  }
+
+  @override
+  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true}) async {
+    final data = {
+      'message': InAppMessageEncoder.encode(message),
+      'interaction': interaction,
+    };
+    await _channel.invokeMethod<void>(_trackInAppMessageCloseWithoutTrackingConsent, data);
   }
 }

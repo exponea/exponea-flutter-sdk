@@ -222,6 +222,26 @@ abstract class ExponeaPlatform extends PlatformInterface
 
   @override
   Future<void> trackInAppContentBlockErrorWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, String errorMessage) async {
+      throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppMessageClick(InAppMessage message, InAppMessageButton button) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppMessageClickWithoutTrackingConsent(InAppMessage message, InAppMessageButton button) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppMessageClose(InAppMessage message, {bool interaction = true}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true}) async {
     throw UnimplementedError();
   }
 

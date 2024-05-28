@@ -158,6 +158,22 @@ class ExponeaPlugin implements BaseInterface {
   Future<void> trackInAppContentBlockErrorWithoutTrackingConsent(String placeholderId, InAppContentBlock contentBlock, String errorMessage) =>
       _platform.trackInAppContentBlockErrorWithoutTrackingConsent(placeholderId, contentBlock, errorMessage);
 
+  @override    
+  Future<void> trackInAppMessageClick(InAppMessage message, InAppMessageButton button) =>
+      _platform.trackInAppMessageClick(message, button);
+
+  @override
+  Future<void> trackInAppMessageClickWithoutTrackingConsent(InAppMessage message, InAppMessageButton button) =>
+      _platform.trackInAppMessageClickWithoutTrackingConsent(message, button);
+
+  @override
+  Future<void> trackInAppMessageClose(InAppMessage message, {bool interaction = true}) =>
+      _platform.trackInAppMessageClose(message, interaction: interaction);
+
+  @override
+  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true}) =>
+      _platform.trackInAppMessageCloseWithoutTrackingConsent(message, interaction: interaction);
+
   @override
   Stream<OpenedPush> get openedPushStream => _platform.openedPushStream;
 
