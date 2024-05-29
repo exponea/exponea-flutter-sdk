@@ -18,7 +18,7 @@ class AppInboxCoder {
         }
 
         fun decodeAction(source: Map<String, Any?>): MessageItemAction? {
-            val sourceType = Type.find(source.getNullSafely("type")) ?: return null
+            val sourceType = Type.find(source.getNullSafely("action")) ?: return null
             return MessageItemAction().apply {
                 type = sourceType
                 title = source.getNullSafely("title")

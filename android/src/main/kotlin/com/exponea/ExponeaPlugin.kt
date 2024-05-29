@@ -379,8 +379,8 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     private fun trackAppInboxClick(args: Any?, result: Result) = runAsync(result) {
         requireConfigured()
         val inputData = args as Map<String, Any?>
-        val messageData = inputData.getRequired<Map<String, Any?>>("message")
-        val action = AppInboxCoder.decodeAction(inputData.getRequired("action"))
+        val messageData = inputData.getRequired<HashMap<String, Any?>>("message").toMap()
+        val action = AppInboxCoder.decodeAction(inputData.getRequired<HashMap<String, Any?>>("action").toMap())
             ?: throw ExponeaException.common("AppInbox message action data are invalid. See logs")
         Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
             // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
@@ -396,8 +396,8 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     private fun trackAppInboxClickWithoutTrackingConsent(args: Any?, result: Result) = runAsync(result) {
         requireConfigured()
         val inputData = args as Map<String, Any?>
-        val messageData = inputData.getRequired<Map<String, Any?>>("message")
-        val action = AppInboxCoder.decodeAction(inputData.getRequired("action"))
+        val messageData = inputData.getRequired<HashMap<String, Any?>>("message").toMap()
+        val action = AppInboxCoder.decodeAction(inputData.getRequired<HashMap<String, Any?>>("action").toMap())
             ?: throw ExponeaException.common("AppInbox message action data are invalid. See logs")
         Exponea.fetchAppInboxItem(messageId = messageData.getRequired("id")) { nativeMessage ->
             // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
