@@ -19,6 +19,8 @@ import com.exponea.data.InAppMessageAction
 import com.exponea.data.RecommendationEncoder
 import com.exponea.data.RecommendationOptionsEncoder
 import com.exponea.data.InAppMessageCoder
+import com.exponea.data.PurchasedItemCoder
+import com.exponea.data.getOptional
 import com.exponea.exception.ExponeaException
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
@@ -205,6 +207,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_TRACK_IN_APP_MESSAGE_CLICK_WITHOUT_TRACKING_CONSENT = "trackInAppMessageClickWithoutTrackingConsent"
         private const val METHOD_TRACK_IN_APP_MESSAGE_CLOSE = "trackInAppMessageClose"
         private const val METHOD_TRACK_IN_APP_MESSAGE_CLOSE_WITHOUT_TRACKING_CONSENT = "trackInAppMessageCloseWithoutTrackingConsent"
+        private const val METHOD_TRACK_PAYMENT_EVENT = "trackPaymentEvent"
 
     }
 
@@ -341,6 +344,9 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_TRACK_IN_APP_MESSAGE_CLOSE_WITHOUT_TRACKING_CONSENT -> {
                 trackInAppMessageCloseWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_TRACK_PAYMENT_EVENT -> {
+                trackPaymentEvent(call.arguments, result)
             }
             else -> {
                 result.notImplemented()
@@ -564,6 +570,14 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val message = InAppMessageCoder.decode(data.getRequired<HashMap<String, Any?>>("message").toMap())
         Exponea.trackInAppMessageCloseWithoutTrackingConsent(message = message, interaction = data.getRequired("interaction"))
+    }
+
+    private fun trackPaymentEvent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val timestamp = data.getOptional<Double>("timestamp")
+        val purchasedItem = PurchasedItemCoder.decode(data.getRequired<HashMap<String, Any?>>("purchasedItem").toMap())
+        Exponea.trackPaymentEvent(timestamp = timestamp ?: currentTimeSeconds(),  purchasedItem = purchasedItem)
     }
 
     private fun requireConfigured() {

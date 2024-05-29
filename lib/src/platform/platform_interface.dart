@@ -246,6 +246,11 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
+  Future<void> trackPaymentEvent(PurchasedItem purchasedItem, {DateTime? timestamp}) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<OpenedPush> get openedPushStream => throw UnimplementedError();
 
   @override

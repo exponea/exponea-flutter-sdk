@@ -62,6 +62,7 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _trackInAppMessageClickWithoutTrackingConsent = 'trackInAppMessageClickWithoutTrackingConsent';
   static const _trackInAppMessageClose = 'trackInAppMessageClose';
   static const _trackInAppMessageCloseWithoutTrackingConsent = 'trackInAppMessageCloseWithoutTrackingConsent';
+  static const _trackPaymentEvent = 'trackPaymentEvent';
 
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
@@ -412,5 +413,14 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
       'interaction': interaction,
     };
     await _channel.invokeMethod<void>(_trackInAppMessageCloseWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackPaymentEvent(PurchasedItem purchasedItem, {DateTime? timestamp}) async {
+    final data = {
+      'purchasedItem': PurchasedItemEncoder.encode(purchasedItem),
+      'timestamp': timestamp?.let(DateTimeEncoder.encode),
+    };
+    await _channel.invokeMethod<void>(_trackPaymentEvent, data);
   }
 }

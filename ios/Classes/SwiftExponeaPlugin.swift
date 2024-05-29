@@ -53,6 +53,7 @@ enum METHOD_NAME: String {
     case trackInAppMessageClickWithoutTrackingConsent = "trackInAppMessageClickWithoutTrackingConsent"
     case trackInAppMessageClose = "trackInAppMessageClose"
     case trackInAppMessageCloseWithoutTrackingConsent = "trackInAppMessageCloseWithoutTrackingConsent"
+    case trackPaymentEvent = "trackPaymentEvent"
 }
 
 
@@ -399,6 +400,8 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             trackInAppMessageClose(call.arguments, with: result)
         case .trackInAppMessageCloseWithoutTrackingConsent:
             trackInAppMessageCloseWithoutTrackingConsent(call.arguments, with: result)
+        case .trackPaymentEvent:
+            trackPaymentEvent(call.arguments, with: result)
         }
     }
     
@@ -841,6 +844,22 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             return
         }
         exponeaInstance.trackInAppMessageCloseClickWithoutTrackingConsent(message: message, isUserInteraction: interaction)
+        result(nil)
+    }
+    
+    private func trackPaymentEvent(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? NSDictionary,
+              let purchasedItemData: [String : Any?] = try? data.getRequiredSafely(property: "purchasedItem"),
+              let purchasedItemProperties = try? PurchasedItemCoder.mapProperties(purchasedItemData) else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Purchased item data are invalid. See logs. See logs", details: "no purchased item"
+            ))
+            return
+        }
+        let timestamp: Double? = try? data.getOptionalSafely(property: "timestamp")
+        exponeaInstance.trackPayment(properties: purchasedItemProperties, timestamp: timestamp)
         result(nil)
     }
 

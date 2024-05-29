@@ -170,4 +170,7 @@ abstract class BaseInterface {
 
   /// Track in-app message close event
   Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true});
+
+  /// Track payment event.
+  Future<void> trackPaymentEvent(PurchasedItem purchasedItem, {DateTime? timestamp});
 }

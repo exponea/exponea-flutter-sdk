@@ -175,6 +175,10 @@ class ExponeaPlugin implements BaseInterface {
       _platform.trackInAppMessageCloseWithoutTrackingConsent(message, interaction: interaction);
 
   @override
+  Future<void> trackPaymentEvent(PurchasedItem purchasedItem, {DateTime? timestamp}) =>
+      _platform.trackPaymentEvent(purchasedItem, timestamp: timestamp);
+
+  @override
   Stream<OpenedPush> get openedPushStream => _platform.openedPushStream;
 
   @override

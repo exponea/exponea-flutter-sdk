@@ -343,6 +343,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ListTile(
                   title: ElevatedButton(
+                    onPressed: () => _trackPaymentEvent(context),
+                    child: const Text('Track payment event'),
+                  ),
+                ),
+                ListTile(
+                  title: ElevatedButton(
                     onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => const InAppCbPage())),
@@ -390,6 +396,19 @@ class _HomePageState extends State<HomePage> {
             title: 'Google', action: 'browser', url: 'https://www.google.com'),
         messages.first);
   }
+
+  Future<void> _trackPaymentEvent(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        return await _plugin.trackPaymentEvent(
+          const PurchasedItem(
+            value: 12.34,
+            currency: "EUR",
+            paymentSystem: "Virtual",
+            productId: "handbag",
+            productTitle: "Awesome leather handbag",
+          ),
+        );
+      });
 
   Future<void> _checkIsConfigured(BuildContext context) =>
       _runAndShowResult(context, () async {
