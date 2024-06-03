@@ -1,7 +1,9 @@
 # Flutter Exponea SDK
-Flutter Exponea SDK allows your application to interact with the [Exponea](https://exponea.com/) Customer Data & Experience Platform. Exponea empowers B2C marketers to raise conversion rates, improve acquisition ROI, and maximize customer lifetime value.
+Flutter Exponea SDK allows your application to interact with the [Bloomreach Engagement](https://www.bloomreach.com/) Customer Data & Experience Platform. Exponea empowers B2C marketers to raise conversion rates, improve acquisition ROI, and maximize customer lifetime value.
 
 Flutter SDK is implemented as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk).
+
+> Bloomreach Engagement was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the Flutter SDK.
 
 ## Getting started
 In your projects `pubspec.yaml` file, add dependency to Flutter Exponea SDK:
@@ -30,25 +32,33 @@ android {
 Minimal supported Android API level for Exponea SDK is 21.
 
 ## Documentation
-  * [Basics concepts](./documentation/BASIC_CONCEPTS.md)
-  * [Configuration](./documentation/CONFIGURATION.md)
-  * [Tracking](./documentation/TRACKING.md)
-  * [Tracking Campaigns(Android App Links/Universal links)](./documentation/LINKING.md)
-  * [Fetching](./documentation/FETCHING.md)
-  * [Push notifications](./documentation/PUSH.md)
-  * [Anonymize customer](./documentation/ANONYMIZE.md)
-  * In-App Personalization
-    * [In-app messages](./documentation/IN_APP_MESSAGES.md)
-    * [In-app content blocks](./documentation/IN_APP_CONTENT_BLOCKS.md)
-  * [App Inbox](./documentation/APP_INBOX.md)
-  * [Example/Package development documentation](./documentation/DEVELOPMENT.md) - Learn how to build example application or the package itself
-  * [SDK version update guide](./documentation/VERSION_UPDATE.md)
+
+- [Initial SDK Setup](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup)
+  - [Configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration)
+  - [Authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization)
+  - [Data Flushing](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-data-flushing)
+- [Basic Concepts](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-basic-concepts)
+- [Tracking](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking)
+  - [Tracking Consent](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent)
+- [Links](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-links)
+- [Push Notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications)
+  - [Android Push Notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android)
+  - [iOS Push Notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
+- [Fetch Data](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-fetch-data)
+- [In-App Personalization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-personalization)
+  - [In-App Messages](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-messages)
+  - [In-App Content Blocks](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-content-blocks)
+- [App Inbox](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-app-inbox)
+- [Example App](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app)
+- [Development](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-development)
+- [Release Notes](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-release-notes)
+   - [SDK Version Update Guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update)
 
 If facing any issues, look for **Troubleshooting** section in the respective document.
 
 ## Release Notes
 
-[Release notes](./CHANGELOG.md) for the SDK.
+[Release notes](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-release-notes) for the SDK.
 
 
 ## Support
