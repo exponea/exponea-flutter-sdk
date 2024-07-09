@@ -30,7 +30,7 @@ InAppContentBlockPlaceholder(
 )
 ```
 
-After the SDK [initializes](https://documentation.bloomreach.com/engagement/docs/android-sdk-setup#initialize-the-sdk), it will identify any in-app content blocks with matching placeholder ID and select the one with the highest priority to display within the placeholder view.
+After the SDK [initializes](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk), it will identify any in-app content blocks with matching placeholder ID and select the one with the highest priority to display within the placeholder view.
 
 > 📘
 >

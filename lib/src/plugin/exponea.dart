@@ -179,6 +179,38 @@ class ExponeaPlugin implements BaseInterface {
       _platform.trackPaymentEvent(purchasedItem, timestamp: timestamp);
 
   @override
+  Future<void> trackPushToken(String token) => _platform.trackPushToken(token);
+
+  @override
+  Future<void> trackHmsPushToken(String token) => _platform.trackHmsPushToken(token);
+
+  @override
+  Future<void> handlePushToken(String token) => _platform.handlePushToken(token);
+
+  @override
+  Future<void> handleHmsPushToken(String token) => _platform.handleHmsPushToken(token);
+
+  @override
+  Future<void> trackClickedPush(Map<String, dynamic> data) => _platform.trackClickedPush(data);
+
+  @override
+  Future<void> trackClickedPushWithoutTrackingConsent(Map<String, dynamic> data) =>
+      _platform.trackClickedPushWithoutTrackingConsent(data);
+
+  @override
+  Future<void> trackDeliveredPush(Map<String, dynamic> data) => _platform.trackDeliveredPush(data);
+
+  @override
+  Future<void> trackDeliveredPushWithoutTrackingConsent(Map<String, dynamic> data) =>
+      _platform.trackDeliveredPushWithoutTrackingConsent(data);
+
+  @override
+  Future<bool> isBloomreachNotification(Map<String, String> data) => _platform.isBloomreachNotification(data);
+
+  @override
+  Future<void> handleCampaignClick(String url) => _platform.handleCampaignClick(url);
+
+  @override
   Stream<OpenedPush> get openedPushStream => _platform.openedPushStream;
 
   @override
@@ -187,4 +219,13 @@ class ExponeaPlugin implements BaseInterface {
   @override
   Stream<InAppMessageAction> inAppMessageActionStream({bool overrideDefaultBehavior = false, bool trackActions = true}) =>
       _platform.inAppMessageActionStream(overrideDefaultBehavior: overrideDefaultBehavior, trackActions : trackActions);
+
+  @override
+  Future<void> handlePushNotificationOpened(Map<String, dynamic> data) =>
+      _platform.handlePushNotificationOpened(data);
+
+  @override
+  Future<void> handlePushNotificationOpenedWithoutTrackingConsent(Map<String, dynamic> data) =>
+      _platform.handlePushNotificationOpenedWithoutTrackingConsent(data);
+
 }

@@ -63,6 +63,18 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _trackInAppMessageClose = 'trackInAppMessageClose';
   static const _trackInAppMessageCloseWithoutTrackingConsent = 'trackInAppMessageCloseWithoutTrackingConsent';
   static const _trackPaymentEvent = 'trackPaymentEvent';
+  static const _trackPushToken = 'trackPushToken';
+  static const _trackHmsPushToken = 'trackHmsPushToken';
+  static const _handlePushToken = 'handlePushToken';
+  static const _handleHmsPushToken = 'handleHmsPushToken';
+  static const _trackClickedPush = 'trackClickedPush';
+  static const _trackClickedPushWithoutTrackingConsent = 'trackClickedPushWithoutTrackingConsent';
+  static const _trackDeliveredPush = 'trackDeliveredPush';
+  static const _trackDeliveredPushWithoutTrackingConsent = 'trackDeliveredPushWithoutTrackingConsent';
+  static const _isBloomreachNotification = 'isBloomreachNotification';
+  static const _handleCampaignClick = 'handleCampaignClick';
+  static const _handlePushNotificationOpened = 'handlePushNotificationOpened';
+  static const _handlePushNotificationOpenedWithoutTrackingConsent = 'handlePushNotificationOpenedWithoutTrackingConsent';
 
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
@@ -422,5 +434,65 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
       'timestamp': timestamp?.let(DateTimeEncoder.encode),
     };
     await _channel.invokeMethod<void>(_trackPaymentEvent, data);
+  }
+
+  @override
+  Future<void> trackPushToken(String token) async {
+    await _channel.invokeMethod<void>(_trackPushToken, token);
+  }
+
+  @override
+  Future<void> trackHmsPushToken(String token) async {
+    await _channel.invokeMethod<void>(_trackHmsPushToken, token);
+  }
+
+  @override
+  Future<void> handlePushToken(String token) async {
+    await _channel.invokeMethod<void>(_handlePushToken, token);
+  }
+
+  @override
+  Future<void> handleHmsPushToken(String token) async {
+    await _channel.invokeMethod<void>(_handleHmsPushToken, token);
+  }
+
+  @override
+  Future<void> trackClickedPush(Map<String, dynamic> data) async {
+    await _channel.invokeMethod<void>(_trackClickedPush, data);
+  }
+
+  @override
+  Future<void> trackClickedPushWithoutTrackingConsent(Map<String, dynamic> data) async {
+    await _channel.invokeMethod<void>(_trackClickedPushWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<void> trackDeliveredPush(Map<String, dynamic> data) async {
+    await _channel.invokeMethod<void>(_trackDeliveredPush, data);
+  }
+
+  @override
+  Future<void> trackDeliveredPushWithoutTrackingConsent(Map<String, dynamic> data) async {
+    await _channel.invokeMethod<void>(_trackDeliveredPushWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<bool> isBloomreachNotification(Map<String, String> data) async {
+    return (await _channel.invokeMethod<bool>(_isBloomreachNotification, data))!;
+  }
+
+  @override
+  Future<void> handleCampaignClick(String url) async {
+    await _channel.invokeMethod<void>(_handleCampaignClick, url);
+  }
+
+  @override
+  Future<void> handlePushNotificationOpened(Map<String, dynamic> data) async {
+    await _channel.invokeMethod<void>(_handlePushNotificationOpened, data);
+  }
+
+  @override
+  Future<void> handlePushNotificationOpenedWithoutTrackingConsent(Map<String, dynamic> data) async {
+    await _channel.invokeMethod<void>(_handlePushNotificationOpenedWithoutTrackingConsent, data);
   }
 }

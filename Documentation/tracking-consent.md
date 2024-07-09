@@ -22,6 +22,31 @@ In case of clicked events, it is possible to override the value of `has_tracking
 
 ## How the SDK Tracks Events Depending on Tracking Consent
 
+### Push Notification Delivered
+
+The SDK tracks push notification delivery by calling `ExponeaPlugin().trackDeliveredPush` or `ExponeaPlugin.handleRemoteMessage`. These methods track a delivered event only if one of the following is true:
+
+- The tracking consent feature is disabled.
+- The tracking consent feature is enabled and `has_tracking_consent` is `true`.
+
+If you are invoking the `ExponeaPlugin().trackDeliveredPush` method manually and want to ignore tracking consent, you may use `ExponeaPlugin().trackDeliveredPushWithoutTrackingConsent` instead. This method will track the event regardless of tracking consent.
+
+### Push Notification Clicked
+
+The SDK tracks push notification clicks by calling `ExponeaPlugin().trackClickedPush`. This method tracks a clicked event only if one of the following is true:
+
+- The tracking consent feature is disabled.
+- The tracking consent feature is enabled and `has_tracking_consent` is `true`.
+- The action URL contains the query parameter `xnpe_force_track` with the value `true` (overriding `has_tracking_consent`).
+
+> 👍
+>
+> An event that is tracked because `xnpe_force_track` (forced tracking) is enabled will contain an additional property `tracking_forced` with value `true`.
+
+If you are invoking the `ExponeaPlugin().trackClickedPush` method manually and you want to ignore tracking consent, you may use `ExponeaPlugin().trackPushOpenedWithoutTrackingConsent` instead.
+
+These methods will track the event regardless of tracking consent.
+
 ### In-App Message Clicked
 
 The SDK tracks in-app message clicks by calling `ExponeaPlugin().trackInAppMessageClick`. This method tracks a clicked event only if one of the following is true:

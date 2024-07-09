@@ -27,6 +27,12 @@ The following pages describe the steps for each platform to add the minimum push
 
 This section describes the customizations you can implement once you have integrated the minimum push notification functionality.
 
+### Configure Automatic Push Notification Tracking
+
+By default, the SDK tracks push notifications automatically. In the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`). You can also disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotifications` property to `false`.
+
+If `automaticPushNotifications` is enabled, the SDK will display push notifications from Engagement and track a "campaign" event for every delivered/opened push notification with the relevant properties.
+
 ### Respond to Push Notification Interactions
 
 Once you have followed the integration steps for each platform, your app should be able to receive push notifications.
@@ -83,6 +89,66 @@ We recommend registering the listener as soon as possible to ensure proper appli
 > ❗️
 >
 > The listener is called for both regular and silent push notifications on Android but **only** for silent push notifications on iOS due to technical limitations.
+
+### Manually Track Push Notifications
+
+If you disable [automatic push notification tracking](#configure-automatic-push-notification-tracking) or if you want to track push notification from other providers, you can manually track events related to push notifications.
+
+#### Track Push Token (FCM)
+
+Use the `trackPushToken` method to manually track the FCM push token:
+
+```dart
+ExponeaPlugin().trackPushToken("382d4221-3441-44b7-a676-3eb5f515157f")
+```
+
+Invoking this method will track the push token immediately regardless of the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for `tokenTrackFrequency`.
+
+#### Track Delivered Push Notification
+
+Use the `trackDeliveredPush` method to manually track a delivered push notification:
+
+```dart
+final Map<String, dynamic> payload = {
+  "platform": "android",
+  "subject": "subject",
+  "type": "push",
+  "url_params": {
+    "utm_campaign": "Campaign name",
+    "utm_medium": "mobile_push_notification",
+    "utm_content": "en",
+    ...
+  },
+  ...
+};
+ExponeaPlugin().trackDeliveredPush(payload)
+```
+
+> ❗️
+>
+> The behaviour of `trackDeliveredPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
+
+#### Track Clicked Push Notification
+
+Use the `trackClickedPush` method to manually track a clicked push notification:
+
+```dart
+final Map<String, dynamic> payload = {
+  "platform": "android",
+  "subject": "subject",
+  "type": "push",
+  "url_params": {
+    "utm_campaign": "Campaign name",
+    "utm_medium": "mobile_push_notification",
+    "utm_content": "en",
+    ...
+  },
+  ...
+};
+ExponeaPlugin().trackClickedPush(payload)
+```
+
+> The behaviour of `trackClickedPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
 
 ### Custom Push Notification Data Processing
 

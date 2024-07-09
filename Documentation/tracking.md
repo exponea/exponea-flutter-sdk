@@ -225,6 +225,42 @@ The SDK automatically tracks a number of default properties for the `session_sta
 
 You can override the value of any of these properties by including them in the `defaultProperties` configuration parameter (see below). For example, if you don't want to track customers' IP addresses, you can set the `ip` property's default value to an empty string.
 
+## Push Notifications
+
+If developers [integrate push notification functionality](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#integration) in their app, the SDK automatically tracks the push notification token by default.
+
+### Track Token Manually
+
+Use either the `trackPushToken()` (Firebase) or `trackHmsPushToken` (Huawei) method to manually track the token for receiving push notifications. The token is assigned to the currently logged-in customer (with the `identifyCustomer` method).
+
+Invoking this method will track a push token immediately regardless of the value of 'tokenTrackFrequency' (refer to the [Configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) documentation for details).
+
+Each time the app becomes active, the SDK calls `verifyPushStatusAndTrackPushToken` and tracks the token.
+
+#### Arguments
+
+| Name                 | Type    | Description |
+| ---------------------| ------- | ----------- |
+| token **(required)** | String  | String containing the push notification token. |
+
+#### Example 
+
+Firebase:
+
+```dart
+ExponeaPlugin().trackPushToken("value-of-push-token")
+```
+
+Huawei:
+
+```dart
+ExponeaPlugin().trackHmsPushToken("value-of-push-token")
+```
+
+> ❗️
+>
+> Remember to invoke [anonymize](#anonymize) whenever the user signs out to ensure the push notification token is removed from the user's customer profile. Failing to do this may cause multiple customer profiles share the same token, resulting in duplicate push notifications.
+
 ## Payments
 
 The SDK provides a convenience method `trackPaymentEvent` to help you track information about a payment for a product or service within the application.
@@ -259,7 +295,7 @@ final item = PurchasedItem(
 Pass the `PurchasedItem` to `trackPaymentEvent` as follows:
 
 ```dart
-Exponea.trackPaymentEvent(item)
+ExponeaPlugin().trackPaymentEvent(item)
 ```
 
 ## Default Properties

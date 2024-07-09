@@ -54,6 +54,16 @@ enum METHOD_NAME: String {
     case trackInAppMessageClose = "trackInAppMessageClose"
     case trackInAppMessageCloseWithoutTrackingConsent = "trackInAppMessageCloseWithoutTrackingConsent"
     case trackPaymentEvent = "trackPaymentEvent"
+    case trackPushToken = "trackPushToken"
+    case handlePushToken = "handlePushToken"
+    case trackClickedPush = "trackClickedPush"
+    case trackClickedPushWithoutTrackingConsent = "trackClickedPushWithoutTrackingConsent"
+    case trackDeliveredPush = "trackDeliveredPush"
+    case trackDeliveredPushWithoutTrackingConsent = "trackDeliveredPushWithoutTrackingConsent"
+    case isBloomreachNotification = "isBloomreachNotification"
+    case handleCampaignClick = "handleCampaignClick"
+    case handlePushNotificationOpened = "handlePushNotificationOpened"
+    case handlePushNotificationOpenedWithoutTrackingConsent = "handlePushNotificationOpenedWithoutTrackingConsent"
 }
 
 
@@ -402,6 +412,26 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             trackInAppMessageCloseWithoutTrackingConsent(call.arguments, with: result)
         case .trackPaymentEvent:
             trackPaymentEvent(call.arguments, with: result)
+        case .trackPushToken:
+            trackPushToken(call.arguments, with: result)
+        case .handlePushToken:
+            handlePushToken(call.arguments, with: result)
+        case .trackClickedPush:
+            trackClickedPush(call.arguments, with: result)
+        case .trackClickedPushWithoutTrackingConsent:
+            trackClickedPushWithoutTrackingConsent(call.arguments, with: result)
+        case .trackDeliveredPush:
+            trackDeliveredPush(call.arguments, with: result)
+        case .trackDeliveredPushWithoutTrackingConsent:
+            trackDeliveredPushWithoutTrackingConsent(call.arguments, with: result)
+        case .isBloomreachNotification:
+            isBloomreachNotification(call.arguments, with: result)
+        case .handleCampaignClick:
+            handleCampaignClick(call.arguments, with: result)
+        case .handlePushNotificationOpened:
+            handlePushNotificationOpened(call.arguments, with: result)
+        case .handlePushNotificationOpenedWithoutTrackingConsent:
+            handlePushNotificationOpenedWithoutTrackingConsent(call.arguments, with: result)
         }
     }
     
@@ -846,7 +876,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         exponeaInstance.trackInAppMessageCloseClickWithoutTrackingConsent(message: message, isUserInteraction: interaction)
         result(nil)
     }
-    
+
     private func trackPaymentEvent(_ args: Any?, with result: FlutterResult) {
         guard requireConfigured(with: result) else { return }
         guard let data = args as? NSDictionary,
@@ -860,6 +890,139 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         }
         let timestamp: Double? = try? data.getOptionalSafely(property: "timestamp")
         exponeaInstance.trackPayment(properties: purchasedItemProperties, timestamp: timestamp)
+        result(nil)
+    }
+
+    private func trackPushToken(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let token = args as? String else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Token data are invalid. See logs", details: "no token"
+            ))
+            return
+        }
+        exponeaInstance.trackPushToken(token)
+        result(nil)
+    }
+
+    private func handlePushToken(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let token = args as? String else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Token data are invalid. See logs", details: "no token"
+            ))
+            return
+        }
+        exponeaInstance.handlePushNotificationToken(token: token)
+        result(nil)
+    }
+
+    private func trackClickedPush(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? [String : Any?] else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Push notification data are invalid. See logs.", details: "no data"
+            ))
+            return
+        }
+        exponeaInstance.trackPushOpened(with: data)
+        result(nil)
+    }
+
+    private func trackClickedPushWithoutTrackingConsent(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? [String : Any?] else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Push notification data are invalid. See logs.", details: "no data"
+            ))
+            return
+        }
+        exponeaInstance.trackPushOpenedWithoutTrackingConsent(with: data)
+        result(nil)
+    }
+
+    private func trackDeliveredPush(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? [String : Any?] else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Push notification data are invalid. See logs.", details: "no data"
+            ))
+            return
+        }
+        exponeaInstance.trackPushReceived(userInfo: data)
+        result(nil)
+    }
+
+    private func trackDeliveredPushWithoutTrackingConsent(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? [String : Any?] else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Push notification data are invalid. See logs.", details: "no data"
+            ))
+            return
+        }
+        exponeaInstance.trackPushReceivedWithoutTrackingConsent(userInfo: data)
+        result(nil)
+    }
+
+    private func isBloomreachNotification(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? [String : Any?] else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Push notification data are invalid. See logs.", details: "no data"
+            ))
+            return
+        }
+        result(Exponea.isExponeaNotification(userInfo: data))
+    }
+
+    private func handleCampaignClick(_ args: Any?, with result: FlutterResult) {
+        guard let data = args as? String,
+              let url = URL(string: data) else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Incorrect URL", details: "Incorrect URL"
+            ))
+            return
+        }
+        exponeaInstance.trackCampaignClick(url: url, timestamp: Date().timeIntervalSince1970)
+        result(nil)
+    }
+
+    private func handlePushNotificationOpened(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? [String : Any?],
+              let userInfo = data["attributes"] as? [String: Any] else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Push notification data are invalid. See logs.", details: "no data"
+            ))
+            return
+        }
+        let identifier = data["url"] as? String
+        exponeaInstance.handlePushNotificationOpened(userInfo: userInfo, actionIdentifier: identifier)
+        result(nil)
+    }
+
+    private func handlePushNotificationOpenedWithoutTrackingConsent(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let data = args as? [String : Any?],
+              let userInfo = data["attributes"] as? [String: Any] else {
+            result(FlutterError(
+                code: errorCode,
+                message: "Push notification data are invalid. See logs.", details: "no data"
+            ))
+            return
+        }
+        let identifier = data["url"] as? String
+        exponeaInstance.handlePushNotificationOpenedWithoutTrackingConsent(userInfo: userInfo, actionIdentifier: identifier)
         result(nil)
     }
 

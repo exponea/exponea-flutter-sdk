@@ -3,6 +3,7 @@ package com.exponea
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -19,6 +20,7 @@ import com.exponea.data.InAppMessageAction
 import com.exponea.data.RecommendationEncoder
 import com.exponea.data.RecommendationOptionsEncoder
 import com.exponea.data.InAppMessageCoder
+import com.exponea.data.NotificationCoder
 import com.exponea.data.PurchasedItemCoder
 import com.exponea.data.getOptional
 import com.exponea.exception.ExponeaException
@@ -208,7 +210,18 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_TRACK_IN_APP_MESSAGE_CLOSE = "trackInAppMessageClose"
         private const val METHOD_TRACK_IN_APP_MESSAGE_CLOSE_WITHOUT_TRACKING_CONSENT = "trackInAppMessageCloseWithoutTrackingConsent"
         private const val METHOD_TRACK_PAYMENT_EVENT = "trackPaymentEvent"
-
+        private const val METHOD_TRACK_PUSH_TOKEN = "trackPushToken"
+        private const val METHOD_TRACK_HMS_PUSH_TOKEN = "trackHmsPushToken"
+        private const val METHOD_HANDLE_PUSH_TOKEN = "handlePushToken"
+        private const val METHOD_HANDLE_HMS_PUSH_TOKEN = "handleHmsPushToken"
+        private const val METHOD_TRACK_CLICKED_PUSH = "trackClickedPush"
+        private const val METHOD_TRACK_CLICKED_PUSH_WITHOUT_TRACKING_CONSENT = "trackClickedPushWithoutTrackingConsent"
+        private const val METHOD_TRACK_DELIVERED_PUSH = "trackDeliveredPush"
+        private const val METHOD_TRACK_DELIVERED_PUSH_WITHOUT_TRACKING_CONSENT = "trackDeliveredPushWithoutTrackingConsent"
+        private const val METHOD_IS_BLOOMREACH_NOTIFICATION = "isBloomreachNotification"
+        private const val METHOD_HANDLE_CAMPAIGN_CLICK = "handleCampaignClick"
+        private const val METHOD_HANDLE_PUSH_NOTIFICATION_OPENED = "handlePushNotificationOpened"
+        private const val METHOD_HANDLE_PUSH_NOTIFICATION_OPENED_WITHOUT_TRACKING_CONSENT = "handlePushNotificationOpenedWithoutTrackingConsent"
     }
 
     var activity: Context? = null
@@ -347,6 +360,42 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_TRACK_PAYMENT_EVENT -> {
                 trackPaymentEvent(call.arguments, result)
+            }
+            METHOD_TRACK_PUSH_TOKEN -> {
+                trackPushToken(call.arguments, result)
+            }
+            METHOD_TRACK_HMS_PUSH_TOKEN -> {
+                trackHmsPushToken(call.arguments, result)
+            }
+            METHOD_HANDLE_PUSH_TOKEN -> {
+                handlePushToken(call.arguments, result)
+            }
+            METHOD_HANDLE_HMS_PUSH_TOKEN -> {
+                handleHmsPushToken(call.arguments, result)
+            }
+            METHOD_TRACK_CLICKED_PUSH -> {
+                trackClickedPush(call.arguments, result)
+            }
+            METHOD_TRACK_CLICKED_PUSH_WITHOUT_TRACKING_CONSENT -> {
+                trackClickedPushWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_TRACK_DELIVERED_PUSH -> {
+                trackDeliveredPush(call.arguments, result)
+            }
+            METHOD_TRACK_DELIVERED_PUSH_WITHOUT_TRACKING_CONSENT -> {
+                trackDeliveredPushWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_IS_BLOOMREACH_NOTIFICATION -> {
+                isBloomreachNotification(call.arguments, result)
+            }
+            METHOD_HANDLE_CAMPAIGN_CLICK -> {
+                handleCampaignClick(call.arguments, result)
+            }
+            METHOD_HANDLE_PUSH_NOTIFICATION_OPENED -> {
+                handlePushNotificationOpened(call.arguments, result)
+            }
+            METHOD_HANDLE_PUSH_NOTIFICATION_OPENED_WITHOUT_TRACKING_CONSENT -> {
+                handlePushNotificationOpenedWithoutTrackingConsent(call.arguments, result)
             }
             else -> {
                 result.notImplemented()
@@ -579,6 +628,85 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val purchasedItem = PurchasedItemCoder.decode(data.getRequired<HashMap<String, Any?>>("purchasedItem").toMap())
         Exponea.trackPaymentEvent(timestamp = timestamp ?: currentTimeSeconds(),  purchasedItem = purchasedItem)
     }
+
+    private fun trackPushToken(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val token = args as String
+        Exponea.trackPushToken(token)
+    }
+
+    private fun trackHmsPushToken(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val token = args as String
+        Exponea.trackHmsPushToken(token)
+    }
+
+    private fun handlePushToken(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val token = args as String
+        Exponea.handleNewToken(activity ?: context, token)
+    }
+
+    private fun handleHmsPushToken(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val token = args as String
+        Exponea.handleNewHmsToken(activity ?: context, token)
+    }
+
+    private fun trackClickedPush(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val notification = NotificationCoder.decodeNotificationData(data)
+        val notificationAction = NotificationCoder.decodeNotificationAction(data)
+        val receivedSeconds = data.getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackClickedPush(notification, notificationAction, receivedSeconds)
+    }
+
+    private fun trackClickedPushWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val notification = NotificationCoder.decodeNotificationData(data)
+        val notificationAction = NotificationCoder.decodeNotificationAction(data)
+        val receivedSeconds = data.getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackClickedPushWithoutTrackingConsent(notification, notificationAction, receivedSeconds)
+    }
+
+    private fun trackDeliveredPush(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val notification = NotificationCoder.decodeNotificationData(data)
+        val receivedSeconds = data.getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackDeliveredPush(notification, receivedSeconds)
+    }
+
+    private fun trackDeliveredPushWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val notification = NotificationCoder.decodeNotificationData(data)
+        val receivedSeconds = data.getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackDeliveredPushWithoutTrackingConsent(notification, receivedSeconds)
+    }
+
+    private  fun isBloomreachNotification(args: Any?, result: Result) = runWithResult(result) {
+        requireConfigured()
+        val data = args as Map<String, String>
+        return@runWithResult Exponea.isExponeaPushNotification(data)
+    }
+
+    private fun handleCampaignClick(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val campaignUrl = args as String
+        val campaignIntent = Intent()
+        campaignIntent.action = Intent.ACTION_VIEW
+        campaignIntent.data = Uri.parse(campaignUrl)
+        Exponea.handleCampaignIntent(campaignIntent, activity ?: context)
+    }
+
+    private fun handlePushNotificationOpened(args: Any?, result: Result) =
+        trackClickedPush(args, result)
+
+    private fun handlePushNotificationOpenedWithoutTrackingConsent(args: Any?, result: Result) =
+        trackClickedPushWithoutTrackingConsent(args, result)
 
     private fun requireConfigured() {
         if (!Exponea.isInitialized) {

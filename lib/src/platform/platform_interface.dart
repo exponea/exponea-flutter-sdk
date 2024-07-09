@@ -251,6 +251,66 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
+  Future<void> trackPushToken(String token) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackHmsPushToken(String token) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> handlePushToken(String token) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> handleHmsPushToken(String token) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackClickedPush(Map<String, dynamic> data) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackClickedPushWithoutTrackingConsent(Map<String, dynamic> data) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackDeliveredPush(Map<String, dynamic> data) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> trackDeliveredPushWithoutTrackingConsent(Map<String, dynamic> data) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isBloomreachNotification(Map<String, String> data) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> handleCampaignClick(String url) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> handlePushNotificationOpened(Map<String, dynamic> data) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> handlePushNotificationOpenedWithoutTrackingConsent(Map<String, dynamic> data) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<OpenedPush> get openedPushStream => throw UnimplementedError();
 
   @override
