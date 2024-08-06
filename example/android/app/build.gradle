@@ -28,11 +28,11 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -85,9 +85,9 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.android.support:multidex:$multidexVersion"
-    implementation "com.exponea.sdk:sdk:3.4.0"
+    implementation "com.exponea.sdk:sdk:$exponeaSdkVersion"
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
     gmsImplementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     hmsImplementation "com.huawei.agconnect:agconnect-core:$agconnectVersion"
@@ -95,8 +95,8 @@ dependencies {
 
     // tests :
     testImplementation 'junit:junit:4.12'
-    testImplementation 'com.exponea.sdk:sdk:3.4.0'
-    testImplementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation "com.exponea.sdk:sdk:$exponeaSdkVersion"
+    testImplementation "com.google.code.gson:gson:$gsonVersion"
 }
 
 

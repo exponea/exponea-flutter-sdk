@@ -206,7 +206,7 @@ public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView 
 }
 
 public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
-    
+
     private let originalBehaviour: InAppContentBlockCallbackType
     private let overrideOriginalBehaviour: Bool
     
@@ -289,7 +289,11 @@ public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
         ]
         invokeMethod(method: methodOnInAppContentBlockEvent, arguments: payload)
     }
-    
+
+    public func onActionClickedSafari(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse, action: ExponeaSDK.InAppContentBlockAction) {
+        onActionClicked(placeholderId: placeholderId, contentBlock: contentBlock, action: action)
+    }
+
     private func invokeMethod(method: String, arguments: [String: Any?]) {
         DispatchQueue.main.async {
             self.channel.invokeMethod(method, arguments: arguments)

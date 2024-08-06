@@ -3,11 +3,11 @@ version '1.6.0-SNAPSHOT'
 
 buildscript {
     ext {
-        androidGradlePluginVersion = '4.1.0'
-        kotlinVersion = '1.5.30'
+        androidGradlePluginVersion = '7.3.1'
+        kotlinVersion = '1.7.20'
 
-        exponeaSdkVersion = '3.11.2'
-        gsonVersion = '2.8.6'
+        exponeaSdkVersion = '3.16.0'
+        gsonVersion = '2.10.1'
     }
 
     repositories {
@@ -32,13 +32,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'

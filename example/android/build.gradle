@@ -1,16 +1,18 @@
 buildscript {
     ext {
         minSdkVersion = 21
-        compileSdkVersion = 33
-        targetSdkVersion = 33
+        compileSdkVersion = 34
+        targetSdkVersion = 34
 
-        androidGradlePluginVersion = '7.1.2'
-        kotlinVersion = '1.7.10'
+        androidGradlePluginVersion = '7.3.1'
+        kotlinVersion = '1.7.20'
         multidexVersion = '2.0.1'
         firebaseVersion = '23.0.0'
         agconnectVersion = '1.5.2.300'
         hmsVersion = '6.1.0.300'
-        googleServicesVersion = '4.3.10'
+        googleServicesVersion = '4.3.14'
+        exponeaSdkVersion = '3.16.0'
+        gsonVersion = '2.10.1'
     }
     repositories {
         google()

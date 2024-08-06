@@ -55,4 +55,12 @@ public class InAppMessageActionStreamHandler: NSObject, FlutterStreamHandler, In
         return true
     }
 
+    public func inAppMessageShown(message: ExponeaSDK.InAppMessage) {
+        // not impl yet
+    }
+
+    public func inAppMessageError(message: ExponeaSDK.InAppMessage?, errorMessage: String) {
+        // not impl yet
+    }
+
 }
