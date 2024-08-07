@@ -10,6 +10,22 @@ parentDocSlug: flutter-sdk
 >
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
+## Release Notes
+## Release Notes for 1.7.0
+#### August 07, 2024
+* Added:
+  * Introduces improved SDK documentation at documentation.bloomreach.com.
+  * Updates native Android SDK to version 3.16.0.
+  * Updates native iOS SDK to version 2.28.0.
+  * Extends the SDK API with:
+    * In-app content block callback and tracking methods
+    * In-app message callbacks and tracking methods
+    * A method to track payment events
+    * Methods related to handling and tracking push notifications
+* Fixed:
+  * Fixes incorrectly mapped parameters in trackAppInboxClick.
+  * Fixes incorrect links and other minor issues in the documentation.
+
 ## Release Notes for 1.6.0
 #### March 08, 2024
 * Features
