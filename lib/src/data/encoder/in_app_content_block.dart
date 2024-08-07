@@ -24,8 +24,7 @@ abstract class InAppContentBlockEncoder {
       'id': contentBlock.id,
       'name': contentBlock.name,
       'date_filter': contentBlock.dateFilter,
-      'frequency': contentBlock.frequency ??
-          "always", //TODO: Remove when fixed on native iOS side
+      'frequency': contentBlock.frequency,
       'load_priority': contentBlock.loadPriority,
       'consent_category_tracking': contentBlock.consentCategoryTracking,
       'content_type': contentBlock.contentType,
