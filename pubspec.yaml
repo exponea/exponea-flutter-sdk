@@ -16,7 +16,6 @@ dependencies:
     sdk: flutter
   meta: ^1.7.0
   plugin_platform_interface: ^2.1.2
-  file: ^6.1.4
   webview_flutter: ^4.0.7
 
 dev_dependencies:
