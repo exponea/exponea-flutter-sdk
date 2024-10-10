@@ -1,5 +1,5 @@
 ---
-title: In-App Content Blocks
+title: In-app content blocks
 excerpt: Display native in-app content blocks based on definitions set up in Engagement using the Flutter SDK
 slug: flutter-sdk-in-app-content-blocks
 categorySlug: integrations
@@ -12,7 +12,7 @@ You can strategically position placeholders for in-app content blocks within you
 
 > 📘
 >
-> Refer to the [In-App Content Blocks](https://documentation.bloomreach.com/engagement/docs/in-app-content-blocks) user guide for instructions on how to create in-app content blocks in Engagement.
+> Refer to the [In-app content blocks](https://documentation.bloomreach.com/engagement/docs/in-app-content-blocks) user guide for instructions on how to create in-app content blocks in Engagement.
 
 ![In-app content blocks in the example app](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/in-app-content-blocks.png)
 
@@ -20,7 +20,7 @@ You can strategically position placeholders for in-app content blocks within you
 
 You can integrate in-app content blocks by adding one or more placeholder views in your app. Each in-app content block must have a `Placeholder ID` specified in its [settings](https://documentation.bloomreach.com/engagement/docs/in-app-content-blocks#3-fill-the-settings) in Engagement. The SDK will display an in-app content block in the corresponding placeholder in the app if the current app user matches the target audience.
 
-### Add a Placeholder View
+### Add a placeholder view
 
 Add a placeholder view with the specified `placeholderId` to your layout:
 
@@ -59,7 +59,7 @@ The SDK automatically tracks `banner` events for in-app content blocks with the 
 
 ## Customization
 
-### Prefetch In-App Content Blocks
+### Prefetch in-app content blocks
 
 The SDK can only display an in-app content block after it has been fully loaded (including its content, any images, and its height). Therefore, the in-app content block may only show in the app after a delay.
 
@@ -76,7 +76,7 @@ final config = ExponeaConfiguration(
 final configured = await _plugin.configure(config);
 ```
 
-### Customize Action Behavior
+### Customize action behavior
 
 When an in-app content block action (show, click, close, error) is performed, by default, the SDK tracks the appropriate event and, in case of a button click, opens a link.
 
@@ -115,7 +115,7 @@ InAppContentBlockPlaceholder(
 )
 ```
 
-### Technical Limitations of In-App Content Blocks Usage in Flutter Apps
+### Technical limitations of in-app content blocks usage in Flutter apps
 
 In-app content blocks use PlatformViews, where the size is determined by Flutter's widget tree and not by their content size. To mitigate this limitation, the SDK initializes each in-app content block at the beginning with height=1. After it finishes loading the content, it calculates and updates the size. 
 
@@ -141,19 +141,19 @@ SingleChildScrollView(
 
 This section provides helpful pointers for troubleshooting in-app content block issues.
 
-> 👍 Enable Verbose Logging
+> 👍 Enable verbose logging
 > The SDK logs a lot of information in verbose mode while loading in-app content blocks. When troubleshooting in-app content block issues, first ensure to [set the SDK's log level](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#log-level) to `verbose`.
 
-### In-App Content Block Not Displayed
+### In-app content block not displayed
 
 - The SDK can only display an in-app content block after it has been fully loaded (including its content, any images, and its height). Therefore, the in-app content block may only show in the app after a delay.
 - Always ensure that the placeholder IDs in the in-app content block configuration (in the Engagement web app) and in your mobile app match.
 
-### In-App Content Block Shows Incorrect Image
+### In-app content block shows incorrect image
 
 - To reduce the number of API calls and fetching time of in-app content blocks, the SDK caches the images contained in content blocks. Once the SDK downloads an image, an image with the same URL may not be downloaded again. If a content block contains a new image with the same URL as a previously used image, the previous image is displayed since it was already cached. For this reason, we recommend always using different URLs for different images.
 
-### Log Messages
+### Log messages
 
 While troubleshooting in-app content block issues, you can find useful information in the messages logged by the SDK at verbose log level.
 

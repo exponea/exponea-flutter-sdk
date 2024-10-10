@@ -1,6 +1,6 @@
 ---
-title: Release Notes
-excerpt: Exponea Flutter SDK Release Notes
+title: Release notes
+excerpt: Exponea Flutter SDK release notes
 slug: flutter-sdk-release-notes
 categorySlug: integrations
 parentDocSlug: flutter-sdk

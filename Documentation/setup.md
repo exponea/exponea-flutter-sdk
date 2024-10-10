@@ -1,5 +1,5 @@
 ---
-title: Initial SDK Setup
+title: Initial SDK setup
 excerpt: Install and configure the Flutter SDK
 slug: flutter-sdk-setup
 categorySlug: integrations
@@ -14,7 +14,7 @@ The Exponea Flutter SDK can be installed or updated through a dependency in your
 >
 > Refer to https://github.com/exponea/exponea-flutter-sdk/releases for the latest Exponea Android SDK release.
 
-### Add Dependency
+### Add dependency
 
 In your project's `pubspec.yaml` file, add a dependency to the Exponea Flutter SDK under `dependencies:`:
 
@@ -25,7 +25,7 @@ dependencies:
 
 Optionally, you can specify a minimum version (for example, `^1.6.0`) or a version range (for example, `>=1.6.0 < 2.0.0`) instead of a specific version. Refer to [Version constraints](https://cocoapods.org/) in the Dart dependencies documentation for details.
 
-### iOS Setup
+### iOS setup
 
 To resolve the Exponea SDK dependencies for the iOS app, first `cd` into the `ios` directory in your project:
 
@@ -41,7 +41,7 @@ pod install
 
 The minimum supported iOS version for the SDK is 11.0. You may need to change the iOS version on the first line of your `ios/Podfile` to `platform :ios, '11.0'`, or higher.
 
-### Android Setup
+### Android setup
 
 The minimum supported Android API level for the SDK is 21. You may need to set or update `minSdkVersion` in `android/app/build.gradle` to `21` or higher:
 
@@ -62,7 +62,7 @@ The required configuration parameters are `projectToken`, `authorizationToken`, 
 
 > 📘
 >
-> Refer to [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
+> Refer to [Mobile SDKs API access management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
 
 Import the SDK:
 
@@ -86,7 +86,7 @@ _plugin.configure(configuration).catchError((error) {
 });
 ```
 
-### Configure the SDK Only Once
+### Configure the SDK only once
 
 Flutter application code can be reloaded without restarting the native application itself. This speeds up the development process, but it also means that native code usually continues to run as if nothing happened. You should configure the SDK only once. When developing with hot reload enabled, you should check `ExponeaPlugin().isConfigured()` before configuring the SDK.
 
@@ -108,13 +108,13 @@ Future<void> configureExponea(ExponeaConfiguration configuration) {
 
 At this point, the SDK is active and should now be tracking sessions in your app.
 
-## Other SDK Configuration
+## Other SDK configuration
 
-### Advanced Configuration
+### Advanced configuration
 
 The SDK can be further configured by setting additional properties of the `ExponeaConfiguration` object. For a complete list of available configuration parameters, refer to the [Configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) documentation.
 
-### Log Level
+### Log level
 
 The SDK supports the following log levels defined in `LogLevel`:
 
@@ -135,6 +135,6 @@ You can set the log level at runtime as follows:
 _plugin.setLogLevel(LogLevel.verbose);
 ```
 
-### Data Flushing
+### Data flushing
 
-Read [Data Flushing](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-data-flushing) to learn more about how the SDK uploads data to the Engagement API and how to customize this behavior.
+Read [Data flushing](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-data-flushing) to learn more about how the SDK uploads data to the Engagement API and how to customize this behavior.

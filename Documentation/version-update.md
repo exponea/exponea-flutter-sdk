@@ -1,5 +1,5 @@
 ---
-title: SDK Version Update Guide
+title: SDK version update guide
 excerpt: Update Exponea Flutter SDK in your app to a new version
 slug: flutter-sdk-version-update
 categorySlug: integrations
@@ -8,11 +8,11 @@ parentDocSlug: flutter-sdk-release-notes
 
 This guide will help you upgrade your Exponea SDK to the new version.
 
-## Update From Version 0.x.x to 1.x.x
+## Update from version 0.x.x to 1.x.x
 
 Updating the Exponea Flutter SDK to version 1 and higher requires making some changes related to Firebase push notifications.
 
-### Changes Regarding FirebaseMessagingService
+### Changes regarding FirebaseMessagingService
 
 We decided not to include the implementation of FirebaseMessagingService in our SDK since we want to keep it as small as possible and avoid including libraries that are not essential for its functionality. The SDK no longer has a dependency on the firebase library. You will need to make the following changes:
 

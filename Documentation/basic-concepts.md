@@ -1,5 +1,5 @@
 ---
-title: Basic Concepts
+title: Basic concepts
 excerpt: Basic concepts of the Flutter SDK and some troubleshooting tips.
 slug: flutter-sdk-basic-concepts
 categorySlug: integrations
@@ -43,7 +43,7 @@ Future<void> cookieLogger() async {
 }
 ```
 
-### Hot Reload
+### Hot reload
 
 Flutter applications code can be reloaded without restarting the native application itself. This speeds up the development process, but it also means that native code usually continues to run as if nothing happened. You should only configure the SDK once. When developing with hot reload enabled, you should check `ExponeaPlugin().isConfigured()` before configuring the SDK.
 
@@ -67,7 +67,7 @@ Future<void> configureExponea(ExponeaConfiguration configuration) {
 
 Below are some common compilation issues encountered while integrating the SDK, and their most likely solutions.
 
-### Missing Swift Standard Libraries (iOS-specific)
+### Missing Swift standard libraries (iOS-specific)
 
 If your log contains warnings like the following:
 
@@ -98,7 +98,7 @@ After cleaning the project, a build should succeed.
 >
 > [Check similar issue on GitHub](https://github.com/exponea/exponea-react-native-sdk/issues/12)
 
-### SWIFT_VERSION Not Specified (iOS-specific)
+### SWIFT_VERSION not specified (iOS-specific)
 
 If `SWIFT_VERSION` is not set, there may be some Swift compilation errors in the Exponea iOS SDK in the Swift files.
 
@@ -118,7 +118,7 @@ Or it can be specified in the **User Defined section** in Xcode.
 >
 > [Check similar issue on GitHub](https://github.com/exponea/exponea-react-native-sdk/issues/12)
 
-### Events Not Tracked in App During First Session
+### Events not tracked in app during first session
 
 If your app is not tracking events during the first session but starts to track events on the next launch, you may not initialize the SDK properly.
 

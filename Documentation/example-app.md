@@ -1,5 +1,5 @@
 ---
-title: Example App
+title: Example app
 excerpt: Build, run, and navigate the example app included with the Flutter SDK
 slug: flutter-sdk-example-app
 categorySlug: integrations
@@ -21,7 +21,7 @@ You must have the following software installed to be able to build and run the e
 >
 > Follow Flutter's [Get started](https://docs.flutter.dev/get-started/install) guide if you are new to Flutter.
 
-## Build and Run the Example App
+## Build and run the example app
 
 1. Clone the [exponea-flutter-sdk](https://github.com/exponea/exponea-flutter-sdk) repository on GitHub:
    ```shell
@@ -58,7 +58,7 @@ You must have the following software installed to be able to build and run the e
 >
 > To enable push notifications in the example app, you must also configure the [Firebase integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-configure-firebase) or [Huawei integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-configure-huawei) in the Exponea web app.
 
-## Navigate the Example App
+## Navigate the example app
 
 ![Example app screens (iOS)](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/example-app-flutter-ios.png)
 

@@ -1,5 +1,5 @@
 ---
-title: Fetch Data
+title: Fetch data
 excerpt: Fetch data from Bloomreach Engagement using the Flutter SDK
 slug: flutter-sdk-fetch-data
 categorySlug: integrations
@@ -12,7 +12,7 @@ The SDK provides methods to retrieve data from the Engagement platform.
 >
 > All examples on this page assume the `ExponeaPlugin` is available as `_plugin`. Refer to [Initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk) for details.
 
-## Fetch Recommendations
+## Fetch recommendations
 
 Use the `fetchRecommendations` method to get personalized recommendations for the current customer from an Engagement [recommendation model](https://documentation.bloomreach.com/engagement/docs/recommendations).
 
@@ -47,7 +47,7 @@ _plugin.fetchRecommendations(options)
   .catchError((error) => print('Error: $error'));
 ```
 
-### Result Object
+### Result object
 
 #### Recommendation
 
@@ -59,7 +59,7 @@ _plugin.fetchRecommendations(options)
 | recommendationVariantId | String?              | ID of the recommendation engine variant used. |
 | data                    | Map<String, dynamic> | The recommendation engine data and recommended item IDs returned from the server. |
 
-## Fetch Consent Categories
+## Fetch consent categories
 
 Use the `fetchConsents` method to get a list of your consent categories and their definitions.
 
@@ -75,7 +75,7 @@ _plugin.fetchConsents()
   .catchError((error) => print('Error: $error'));
 ```
 
-### Result Object
+### Result object
 
 #### Consent
 

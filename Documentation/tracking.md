@@ -16,13 +16,17 @@ By default, the SDK tracks certain events automatically, including:
 
 Additionally, you can track any custom event relevant to your business.
 
+> 📘
+>
+> Also see [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at Bloomreach Support Help Center.
+
 > 👍
 >
 > All examples on this page assume the `ExponeaPlugin` is available as `_plugin`. Refer to [Initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk) for details.
 
 ## Events
 
-### Track Event
+### Track event
 
 Use the `trackEvent()` method with an `Event` object as an argument to track any custom event type relevant to your business.
 
@@ -203,7 +207,7 @@ The session represents the actual time spent in the app. It starts when the appl
 
 The default session timeout is 20 seconds. Set `sessionTimeout` in the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) to specify a different timeout.
 
-### Track Session Manually
+### Track session manually
 
 To disable automatic session tracking, set `automaticSessionTracking` to `false` in the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
 
@@ -219,17 +223,17 @@ _plugin_.trackSessionStart()
 _plugin_.trackSessionEnd()
 ```
 
-### Override Default Session Event Properties
+### Override default session event properties
 
 The SDK automatically tracks a number of default properties for the `session_start` and `session_end` events, including `ip`, `city`, `country`, etc.
 
 You can override the value of any of these properties by including them in the `defaultProperties` configuration parameter (see below). For example, if you don't want to track customers' IP addresses, you can set the `ip` property's default value to an empty string.
 
-## Push Notifications
+## Push notifications
 
 If developers [integrate push notification functionality](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#integration) in their app, the SDK automatically tracks the push notification token by default.
 
-### Track Token Manually
+### Track token manually
 
 Use either the `trackPushToken()` (Firebase) or `trackHmsPushToken` (Huawei) method to manually track the token for receiving push notifications. The token is assigned to the currently logged-in customer (with the `identifyCustomer` method).
 
@@ -266,7 +270,7 @@ ExponeaPlugin().trackHmsPushToken("value-of-push-token")
 The SDK provides a convenience method `trackPaymentEvent` to help you track information about a payment for a product or service within the application.
 
 
-### Track Payment Event
+### Track payment event
 
 Use the `trackPaymentEvent()` method to track payments.
 
@@ -298,7 +302,7 @@ Pass the `PurchasedItem` to `trackPaymentEvent` as follows:
 ExponeaPlugin().trackPaymentEvent(item)
 ```
 
-## Default Properties
+## Default properties
 
 You can [configure](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) default properties to be tracked with every event. Note that the value of a default property will be overwritten if the tracking event has a property with the same key.
 

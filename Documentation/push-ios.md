@@ -1,5 +1,5 @@
 ---
-title: iOS Push Notifications
+title: iOS push notifications
 excerpt: Enable push notifications on iOS using the Flutter SDK
 slug: flutter-sdk-push-ios
 categorySlug: integrations
@@ -33,7 +33,7 @@ To be able to send push notifications to iOS devices from Engagement, you must:
 
 This section describes the steps to add the minimum push notification functionality (receive alert notifications) to your app.
 
-### Step 1: Enable Push Capabilities
+### Step 1: Enable push capabilities
 
 Open the Xcode project located in the `ios` folder in your Flutter project.
 
@@ -52,7 +52,7 @@ In Xcode, select your application target, and on the `Signing & Capabilities` ta
 
 ![](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/ios-capabilities.png)
 
-### Step 2: Implement Application Delegate Methods
+### Step 2: Implement application delegate methods
 
 For your application to be able to respond to push notification-related events, its `AppDelegate` must implement several methods (see the [native iOS SDK documentation](https://documentation.bloomreach.com/engagement/docs/ios-sdk-push-notifications#step-3-implement-application-delegate-methods) for details).
 
@@ -80,7 +80,7 @@ import exponea
 
 If, for some reason, you don't want to or are not able to extend `ExponeaFlutterAppDelegate`, you can use it as a reference for implementing the required delegate methods yourself.
 
-### Step 3: Configure App Group
+### Step 3: Configure app group
 
 When you [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/ios-sdk-setup#initialize-the-sdk), you must set the `appGroup` property to the app group you created in [step 1](#step-1-enable-push-capabilities):
 
@@ -96,7 +96,7 @@ _plugin.configure(ExponeaConfiguration(
 ));
 ```
 
-### Step 4: Request Notification Permission
+### Step 4: Request notification permission
 
 Your app requires explicit permission from the user to receive "alert" notifications that are visible to the user. 
 
@@ -121,7 +121,7 @@ _plugin.requestPushAuthorization()
 
 This section describes the customizations you can implement once you have integrated the minimum push notification functionality.
 
-### Rich Push Notifications
+### Rich push notifications
 
 Rich push notifications can contain images and buttons. To enable this functionality, you must add two application extensions: a **Notification Service Extension** and a **Notification Content Extension**.
 
@@ -133,7 +133,7 @@ Calling the `ExponeaNotificationContentService.didReceive()` method will enhance
  - [ ] Check that push notifications with images and buttons sent from Engagement are correctly displayed on your device. Push delivery tracking should work.
  - [ ] If you don't see buttons in the expanded push notification, the content extension is **not** running. Double check `UNNotificationExtensionCategory` in `Info.plist` - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for the extensions and the main app.
 
-### Retrieve Push Notification Token Manually
+### Retrieve push notification token manually
 
 Sometimes, your application may need to retrieve the current push token while running. You can do this using the `Exponea.shared.trackPushToken` method.
 
@@ -150,7 +150,7 @@ Messaging.messaging().token { token, error in
 }
 ```
 
-### Show Foreground Notifications
+### Show foreground notifications
 
 The system calls the following method if the app is in the foreground while a push notification arrives. The default implementation shows the push notification. You can override this method if you want to change the default behavior.
 

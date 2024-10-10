@@ -12,7 +12,7 @@ For details on how App Links and Universal Links work and how they can improve y
 
 This page describes the steps required to support and track incoming App Links and Universal Links in your app using the Flutter SDK.
 
-## Implement and Track App Links and Universal Links
+## Implement and track App Links and Universal Links
 
 The official [Flutter documentation](https://docs.flutter.dev/ui/navigation/deep-linking) describes how to set up your application and how to process incoming links. , we just need to add tracking to Exponea.
 

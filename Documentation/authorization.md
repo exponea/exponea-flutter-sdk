@@ -8,7 +8,7 @@ parentDocSlug: flutter-sdk-setup
 
 The SDK exchanges data with the Engagement APIs through authorized HTTP/HTTPS communication. The SDK supports two authorization modes: the default **token authorization** for public API access and the more secure **customer token authorization** for private API access. Developers can choose the appropriate authorization mode for the required level of security.
 
-## Token Authorization
+## Token authorization
 
 The default token authorization mode provides [public API access](https://documentation.bloomreach.com/engagement/reference/authentication#public-api-access) using an API key as a token. 
 
@@ -37,7 +37,7 @@ final config = ExponeaConfiguration(
 final configured = await _plugin.configure(config);
 ```
 
-## Customer Token Authorization
+## Customer token authorization
 
 Customer token authorization is optional and provides [private API access](https://documentation.bloomreach.com/engagement/docs/authentication#private-api-access) to select Engagement API endpoints. The [customer token](https://documentation.bloomreach.com/engagement/docs/customer-token) contains encoded customer IDs and a signature. When the Bloomreach Engagement API receives a customer token, it first verifies the signature and only processes the request if the signature is valid.
 
@@ -72,7 +72,7 @@ Additionally, developers must implement an authorization provider that provides 
 > Refer to [Generating customer token](https://documentation.bloomreach.com/engagement/docs/customer-token#generating-customer-token) in the customer token documentation for step-by-step instructions to generate a JWT customer token.
 
 
-### Android Authorization Provider
+### Android authorization provider
 
 First, implement the `com.exponea.sdk.services.AuthorizationProvider` interface as in the following example:
 
@@ -116,7 +116,7 @@ If your authorization provider is not working correctly, SDK initialization will
 
 The AuthorizationProvider is loaded during SDK initialization or after calling `ExponeaPlugin().anonymize()`. You should see the above log messages at the same time.
 
-### iOS Authorization Provider
+### iOS authorization provider
 
 Implement the `AuthorizationProviderType` protocol with the `@objc` attribute as in the following example:
 
@@ -147,7 +147,7 @@ If you define `ExponeaAuthProvider` but it is not working as expected, check the
    Class ExponeaAuthProvider does not conform to AuthorizationProviderType
    ```
 
-### Asynchronous Authorization Provider Implementation
+### Asynchronous authorization provider implementation
 
 The customer token value is requested for every HTTP call at runtime. The method `getAuthorizationToken()` is written for synchronous usage but is invoked in a background thread. Therefore, you are able to block any asynchronous token retrieval (i.e. other HTTP call) and wait for the result by blocking this thread. If the token retrieval fails, you may return a NULL value but the request will automatically fail.
 
@@ -190,7 +190,7 @@ public class ExampleAuthProvider: NSObject, AuthorizationProviderType {
 >
 > Different network libraries support different approaches but the principle stays same - feel free to block the invocation of the `getAut👍horizationToken` method.
 
-### Customer Token Retrieval Policy
+### Customer token retrieval policy
 
 The customer token value is requested for every HTTP call that requires it.
 

@@ -41,7 +41,7 @@ That's all that's required to integrate the App Inbox. Optionally, you can [cust
 >
 > See [home.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/home.dart) for a reference implementation.
 
-## Default App Inbox Behavior
+## Default App Inbox behavior
 
 The SDK fetches and displays the App Inbox automatically as follows:
 
@@ -110,7 +110,7 @@ For iOS, add to your `Localizable.string` files:
 "exponea.inbox.mainActionTitle" = "See more";
 ```
 
-### Customize UI Styles
+### Customize UI styles
 
 The App Inbox screens are designed to satisfy most customers' needs. However, they may not fit the design of your application. You can customize colors and text styles through configuration.
 
@@ -203,7 +203,7 @@ Supported text weight formats:
 >
 > You may register your own styling at any time - before [SDK initialization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk) or later in some of your screens. Every action in scope of the App Inbox uses currently registered styles. We recommend to register your styles configuration right before you initialize the SDK.
 
-#### Android Style Rules
+#### Android style rules
 
 The style rules defined for the App Inbox UI components are listed below. You can override them in your `styles.xml` files.
 
@@ -278,7 +278,7 @@ The style rules defined for the App Inbox UI components are listed below. You ca
 </style>
 ```
 
-### App Inbox Data API
+### App Inbox data API
 
 The SDK provides methods to access App Inbox data directly without accessing the UI layer.
 
@@ -305,7 +305,7 @@ var message = await ExponeaPlugin().fetchAppInboxItem(messageId);
 
 Fetching a single message triggers fetching the entire App Inbox (including incremental loading) but will retrieve the data from local storage if the App Inbox was fetched previously.
 
-#### Mark Message as Read
+#### Mark message as read
 
 Use the `markAppInboxAsRead` method, passing an App Inbox message object as argument, to mark the message as read:
 
@@ -317,22 +317,22 @@ var markedAsRead = ExponeaPlugin().markAppInboxAsRead(message);
 >
 > Marking a message as read using the `markAppInboxAsRead` method does not trigger a tracking event for opening the message. To track an opened message, you need to call the `ExponeaPlugin().trackAppInboxOpened` method). 
 
-### Track App Inbox Events Manually
+### Track App Inbox events manually
 
 The SDK tracks App Inbox events automatically by default. In case of a [custom implementation](#customize-app-inbox), it is the developers' responsibility to use the relevant tracking methods in the right places.
 
-#### Track Opened App Inbox Message
+#### Track opened App Inbox message
 
 Use the `ExponeaPlugin().trackAppInboxOpened(MessageItem)` method to track the opening of App Inbox messages.
 
-The behavior of `trackAppInboxOpened` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking Consent](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.
+The behavior of `trackAppInboxOpened` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking consent](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.
 
 If you want to ignore tracking consent, use `ExponeaPlugin().trackAppInboxOpenedWithoutTrackingConsent` instead. This method will track the event regardless of consent.
 
-#### Track Clicked App Inbox Message Action
+#### Track clicked App Inbox message action
 
 Use the `ExponeaPlugin().trackAppInboxClick(MessageItemAction, MessageItem)` method to track action invocations in App Inbox messages.
 
-The behavior of `trackAppInboxClick` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking Consent](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.
+The behavior of `trackAppInboxClick` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking consent](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.
 
 If you want to ignore tracking consent, use `ExponeaPlugin().trackAppInboxClickWithoutTrackingConsent` instead. This method will track the event regardless of consent.

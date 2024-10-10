@@ -1,5 +1,5 @@
 ---
-title: Push Notifications
+title: Push notifications
 excerpt: Enable push notifications in your app using the Flutter SDK
 slug: flutter-sdk-push-notifications
 categorySlug: integrations
@@ -12,7 +12,11 @@ Push notifications can also be silent, used only to update the app’s interface
 
 > 📘
 >
-> Refer to [Mobile Push Notifications](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) to learn how to create push notifications in the Engagement web app.
+> Refer to [Mobile push notifications](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) to learn how to create push notifications in the Engagement web app.
+
+> 📘
+>
+> Also see [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at Bloomreach Support Help Center.
 
 ## Integration
 
@@ -20,20 +24,20 @@ The Flutter SDK relies on the underlying native Android and iOS platforms to han
 
 The following pages describe the steps for each platform to add the minimum push notification functionality (receive alert notifications) to your app.
 
-- [Android Push Notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android)
-- [iOS Push Notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
+- [Android push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android)
+- [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
 
 ## Customization
 
 This section describes the customizations you can implement once you have integrated the minimum push notification functionality.
 
-### Configure Automatic Push Notification Tracking
+### Configure automatic push notification tracking
 
 By default, the SDK tracks push notifications automatically. In the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`). You can also disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotifications` property to `false`.
 
 If `automaticPushNotifications` is enabled, the SDK will display push notifications from Engagement and track a "campaign" event for every delivered/opened push notification with the relevant properties.
 
-### Respond to Push Notification Interactions
+### Respond to push notification interactions
 
 Once you have followed the integration steps for each platform, your app should be able to receive push notifications.
 
@@ -72,7 +76,7 @@ We recommend registering the listener as soon as possible to ensure proper appli
 > To support deep links, additional set up steps are required. Refer to the documentation for the respective native platforms ([Android](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android), [iOS](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)). Alternatively, use the `Open app` action instead and add your payload to `Additional data`.
 
 
-### Respond to Received Push Notifications
+### Respond to received push notifications
 
 You can set up a listener for received push notifications using `ExponeaPlugin.receivedPushStream`, which is especially useful for silent push notifications.
 
@@ -90,11 +94,11 @@ We recommend registering the listener as soon as possible to ensure proper appli
 >
 > The listener is called for both regular and silent push notifications on Android but **only** for silent push notifications on iOS due to technical limitations.
 
-### Manually Track Push Notifications
+### Manually track push notifications
 
 If you disable [automatic push notification tracking](#configure-automatic-push-notification-tracking) or if you want to track push notification from other providers, you can manually track events related to push notifications.
 
-#### Track Push Token (FCM)
+#### Track push token (FCM)
 
 Use the `trackPushToken` method to manually track the FCM push token:
 
@@ -104,7 +108,7 @@ ExponeaPlugin().trackPushToken("382d4221-3441-44b7-a676-3eb5f515157f")
 
 Invoking this method will track the push token immediately regardless of the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for `tokenTrackFrequency`.
 
-#### Track Delivered Push Notification
+#### Track delivered push notification
 
 Use the `trackDeliveredPush` method to manually track a delivered push notification:
 
@@ -128,7 +132,7 @@ ExponeaPlugin().trackDeliveredPush(payload)
 >
 > The behaviour of `trackDeliveredPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
 
-#### Track Clicked Push Notification
+#### Track clicked push notification
 
 Use the `trackClickedPush` method to manually track a clicked push notification:
 
@@ -150,7 +154,7 @@ ExponeaPlugin().trackClickedPush(payload)
 
 > The behaviour of `trackClickedPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
 
-### Custom Push Notification Data Processing
+### Custom push notification data processing
 
 If the provided native `ExponeaModule.Companion.handleRemoteMessage` (Android) and `ExponeaNotificationService().process` (iOS)  methods don't fit the requirements of your app, or you decide to disable automatic push notifications, you must handle push notifications and process their payload yourself.
 
@@ -158,7 +162,7 @@ Notification payloads are generated from (possibly complex) scenarios in the Eng
 
 Notification payloads use a JSON data structure.
 
-#### Payload Example
+#### Payload example
 
 ```json
 {

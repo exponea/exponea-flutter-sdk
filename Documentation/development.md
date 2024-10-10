@@ -1,12 +1,12 @@
 ---
-title: SDK Development
+title: SDK development
 excerpt: Work with the Flutter SDK source code.
 slug: flutter-sdk-development
 categorySlug: integrations
 parentDocSlug: flutter-sdk
 ---
 
-## SDK Development Guide
+## SDK development guide
 
 The project consists of Flutter code in the `/lib` folder, a native Android module in `/android`, and a native iOS module in `/ios`. To see SDK functionality in action, we provide an [example application](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app) you can find in `/example`.
 

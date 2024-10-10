@@ -1,5 +1,5 @@
 ---
-title: Android Push Notifications
+title: Android push notifications
 excerpt: Enable push notifications on Android using the Flutter SDK
 slug: flutter-sdk-push-android
 categorySlug: integrations
@@ -25,7 +25,7 @@ Exponea Android SDK supports the following integrations:
 - [Standard (Firebase) integration](#standard-firebase-integration)
 - [Huawei integration](#huawei-integration)
 
-### Standard (Firebase) Integration
+### Standard (Firebase) integration
 
 To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
 
@@ -41,9 +41,9 @@ To be able to send [push notifications](https://documentation.bloomreach.com/eng
 
 > 👍
 >
-> Please note that with Google deprecating and removing the FCM legacy API in June 2024, Bloomreach Engagement is now using Firebase HTTP v1 API.
+> Please note that with Google deprecating and removing the FCM legacy API in June 2024, Bloomreach Engagement is now using Firebase HTTP v1 API. Refer to [Firebase upgrade to HTTP v1 API](https://support.bloomreach.com/hc/en-us/articles/18931691055133-Firebase-upgrade-to-HTTP-v1-API) at the Bloomreach Support Help Center for upgrade information.
 
-### Huawei Integration
+### Huawei integration
 
 To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/android-push-notifications) from the Engagement platform and receive them in your app on Huawei devices, you must:
 
@@ -55,7 +55,7 @@ To be able to send [push notifications](https://documentation.bloomreach.com/eng
 >
 > Follow the instructions in [Huawei Mobile Services](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei) in the native Android SDK documentation.
 
-### Request Notification Permission
+### Request notification permission
 
 As of Android 13 (API level 33), a new runtime notification permission `POST_NOTIFICATIONS` must be registered in your `AndroidManifest.xml` and must also be granted by the user for your application to be able to show push notifications.
 
@@ -79,7 +79,7 @@ The behavior of this callback is as follows:
 
 ## Customization
 
-### Enable Deep Linking
+### Enable deep linking
 
 You can use `ExponeaPlugin().openedPushStream` to define a [listener that will respond to push notification interactions(flutter-sdk-push-notifications#respond-to-push-notification-interactions). To enable deep linking, you must make some changes to `AndroidManifest` in `android/src/main`.
 
@@ -117,7 +117,7 @@ You must also define an intent filter that can respond to push notification's li
 ```
 
 
-### Show  Foreground Notifications
+### Show foreground notifications
 
 By default, if a notification arrives while the app is in the foreground, the notification ends up in the notification drawer and a notification icon appears in the status bar.
 

@@ -21,7 +21,7 @@ The SDK is [available as open source on GitHub](https://github.com/exponea/expon
 > 
 > Always make sure to capture explicit consent before using the SDK to track and collect data.
 
-## Video Tutorial
+## Video tutorial
 
 This short video guide provides a step-by-step introduction to integrating the Flutter SDK into your app.
 
@@ -38,7 +38,7 @@ This short video guide provides a step-by-step introduction to integrating the F
 }
 [/block]
 
-## Get Started
+## Get started
 
 - [Initial SDK Setup](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup)
   - [Configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration)
@@ -60,3 +60,9 @@ This short video guide provides a step-by-step introduction to integrating the F
 - [Development](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-development)
 - [Release Notes](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-release-notes)
    - [SDK Version Update Guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update)
+
+## Frequently asked questions
+
+- [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at Bloomreach Support Help Center
+- [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at Bloomreach Support Help Center
+- [In-app messages FAQ](https://support.bloomreach.com/hc/en-us/articles/18152718785437-In-App-Messages-FAQ) at Bloomreach Support Help Center
