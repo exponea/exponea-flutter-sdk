@@ -1059,7 +1059,8 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 inAppContentBlocksPlaceholders: config.inAppContentBlockPlaceholdersAutoLoad,
                 flushingSetup: config.flushingSetup,
                 allowDefaultCustomerProperties: config.allowDefaultCustomerProperties,
-                advancedAuthEnabled: config.advancedAuthEnabled
+                advancedAuthEnabled: config.advancedAuthEnabled, 
+                manualSessionAutoClose: config.manualSessionAutoClose
             )
             exponeaInstance.pushNotificationsDelegate = self
             exponeaInstance.inAppMessagesDelegate = InAppMessageActionStreamHandler.currentInstance

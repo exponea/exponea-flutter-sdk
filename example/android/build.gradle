@@ -11,7 +11,7 @@ buildscript {
         agconnectVersion = '1.5.2.300'
         hmsVersion = '6.1.0.300'
         googleServicesVersion = '4.3.14'
-        exponeaSdkVersion = '3.16.0'
+        exponeaSdkVersion = '4.0.1'
         gsonVersion = '2.10.1'
     }
     repositories {

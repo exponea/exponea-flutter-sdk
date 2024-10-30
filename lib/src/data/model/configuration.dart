@@ -52,6 +52,9 @@ class ExponeaConfiguration {
   /// Automatically load content of In-app content blocks assigned to these Placeholder IDs
   final List<String>? inAppContentBlockPlaceholdersAutoLoad;
 
+  /// If true, `session_end` is automatically tracked for current open session when next `trackSessionStart()` is called
+  final bool? manualSessionAutoClose;
+
   const ExponeaConfiguration({
     required this.projectToken,
     required this.authorizationToken,
@@ -67,6 +70,7 @@ class ExponeaConfiguration {
     this.android,
     this.ios,
     this.inAppContentBlockPlaceholdersAutoLoad,
+    this.manualSessionAutoClose,
   });
 }
 

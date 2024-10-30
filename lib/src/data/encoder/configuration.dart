@@ -35,6 +35,7 @@ abstract class ExponeaConfigurationEncoder {
           .getOptional<List>('inAppContentBlockPlaceholdersAutoLoad')
           ?.map((it) => it.toString())
           .toList(growable: false),
+      manualSessionAutoClose: data.getOptional('manualSessionAutoClose'),
     );
   }
 
@@ -56,6 +57,7 @@ abstract class ExponeaConfigurationEncoder {
       'android': config.android?.let(AndroidExponeaConfigurationEncoder.encode),
       'ios': config.ios?.let(IOSExponeaConfigurationEncoder.encode),
       'inAppContentBlockPlaceholdersAutoLoad': config.inAppContentBlockPlaceholdersAutoLoad,
+      'manualSessionAutoClose' : config.manualSessionAutoClose,
     }..removeWhere((key, value) => value == null);
   }
 }

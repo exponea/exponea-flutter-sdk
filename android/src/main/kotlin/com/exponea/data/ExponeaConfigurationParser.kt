@@ -51,6 +51,9 @@ class ExponeaConfigurationParser {
             map.getOptional<ArrayList<String>>("inAppContentBlockPlaceholdersAutoLoad")?.let {
                 inAppContentBlockPlaceholdersAutoLoad = it
             }
+            map.getOptional<Boolean>("manualSessionAutoClose")?.let {
+                manualSessionAutoClose = it
+            }
         }
     }
 
