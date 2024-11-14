@@ -6,7 +6,7 @@ categorySlug: integrations
 parentDocSlug: flutter-sdk-push-notifications
 ---
 
-The Flutter SDK relies on the [native Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk) to handle push notifications on Android. This guide provides shortened instructions for Android within the context of the Flutter SDK and refers to the [push notifications documentation for the Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notification) for details.
+The Flutter SDK relies on the [native Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk) to handle push notifications on Android. This guide provides shortened instructions for Android within the context of the Flutter SDK and refers to the [push notifications documentation for the Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notifications) for details.
 
 > 👍
 >
