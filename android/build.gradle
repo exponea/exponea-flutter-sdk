@@ -32,6 +32,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'com.exponea'
     compileSdkVersion 34
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
