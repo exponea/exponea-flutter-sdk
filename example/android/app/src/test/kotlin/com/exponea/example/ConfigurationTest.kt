@@ -20,7 +20,7 @@ class ConfigurationTest {
 
     @Test
     fun `validate data`() {
-        assertEquals(data.size, 3)
+        assertEquals(data.size, 4)
     }
 
     @Test
@@ -48,7 +48,7 @@ class ConfigurationTest {
     }
 
     @Test
-    fun `parse full config`() {
+    fun `parse defaultSession config`() {
         val parser = ExponeaConfigurationParser()
         val config = parser.parseConfig(data[2])
 
@@ -69,7 +69,35 @@ class ConfigurationTest {
         assertEquals(props["array"], listOf("value1", "value2"));
         assertEquals(props["object"], mapOf("key" to "value"));
         assertEquals(config.maxTries, 10);
-        assertEquals(config.sessionTimeout.toInt(), 20);
+        assertEquals(config.sessionTimeout.toInt(), 60);
+        assertEquals(config.automaticSessionTracking, true);
+        assertEquals(config.tokenTrackFrequency, TokenFrequency.DAILY);
+        assertEquals(config.allowDefaultCustomerProperties, true);
+    }
+
+    @Test
+    fun `parse full config`() {
+        val parser = ExponeaConfigurationParser()
+        val config = parser.parseConfig(data[3])
+
+        assertEquals(config.projectToken, "mock-project-token")
+        assertEquals(config.authorization, "Token mock-auth-token");
+        assertEquals(config.baseURL, "http://mock.base.url.com");
+        assertEquals(config.projectRouteMap.size, 1);
+        val projectList = config.projectRouteMap[EventType.BANNER]!!
+        assertEquals(projectList.size, 1);
+        assertEquals(projectList[0].projectToken, "other-project-token");
+        assertEquals(projectList[0].authorization, "Token other-auth-token");
+        assertEquals(projectList[0].baseUrl, config.baseURL);
+        val props = config.defaultProperties
+        assertEquals(props.size, 5);
+        assertEquals(props["string"], "value");
+        assertEquals(props["boolean"], false);
+        assertEquals(props["number"], 3.14159);
+        assertEquals(props["array"], listOf("value1", "value2"));
+        assertEquals(props["object"], mapOf("key" to "value"));
+        assertEquals(config.maxTries, 10);
+        assertEquals(config.sessionTimeout.toInt(), 45);
         assertEquals(config.automaticSessionTracking, true);
         assertEquals(config.tokenTrackFrequency, TokenFrequency.DAILY);
         assertEquals(config.allowDefaultCustomerProperties, true);
