@@ -410,18 +410,20 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   }
 
   @override
-  Future<void> trackInAppMessageClose(InAppMessage message, {bool interaction = true}) async {
+  Future<void> trackInAppMessageClose(InAppMessage message, {InAppMessageButton? button, bool interaction = true}) async {
     final data = {
       'message': InAppMessageEncoder.encode(message),
+      'button': button?.let(InAppMessageButtonEncoder.encode),
       'interaction': interaction,
     };
     await _channel.invokeMethod<void>(_trackInAppMessageClose, data);
   }
 
   @override
-  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true}) async {
+  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {InAppMessageButton? button, bool interaction = true}) async {
     final data = {
       'message': InAppMessageEncoder.encode(message),
+      'button': button?.let(InAppMessageButtonEncoder.encode),
       'interaction': interaction,
     };
     await _channel.invokeMethod<void>(_trackInAppMessageCloseWithoutTrackingConsent, data);

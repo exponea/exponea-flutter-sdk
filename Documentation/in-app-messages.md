@@ -65,10 +65,19 @@ const overrideDefaultBehavior = false;
 const trackActions = false;
 final subscription = _plugin.inAppMessageActionStream(overrideDefaultBehavior: overrideDefaultBehavior, trackActions: trackActions).listen((inAppMessageAction) {
   if (<your-special-condition>) {
-    if (inAppMessageAction.interaction) {  
-        _plugin.trackInAppMessageClick(inAppMessageAction.message, inAppMessageAction.button);
-    } else {
-        _plugin.trackInAppMessageClose(inAppMessageAction.message, interaction: inAppMessageAction.interaction);
+    switch(inAppMessageAction.type) {
+      case InAppMessageActionType.click:
+        _plugin.trackInAppMessageClick(inAppMessageAction.message!, inAppMessageAction.button!);
+        break;
+      case InAppMessageActionType.close:
+        _plugin.trackInAppMessageClose(inAppMessageAction.message!, interaction: inAppMessageAction.interaction ?? true);
+        break;
+      case InAppMessageActionType.error:
+        // Here goes your code
+        break;
+      case InAppMessageActionType.show:
+        // Here goes your code
+        break;
     }
   }
 });

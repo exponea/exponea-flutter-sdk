@@ -167,12 +167,12 @@ class ExponeaPlugin implements BaseInterface {
       _platform.trackInAppMessageClickWithoutTrackingConsent(message, button);
 
   @override
-  Future<void> trackInAppMessageClose(InAppMessage message, {bool interaction = true}) =>
-      _platform.trackInAppMessageClose(message, interaction: interaction);
+  Future<void> trackInAppMessageClose(InAppMessage message, {InAppMessageButton? button, bool interaction = true}) =>
+      _platform.trackInAppMessageClose(message, button: button, interaction: interaction);
 
   @override
-  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true}) =>
-      _platform.trackInAppMessageCloseWithoutTrackingConsent(message, interaction: interaction);
+  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {InAppMessageButton? button, bool interaction = true}) =>
+      _platform.trackInAppMessageCloseWithoutTrackingConsent(message, button: button, interaction: interaction);
 
   @override
   Future<void> trackPaymentEvent(PurchasedItem purchasedItem, {DateTime? timestamp}) =>

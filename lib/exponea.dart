@@ -23,6 +23,7 @@ export 'src/data/model/in_app_content_block.dart';
 export 'src/data/model/in_app_content_block_action.dart';
 export 'src/data/model/in_app_message.dart';
 export 'src/data/model/in_app_message_action.dart';
+export 'src/data/model/in_app_message_action_type.dart';
 export 'src/data/model/in_app_message_button.dart';
 export 'src/data/model/list_screen_style.dart';
 export 'src/data/model/progress_bar_style.dart';

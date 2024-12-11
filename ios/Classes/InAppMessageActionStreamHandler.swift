@@ -38,14 +38,6 @@ public class InAppMessageActionStreamHandler: NSObject, FlutterStreamHandler, In
         return nil
     }
     
-    public func inAppMessageAction(with message: ExponeaSDK.InAppMessage, button: ExponeaSDK.InAppMessageButton?, interaction: Bool) {
-        _ = handle(action: InAppMessageAction(
-            message: message,
-            button: button,
-            interaction: interaction
-        ))
-    }
-    
     private func handle(action: InAppMessageAction) -> Bool {
         guard let sink = eventSink else {
             pendingData = action
@@ -56,11 +48,35 @@ public class InAppMessageActionStreamHandler: NSObject, FlutterStreamHandler, In
     }
 
     public func inAppMessageShown(message: ExponeaSDK.InAppMessage) {
-        // not impl yet
+        _ = handle(action: InAppMessageAction(
+            type: .show,
+            message: message
+        ))
     }
 
     public func inAppMessageError(message: ExponeaSDK.InAppMessage?, errorMessage: String) {
-        // not impl yet
+        _ = handle(action: InAppMessageAction(
+            type: .error,
+            message: message,
+            errorMessage: errorMessage
+        ))
+    }
+    
+    public func inAppMessageClickAction(message: ExponeaSDK.InAppMessage, button: ExponeaSDK.InAppMessageButton) {
+        _ = handle(action: InAppMessageAction(
+            type: .click,
+            message: message,
+            button: button
+        ))
+    }
+    
+    public func inAppMessageCloseAction(message: ExponeaSDK.InAppMessage, button: ExponeaSDK.InAppMessageButton?, interaction: Bool) {
+        _ = handle(action: InAppMessageAction(
+            type: .close,
+            message: message,
+            button: button,
+            interaction: interaction
+        ))
     }
 
 }

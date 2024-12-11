@@ -166,10 +166,10 @@ abstract class BaseInterface {
   Future<void> trackInAppMessageClickWithoutTrackingConsent(InAppMessage message, InAppMessageButton button);
 
   /// Track in-app message close event
-  Future<void> trackInAppMessageClose(InAppMessage message, {bool interaction = true});
+  Future<void> trackInAppMessageClose(InAppMessage message, {InAppMessageButton? button, bool interaction = true});
 
   /// Track in-app message close event
-  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {bool interaction = true});
+  Future<void> trackInAppMessageCloseWithoutTrackingConsent(InAppMessage message, {InAppMessageButton? button, bool interaction = true});
 
   /// Track payment event.
   Future<void> trackPaymentEvent(PurchasedItem purchasedItem, {DateTime? timestamp});

@@ -861,7 +861,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             ))
             return
         }
-        exponeaInstance.trackInAppMessageClose(message: message, isUserInteraction: interaction)
+        var buttonText: String? = nil
+        let buttonData: NSDictionary? = try? data.getOptionalSafely(property: "button")
+        if let buttonData {
+             buttonText = try? buttonData.getRequiredSafely(property: "text")
+        }
+        exponeaInstance.trackInAppMessageClose(message: message, buttonText: buttonText, isUserInteraction: interaction)
         result(nil)
     }
 
@@ -877,7 +882,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             ))
             return
         }
-        exponeaInstance.trackInAppMessageCloseClickWithoutTrackingConsent(message: message, isUserInteraction: interaction)
+        var buttonText: String? = nil
+        let buttonData: NSDictionary? = try? data.getOptionalSafely(property: "button")
+        if let buttonData {
+             buttonText = try? buttonData.getRequiredSafely(property: "text")
+        }
+        exponeaInstance.trackInAppMessageCloseClickWithoutTrackingConsent(message: message, buttonText: buttonText, isUserInteraction: interaction)
         result(nil)
     }
 

@@ -17,6 +17,7 @@ import com.exponea.data.InAppContentBlockActionCoder
 import com.exponea.data.OpenedPush
 import com.exponea.data.ReceivedPush
 import com.exponea.data.InAppMessageAction
+import com.exponea.data.InAppMessageActionType
 import com.exponea.data.RecommendationEncoder
 import com.exponea.data.RecommendationOptionsEncoder
 import com.exponea.data.InAppMessageCoder
@@ -611,14 +612,24 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         requireConfigured()
         val data = args as Map<String, Any?>
         val message = InAppMessageCoder.decode(data.getRequired<HashMap<String, Any?>>("message").toMap())
-        Exponea.trackInAppMessageClose(message = message, interaction = data.getRequired("interaction"))
+        val buttonData = data.getOptional<HashMap<String, Any?>>("button")?.toMap()
+        Exponea.trackInAppMessageClose(
+            message = message,
+            buttonText = buttonData?.getOptional("text"),
+            interaction = data.getRequired("interaction")
+        )
     }
 
     private fun trackInAppMessageCloseWithoutTrackingConsent(args: Any?, result: Result) = runWithNoResult(result) {
         requireConfigured()
         val data = args as Map<String, Any?>
         val message = InAppMessageCoder.decode(data.getRequired<HashMap<String, Any?>>("message").toMap())
-        Exponea.trackInAppMessageCloseWithoutTrackingConsent(message = message, interaction = data.getRequired("interaction"))
+        val buttonData = data.getOptional<HashMap<String, Any?>>("button")?.toMap()
+        Exponea.trackInAppMessageCloseWithoutTrackingConsent(
+            message = message,
+            buttonText = buttonData?.getOptional("text"),
+            interaction = data.getRequired("interaction")
+        )
     }
 
     private fun trackPaymentEvent(args: Any?, result: Result) = runWithNoResult(result) {
@@ -1073,7 +1084,15 @@ class InAppMessageActionStreamHandler private constructor(
         trackActions = true
     }
 
-    override fun inAppMessageAction(
+    override fun inAppMessageClickAction(
+        message: InAppMessage,
+        button: InAppMessageButton,
+        context: Context
+    ) {
+        handle(InAppMessageAction(type = InAppMessageActionType.CLICK, message = message, button = button))
+    }
+
+    override fun inAppMessageCloseAction(
         message: InAppMessage,
         button: InAppMessageButton?,
         interaction: Boolean,
@@ -1081,17 +1100,20 @@ class InAppMessageActionStreamHandler private constructor(
     ) {
         handle(
             InAppMessageAction(
-                message = message, button = button, interaction = interaction
+                type = InAppMessageActionType.CLOSE,
+                message = message,
+                button = button,
+                interaction = interaction
             )
         )
     }
 
     override fun inAppMessageError(message: InAppMessage?, errorMessage: String, context: Context) {
-        // not yet impl
+        handle(InAppMessageAction(type = InAppMessageActionType.ERROR, message = message, errorMessage = errorMessage))
     }
 
     override fun inAppMessageShown(message: InAppMessage, context: Context) {
-        // not yet impl
+        handle(InAppMessageAction(type = InAppMessageActionType.SHOW, message = message))
     }
 
     private fun handle(action: InAppMessageAction): Boolean {
