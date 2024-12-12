@@ -11,6 +11,21 @@ parentDocSlug: flutter-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 2.0.0
+#### December 13, 2024
+* Added:
+  * Updates native Android SDK to version 4.0.1.
+  * Updates native iOS SDK to version 3.0.1.
+  * Updates the default session timeout to 60 seconds.
+  * Adds a manualSessionAutoClose configuration parameter to override automatic session end tracking for open sessions when sessionStart is called multiple times.
+  * Adds compatibility with Android Gradle Plugin 8.
+  * Adds identification of Cancel button clicks in in-app message close events and inclusion of the button label in the tracked event.
+  * Adds minor documentation improvements.
+* Fixed:
+  * Fixes an issue on iOS where an empty App Inbox caused click events to be passed to the underlying app.
+  * Fixes an issue where, in certain scenarios, the app would crash while parsing Recommendations .
+
+## Release Notes
 ## Release Notes for 1.7.0
 #### August 07, 2024
 * Added:
