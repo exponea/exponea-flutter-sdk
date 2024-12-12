@@ -1,6 +1,7 @@
 package com.exponea.data
 
 import com.exponea.sdk.models.CustomerRecommendation
+import com.exponea.sdk.util.ExponeaGson
 
 class RecommendationEncoder {
     companion object {
@@ -10,7 +11,7 @@ class RecommendationEncoder {
                 "itemId" to recommendation.itemId,
                 "recommendationId" to recommendation.recommendationId,
                 "recommendationVariantId" to recommendation.recommendationVariantId,
-                "data" to recommendation.data.mapValues { JsonElementEncoder.encode(it.value) }
+                "data" to ExponeaGson.instance.toJson(recommendation.data)
             )
         }
     }

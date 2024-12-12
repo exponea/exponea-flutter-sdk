@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../model/recommendation.dart';
 import '../util/object.dart';
 
@@ -37,9 +39,9 @@ abstract class RecommendationEncoder {
       itemId: data.getRequired('itemId'),
       recommendationId: data.getRequired('recommendationId'),
       recommendationVariantId: data.getOptional('recommendationVariantId'),
-      data: data
-          .getRequired<Map>('data')
-          .map((k, v) => MapEntry(k.toString(), v)),
+      data: jsonDecode(data
+          .getRequired<String>('data'))
+          .map<String, dynamic>((k, v) => MapEntry(k.toString(), v)),
     );
   }
 
@@ -49,7 +51,7 @@ abstract class RecommendationEncoder {
       'itemId': recommendation.itemId,
       'recommendationId': recommendation.recommendationId,
       'recommendationVariantId': recommendation.recommendationVariantId,
-      'data': recommendation.data,
+      'data': jsonEncode(recommendation.data),
     };
   }
 }

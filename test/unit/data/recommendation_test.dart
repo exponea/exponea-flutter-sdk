@@ -36,7 +36,13 @@ void main() {
           itemId: "mock-item",
           recommendationId: "mock-rec-id",
           recommendationVariantId: "mock-variant-id",
-          data: {"a": 123, "b": true},
+          data: {
+            "integer": 123456,
+            "decimal": 123.456,
+            "boolean": true,
+            "string": "example_string",
+            "datetime": "2024-02-01T11:22:33.444Z"
+          },
         );
         expect(encode(recommendation), fullData);
       });
@@ -88,7 +94,13 @@ void main() {
           itemId: "mock-item",
           recommendationId: "mock-rec-id",
           recommendationVariantId: "mock-variant-id",
-          data: {"a": 123, "b": true},
+          data: {
+            "integer": 123456,
+            "decimal": 123.456,
+            "boolean": true,
+            "string": "example_string",
+            "datetime": "2024-02-01T11:22:33.444Z"
+          },
         );
         final decoded = decode(fullData);
 

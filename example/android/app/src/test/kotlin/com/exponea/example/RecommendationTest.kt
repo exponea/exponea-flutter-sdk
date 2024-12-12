@@ -45,7 +45,13 @@ class RecommendationTest {
             itemId = "mock-item",
             recommendationId = "mock-rec-id",
             recommendationVariantId = "mock-variant-id",
-            data = mapOf("a" to JsonPrimitive(123.0), "b" to JsonPrimitive(true))
+            data = mapOf(
+                "integer" to JsonPrimitive(123456),
+                "decimal" to JsonPrimitive(123.456),
+                "boolean" to JsonPrimitive(true),
+                "string" to JsonPrimitive("example_string"),
+                "datetime" to JsonPrimitive("2024-02-01T11:22:33.444Z")
+            )
         )
         val encoded = RecommendationEncoder.encode(recommendation)
 

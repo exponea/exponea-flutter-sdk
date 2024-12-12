@@ -10,7 +10,7 @@ import AnyCodable
 public struct AllRecommendationData: RecommendationUserData {
     public let data: [String: Any]
     
-    public func formattedData() -> [String: Any?] {
+    public func formattedData() throws -> [String: Any?] {
         var localData = [String:Any?]()
         for (key,value) in data {
             localData[key] = value
@@ -20,7 +20,7 @@ public struct AllRecommendationData: RecommendationUserData {
             "itemId": localData.removeValue(forKey: "item_id"),
             "recommendationId": localData.removeValue(forKey: "recommendation_id"),
             "recommendationVariantId": localData.removeValue(forKey: "recommendation_variant_id"),
-            "data": localData,
+            "data": try String(data: JSONSerialization.data(withJSONObject: localData), encoding: .utf8),
         ]
     }
 
