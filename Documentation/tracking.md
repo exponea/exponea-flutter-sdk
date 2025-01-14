@@ -233,6 +233,16 @@ You can override the value of any of these properties by including them in the `
 
 If developers [integrate push notification functionality](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#integration) in their app, the SDK automatically tracks the push notification token by default.
 
+On Android, you can disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotification` property to `false` in the SDK's [Android-specific configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration#android-specific-configuration-parameters). It is then up to the developer to [manually track push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#manually-track-push-notifications).
+
+> ❗️
+>
+> The Flutter SDK currently does not support disabling automatic push notification tracking on iOS.
+
+> ❗️
+>
+> The behavior of push notification tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.
+
 ### Track token manually
 
 Use either the `trackPushToken()` (Firebase) or `trackHmsPushToken` (Huawei) method to manually track the token for receiving push notifications. The token is assigned to the currently logged-in customer (with the `identifyCustomer` method).
@@ -264,6 +274,38 @@ ExponeaPlugin().trackHmsPushToken("value-of-push-token")
 > ❗️
 >
 > Remember to invoke [anonymize](#anonymize) whenever the user signs out to ensure the push notification token is removed from the user's customer profile. Failing to do this may cause multiple customer profiles share the same token, resulting in duplicate push notifications.
+
+### Track push notification delivery manually
+
+Use the `trackDeliveredPush` method to [manually track push notification delivery](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#track-delivered-push-notification).
+
+#### Arguments
+
+The `trackDeliveredPush` method accepts a notification payload in JSON format as argument.
+
+For an example payload, refer to [Push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#payload-example).
+
+#### Example
+
+```dart
+ExponeaPlugin().trackDeliveredPush(payload)
+```
+
+### Track push notification click manually
+
+Use the `trackClickedPush` method to [manually track push notification clicks](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notifications#track-clicked-push-notification).
+
+#### Arguments
+
+The `trackClickedPush` method accepts a notification payload in JSON format as argument.
+
+For an example payload, refer to [Push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#payload-example).
+
+#### Example
+
+```dart
+ExponeaPlugin().trackClickedPush(payload)
+```
 
 ## Payments
 

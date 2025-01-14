@@ -33,9 +33,15 @@ This section describes the customizations you can implement once you have integr
 
 ### Configure automatic push notification tracking
 
-By default, the SDK tracks push notifications automatically. In the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`). You can also disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotifications` property to `false`.
+By default, the SDK tracks push notifications automatically. The SDK will display push notifications from Engagement and track a "campaign" event for every delivered/opened push notification with the relevant properties.
 
-If `automaticPushNotifications` is enabled, the SDK will display push notifications from Engagement and track a "campaign" event for every delivered/opened push notification with the relevant properties.
+In the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency with which the SDK tracks the push notification token to Engagement using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`).
+
+On Android, you can disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotifications` property to `false` in the SDK's [Android-specific configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration#android-specific-configuration-parameters).
+
+> ❗️
+>
+> The Flutter SDK currently does not support disabling automatic push notification tracking on iOS.
 
 ### Respond to push notification interactions
 
@@ -96,7 +102,11 @@ We recommend registering the listener as soon as possible to ensure proper appli
 
 ### Manually track push notifications
 
-If you disable [automatic push notification tracking](#configure-automatic-push-notification-tracking) or if you want to track push notification from other providers, you can manually track events related to push notifications.
+If you disable [automatic push notification tracking](#configure-automatic-push-notification-tracking) (Android only) or if you want to track push notification from other providers, you can manually track events related to push notifications.
+
+> ❗️
+>
+> The Flutter SDK currently does not support disabling automatic push notification tracking on iOS.
 
 #### Track push token (FCM)
 
