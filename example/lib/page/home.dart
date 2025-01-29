@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:exponea/exponea.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'app_inbox_list_page.dart';
 import 'in_app_cb_page.dart';
 
 final _plugin = ExponeaPlugin();
@@ -353,6 +353,14 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(
                             builder: (context) => const InAppCbPage())),
                     child: const Text('In App CB Example Page'),
+                  ),
+                ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const AppInboxListPage())),
+                    child: const Text('App inbox Example Page'),
                   ),
                 ),
               ],

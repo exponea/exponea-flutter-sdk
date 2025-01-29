@@ -39,6 +39,8 @@ import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
 import com.exponea.widget.FlutterAppInboxButton
+import com.exponea.widget.FlutterAppInboxDetailView
+import com.exponea.widget.FlutterAppInboxListView
 import com.exponea.widget.FlutterInAppContentBlockPlaceholderFactory
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -135,6 +137,12 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         binding
             .platformViewRegistry
             .registerViewFactory("InAppContentBlockPlaceholder", FlutterInAppContentBlockPlaceholderFactory(binding))
+        binding
+            .platformViewRegistry
+            .registerViewFactory("AppInboxDetailView", FlutterAppInboxDetailView.Factory())
+        binding
+            .platformViewRegistry
+            .registerViewFactory("AppInboxListView", FlutterAppInboxListView.Factory(binding))
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

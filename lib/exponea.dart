@@ -34,5 +34,7 @@ export 'src/data/model/app_inbox_message.dart';
 export 'src/data/model/purchased_item.dart';
 export 'src/platform/platform_interface.dart';
 export 'src/widget/app_inbox_button.dart';
+export 'src/widget/app_inbox_detail_view.dart';
+export 'src/widget/app_inbox_list_view.dart';
 export 'src/widget/in_app_content_block_placeholder.dart';
 export 'src/plugin/exponea.dart';

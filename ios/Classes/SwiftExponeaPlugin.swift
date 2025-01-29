@@ -319,6 +319,8 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
 
         registrar.register(FluffViewFactory(), withId: "FluffView")
         registrar.register(FlutterInAppContentBlockPlaceholderFactory(messenger: registrar.messenger()), withId: "InAppContentBlockPlaceholder")
+        registrar.register(FlutterAppInboxDetailViewFactory(), withId: "AppInboxDetailView")
+        registrar.register(FlutterAppInboxListViewFactory(messenger: registrar.messenger()), withId: "AppInboxListView")
     }
 
     var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared

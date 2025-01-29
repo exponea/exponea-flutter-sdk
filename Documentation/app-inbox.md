@@ -278,6 +278,41 @@ The style rules defined for the App Inbox UI components are listed below. You ca
 </style>
 ```
 
+### Customize UI Components
+
+If use of the App Inbox button flow doesn't suit your needs, you can integrate the App Inbox List View through a widget provided by the SDK, which displays the App Inbox messages list. Also, you can use Detail view, once the user picks a message from the list to show.
+
+#### App Inbox List View
+
+The `AppInboxListView` implements all the data handling (fetching, displaying data, action listeners, etc.).
+
+The methods `ExponeaPlugin().trackAppInboxOpened` and `ExponeaPlugin().markAppInboxAsRead` are called automatically when the user clicks on an item.
+
+The click action for each item in the list triggers the `onAppInboxItemClicked` callback with `AppInboxMessage` as a parameter. You can then navigate the user to the page showing detail of that clicked message. For example:
+
+```dart
+AppInboxListView(
+  onAppInboxItemClicked: (AppInboxMessage message) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AppInboxDetailPage(messageId: message.id)));
+  },
+)
+```
+
+#### App Inbox Detail View
+
+The `AppInboxDetailView` implements all the data handling (fetching, displaying data, action listeners, etc.).
+
+The method `ExponeaPlugin().trackAppInboxClick` is called automatically when the user clicks on an action.
+
+You can show detail of a message as a full-screen View. For example:
+
+```dart
+Scaffold(
+  appBar: AppBar(title: const Text('App inbox message')),
+  body: AppInboxDetailView(messageId: messageId),
+);
+```
+
 ### App Inbox data API
 
 The SDK provides methods to access App Inbox data directly without accessing the UI layer.
