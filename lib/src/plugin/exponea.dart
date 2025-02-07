@@ -228,4 +228,11 @@ class ExponeaPlugin implements BaseInterface {
   Future<void> handlePushNotificationOpenedWithoutTrackingConsent(Map<String, dynamic> data) =>
       _platform.handlePushNotificationOpenedWithoutTrackingConsent(data);
 
+  @override
+  Future<List<Map<String, String>>> getSegments(String exposingCategory, {bool force = false}) =>
+      _platform.getSegments(exposingCategory, force: force);
+
+  @override
+  Future<Stream<List<Map<String, String>>>> segmentationDataStream(String exposingCategory, {bool includeFirstLoad = false}) =>
+      _platform.segmentationDataStream(exposingCategory, includeFirstLoad: includeFirstLoad);
 }

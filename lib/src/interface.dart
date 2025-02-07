@@ -211,4 +211,10 @@ abstract class BaseInterface {
 
   /// Handle push notification Opened
   Future<void> handlePushNotificationOpenedWithoutTrackingConsent(Map<String, dynamic> data);
+
+  /// Returns segments for the exposing category
+  Future<List<Map<String, String>>> getSegments(String exposingCategory, {bool force = false});
+
+  /// Returns stream segments for the exposing category
+  Future<Stream<List<Map<String, String>>>> segmentationDataStream(String exposingCategory, {bool includeFirstLoad = false});
 }

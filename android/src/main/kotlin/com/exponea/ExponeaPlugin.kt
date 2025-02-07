@@ -13,6 +13,7 @@ import com.exponea.data.ConsentEncoder
 import com.exponea.data.Customer
 import com.exponea.data.Event
 import com.exponea.data.ExponeaConfigurationParser
+import com.exponea.data.FlutterSegmentationDataCallback
 import com.exponea.data.InAppContentBlockActionCoder
 import com.exponea.data.OpenedPush
 import com.exponea.data.ReceivedPush
@@ -23,6 +24,7 @@ import com.exponea.data.RecommendationOptionsEncoder
 import com.exponea.data.InAppMessageCoder
 import com.exponea.data.NotificationCoder
 import com.exponea.data.PurchasedItemCoder
+import com.exponea.data.SegmentationData
 import com.exponea.data.getOptional
 import com.exponea.exception.ExponeaException
 import com.exponea.sdk.Exponea
@@ -53,7 +55,11 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private const val TAG = "ExponeaPlugin"
 
@@ -66,6 +72,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         private const val STREAM_NAME_OPENED_PUSH = "$CHANNEL_NAME/opened_push"
         private const val STREAM_NAME_RECEIVED_PUSH = "$CHANNEL_NAME/received_push"
         private const val STREAM_NAME_IN_APP_MESSAGES = "$CHANNEL_NAME/in_app_messages"
+        private const val STREAM_NAME_SEGMENTATION_DATA = "$CHANNEL_NAME/segmentation_data"
 
         fun handleCampaignIntent(intent: Intent?, applicationContext: Context) {
             Log.d(TAG, "handleCampaignIntent()")
@@ -109,6 +116,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
     private var openedPushStreamHandler: OpenedPushStreamHandler? = null
     private var receivedPushChannel: EventChannel? = null
     private var inAppMessagesChannel: EventChannel? = null
+    private var segmentationDataChannel: EventChannel? = null
 
     override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         val context = binding.applicationContext
@@ -129,6 +137,10 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         }
         inAppMessagesChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_IN_APP_MESSAGES).apply {
             val handler = InAppMessageActionStreamHandler.currentInstance
+            setStreamHandler(handler)
+        }
+        segmentationDataChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_SEGMENTATION_DATA).apply {
+            val handler = SegmentationDataStreamHandler()
             setStreamHandler(handler)
         }
         binding
@@ -154,6 +166,10 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         openedPushChannel = null
         receivedPushChannel?.setStreamHandler(null)
         receivedPushChannel = null
+        inAppMessagesChannel?.setStreamHandler(null)
+        inAppMessagesChannel = null
+        segmentationDataChannel?.setStreamHandler(null)
+        segmentationDataChannel = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -231,11 +247,15 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_HANDLE_CAMPAIGN_CLICK = "handleCampaignClick"
         private const val METHOD_HANDLE_PUSH_NOTIFICATION_OPENED = "handlePushNotificationOpened"
         private const val METHOD_HANDLE_PUSH_NOTIFICATION_OPENED_WITHOUT_TRACKING_CONSENT = "handlePushNotificationOpenedWithoutTrackingConsent"
+        private const val METHOD_GET_SEGMENTS = "getSegments"
+        private const val METHOD_REGISTER_SEGMENTATION_DATA_STREAM = "registerSegmentationDataStream"
+        private const val METHOD_UNREGISTER_SEGMENTATION_DATA_STREAM = "unregisterSegmentationDataStream"
     }
 
     var activity: Context? = null
     private var configuration: ExponeaConfiguration? = null
     private val handler: Handler = Handler(Looper.getMainLooper())
+    private val segmentationDataCallbacks = CopyOnWriteArrayList<FlutterSegmentationDataCallback>()
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         Log.i(TAG, "onMethodCall(${call.method})")
@@ -405,6 +425,15 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_HANDLE_PUSH_NOTIFICATION_OPENED_WITHOUT_TRACKING_CONSENT -> {
                 handlePushNotificationOpenedWithoutTrackingConsent(call.arguments, result)
+            }
+            METHOD_GET_SEGMENTS -> {
+                getSegments(call.arguments, result)
+            }
+            METHOD_REGISTER_SEGMENTATION_DATA_STREAM -> {
+                registerSegmentationDataStream(call.arguments, result)
+            }
+            METHOD_UNREGISTER_SEGMENTATION_DATA_STREAM -> {
+                unregisterSegmentationDataStream(call.arguments, result)
             }
             else -> {
                 result.notImplemented()
@@ -726,6 +755,48 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
 
     private fun handlePushNotificationOpenedWithoutTrackingConsent(args: Any?, result: Result) =
         trackClickedPushWithoutTrackingConsent(args, result)
+
+    private fun getSegments(args: Any?, result: Result) = runAsync(result) {
+        requireConfigured()
+        val params = args as Map<String, Any?>
+        Exponea.getSegments(
+            exposingCategory = params.getRequired("exposingCategory"),
+            force = params.getRequired("force")
+        ) {
+            result.success(it)
+        }
+    }
+
+    private fun registerSegmentationDataStream(args: Any?, result: Result) = runWithResult(result) {
+        requireConfigured()
+        val params = args as Map<String, Any?>
+        val segmentationDataCallback = FlutterSegmentationDataCallback(
+            params.getRequired("exposingCategory"),
+            params.getRequired("includeFirstLoad"),
+        ) { callbackInstance, segments ->
+            SegmentationDataStreamHandler.handle(
+                SegmentationData(
+                    callbackInstance.instanceId,
+                    segments
+                )
+            )
+        }
+        Exponea.registerSegmentationDataCallback(segmentationDataCallback)
+        segmentationDataCallbacks.add(segmentationDataCallback)
+        return@runWithResult segmentationDataCallback.instanceId
+    }
+
+    private fun unregisterSegmentationDataStream(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val params = args as Map<String, Any?>
+        val callbackInstanceId = params.getRequired<String>("instanceId")
+        val segmentationCallbackToRemove = segmentationDataCallbacks.find { it.instanceId == callbackInstanceId }
+        if (segmentationCallbackToRemove == null) {
+            throw ExponeaException.common("Segmentation data stream with instanceId $callbackInstanceId not found")
+        }
+        Exponea.unregisterSegmentationDataCallback(segmentationCallbackToRemove)
+        segmentationDataCallbacks.remove(segmentationCallbackToRemove)
+    }
 
     private fun requireConfigured() {
         if (!Exponea.isInitialized) {
@@ -1131,6 +1202,56 @@ class InAppMessageActionStreamHandler private constructor(
             return true
         }
         pendingData = action
+        return false
+    }
+}
+
+/**
+ * Handles listeners for segmentation data.
+ */
+class SegmentationDataStreamHandler : StreamHandler {
+    companion object {
+        private var currentInstance: SegmentationDataStreamHandler? = null
+
+        // We have to hold SegmentationData until plugin is initialized and listener set
+        private var pendingData: SegmentationData? = null
+
+        fun handle(segmentationData: SegmentationData): Boolean {
+            val handled = currentInstance?.internalHandle(segmentationData) ?: false
+            if (!handled) {
+                pendingData = segmentationData
+            }
+            return handled
+        }
+    }
+
+    init {
+        currentInstance = this
+    }
+
+    private var eventSink: EventSink? = null
+
+    override fun onListen(arguments: Any?, eSink: EventSink?) {
+        eventSink = eSink
+        pendingData?.let {
+            if (handle(it)) {
+                pendingData = null
+            }
+        }
+    }
+
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
+    }
+
+    private fun internalHandle(segmentationData: SegmentationData): Boolean {
+        val sink = eventSink
+        if (sink != null) {
+            CoroutineScope(Dispatchers.Main).launch {
+                sink.success(segmentationData.toMap())
+            }
+            return true
+        }
         return false
     }
 }

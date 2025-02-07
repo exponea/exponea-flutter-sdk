@@ -31,6 +31,18 @@ class _HomePageState extends State<HomePage> {
   late final StreamSubscription<OpenedPush> _openedPushSub;
   late final StreamSubscription<ReceivedPush> _receivedPushSub;
   late final StreamSubscription<InAppMessageAction> _inAppMessageActionSub;
+  late final StreamSubscription<List<Map<String, dynamic>>> _discoverySubscription;
+  late final StreamSubscription<List<Map<String, dynamic>>> _contentSubscription;
+  late final StreamSubscription<List<Map<String, dynamic>>> _merchandisingSubscription;
+
+  Future<void> initializeSegmentationDataStreams() async {
+    final discoverySegmentationDataStream = await _plugin.segmentationDataStream('discovery', includeFirstLoad: true);
+    _discoverySubscription = discoverySegmentationDataStream.listen((event) => _onSegmentationDataEvent('discovery', event));
+    final contentSegmentationDataStream = await _plugin.segmentationDataStream('content', includeFirstLoad: true);
+    _contentSubscription = contentSegmentationDataStream.listen((event) => _onSegmentationDataEvent('content', event));
+    final merchandisingSegmentationDataStream = await _plugin.segmentationDataStream('merchandising', includeFirstLoad: true);
+    _merchandisingSubscription = merchandisingSegmentationDataStream.listen((event) => _onSegmentationDataEvent('merchandising', event));
+  }
 
   @override
   void initState() {
@@ -39,6 +51,7 @@ class _HomePageState extends State<HomePage> {
     _inAppMessageActionSub = _plugin
         .inAppMessageActionStream()
         .listen(_onInAppMessageActionEvent);
+    initializeSegmentationDataStreams();
     super.initState();
   }
 
@@ -47,6 +60,9 @@ class _HomePageState extends State<HomePage> {
     _openedPushSub.cancel();
     _receivedPushSub.cancel();
     _inAppMessageActionSub.cancel();
+    _discoverySubscription.cancel();
+    _contentSubscription.cancel();
+    _merchandisingSubscription.cancel();
     _flushPeriodController.dispose();
     _flushModeController.dispose();
     _pushController.dispose();
@@ -363,6 +379,15 @@ class _HomePageState extends State<HomePage> {
                     child: const Text('App inbox Example Page'),
                   ),
                 ),
+                ListTile(
+                  title: ElevatedButton(
+                    onPressed: () async {
+                      final data = await _plugin.getSegments('discovery');
+                      print('Segments: received segments for category discovery with IDs: $data');
+                    },
+                    child: const Text('Get segments'),
+                  ),
+                ),
               ],
             ),
           ),
@@ -579,4 +604,7 @@ class _HomePageState extends State<HomePage> {
     print('received in-app action: $action');
   }
 
+  void _onSegmentationDataEvent(String exposingCategory, List<Map<String, String>> data) {
+    print('Segments: New for category $exposingCategory with IDs: $data');
+  }
 }

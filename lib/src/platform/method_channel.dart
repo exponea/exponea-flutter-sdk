@@ -20,6 +20,9 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _inAppMessageActionStreamName = '$_channelName/in_app_messages';
   static const _inAppMessageActionEventChannel = EventChannel(_inAppMessageActionStreamName);
 
+  static const _segmentationDataStreamName = '$_channelName/segmentation_data';
+  static const _segmentationDataEventChannel = EventChannel(_segmentationDataStreamName);
+
   static const _methodConfigure = 'configure';
   static const _methodIsConfigured = 'isConfigured';
   static const _methodGetCustomerCookie = 'getCustomerCookie';
@@ -75,10 +78,24 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _handleCampaignClick = 'handleCampaignClick';
   static const _handlePushNotificationOpened = 'handlePushNotificationOpened';
   static const _handlePushNotificationOpenedWithoutTrackingConsent = 'handlePushNotificationOpenedWithoutTrackingConsent';
+  static const _getSegments = 'getSegments';
+  static const _registerSegmentationDataStream = 'registerSegmentationDataStream';
+  static const _unregisterSegmentationDataStream = 'unregisterSegmentationDataStream';
 
+  late SegmentationStreamDataHandler _segmentationStreamDataHandler;
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
   Stream<InAppMessageAction>? _inAppMessageActionStream;
+
+  MethodChannelExponeaPlatform() {
+    _segmentationStreamDataHandler = SegmentationStreamDataHandler(
+      onStreamClosed: (instanceId) => unregisterSegmentationDataStream(instanceId),
+    );
+    _segmentationDataEventChannel
+        .receiveBroadcastStream()
+        .cast<Map<dynamic, dynamic>>()
+        .listen((data) => _segmentationStreamDataHandler.handleSegmentationData(data));
+  }
 
   @override
   Future<bool> configure(ExponeaConfiguration configuration) async {
@@ -496,5 +513,29 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   @override
   Future<void> handlePushNotificationOpenedWithoutTrackingConsent(Map<String, dynamic> data) async {
     await _channel.invokeMethod<void>(_handlePushNotificationOpenedWithoutTrackingConsent, data);
+  }
+
+  @override
+  Future<List<Map<String, String>>> getSegments(String exposingCategory, {bool force = false}) async {
+    final data = {
+      'exposingCategory': exposingCategory,
+      'force': force,
+    };
+    final result = await _channel.invokeListMethod<Map>(_getSegments, data);
+    return result?.map((e) => Map<String, String>.from(e)).toList() ?? [];
+  }
+
+  @override
+  Future<Stream<List<Map<String, String>>>> segmentationDataStream(String exposingCategory, {bool includeFirstLoad = false}) async {
+    final data = {
+      'exposingCategory': exposingCategory,
+      'includeFirstLoad': includeFirstLoad,
+    };
+    final instanceId =  await _channel.invokeMethod<String>(_registerSegmentationDataStream, data);
+    return _segmentationStreamDataHandler.registerSegmentationDataStream(instanceId!);
+  }
+
+  Future<void> unregisterSegmentationDataStream(String instanceId) async {
+    await _channel.invokeMethod<void>(_unregisterSegmentationDataStream, {'instanceId': instanceId});
   }
 }

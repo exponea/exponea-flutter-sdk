@@ -311,6 +311,16 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
+  Future<List<Map<String, String>>> getSegments(String exposingCategory, {bool force = false}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Stream<List<Map<String, String>>>> segmentationDataStream(String exposingCategory, {bool includeFirstLoad = false}) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<OpenedPush> get openedPushStream => throw UnimplementedError();
 
   @override

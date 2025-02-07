@@ -9,6 +9,7 @@ private let channelName = "com.exponea"
 private let openedPushStreamName = "\(channelName)/opened_push"
 private let receivedPushStreamName = "\(channelName)/received_push"
 private let inAppMessagesStreamName = "\(channelName)/in_app_messages"
+private let segmentationDataStreamName = "\(channelName)/segmentation_data"
 
 enum METHOD_NAME: String {
     case methodConfigure = "configure"
@@ -64,6 +65,9 @@ enum METHOD_NAME: String {
     case handleCampaignClick = "handleCampaignClick"
     case handlePushNotificationOpened = "handlePushNotificationOpened"
     case handlePushNotificationOpenedWithoutTrackingConsent = "handlePushNotificationOpenedWithoutTrackingConsent"
+    case getSegments = "getSegments"
+    case registerSegmentationDataStream = "registerSegmentationDataStream"
+    case unregisterSegmentationDataStream = "unregisterSegmentationDataStream"
 }
 
 
@@ -317,6 +321,9 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         let inAppMessagesChannel = FlutterEventChannel(name: inAppMessagesStreamName, binaryMessenger: registrar.messenger())
         inAppMessagesChannel.setStreamHandler(InAppMessageActionStreamHandler.currentInstance)
 
+        let segmentationDataChannel = FlutterEventChannel(name: segmentationDataStreamName, binaryMessenger: registrar.messenger())
+        segmentationDataChannel.setStreamHandler(SegmentationDataStreamHandler.newInstance())
+
         registrar.register(FluffViewFactory(), withId: "FluffView")
         registrar.register(FlutterInAppContentBlockPlaceholderFactory(messenger: registrar.messenger()), withId: "InAppContentBlockPlaceholder")
         registrar.register(FlutterAppInboxDetailViewFactory(), withId: "AppInboxDetailView")
@@ -324,6 +331,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
     }
 
     var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
+    var segmentationDataCallbacks: [FlutterSegmentationDataCallback] = []
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let method = METHOD_NAME(rawValue: call.method) else {
@@ -438,6 +446,12 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             handlePushNotificationOpened(call.arguments, with: result)
         case .handlePushNotificationOpenedWithoutTrackingConsent:
             handlePushNotificationOpenedWithoutTrackingConsent(call.arguments, with: result)
+        case .getSegments:
+            getSegments(call.arguments, with: result)
+        case .registerSegmentationDataStream:
+            registerSegmentationDataStream(call.arguments, with: result)
+        case .unregisterSegmentationDataStream:
+            unregisterSegmentationDataStream(call.arguments, with: result)
         }
     }
     
@@ -1040,6 +1054,64 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         let identifier = data["url"] as? String
         exponeaInstance.handlePushNotificationOpenedWithoutTrackingConsent(userInfo: userInfo, actionIdentifier: identifier)
         result(nil)
+    }
+    
+    private func getSegments(_ args: Any?, with result: @escaping FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let params = args as? [String: Any],
+              let exposingCategory = params["exposingCategory"] as? String,
+              let force = params["force"] as? Bool else {
+            result(FlutterError(code: errorCode, message: "Invalid arguments for getSegments", details: nil))
+            return
+        }
+        Exponea.shared.getSegments(force: force, category: .init(type: exposingCategory, data: [])) { segments in
+            result(segments.map { return ["id" : $0.id, "segmentation_id" : $0.segmentationId] })
+        }
+
+    }
+    
+    private func registerSegmentationDataStream(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let params = args as? [String: Any],
+              let exposingCategory = params["exposingCategory"] as? String,
+              let includeFirstLoad = params["includeFirstLoad"] as? Bool else {
+            result(FlutterError(code: errorCode, message: "Invalid arguments for registerSegmentationDataStream", details: nil))
+            return
+        }
+        let segmentationDataCallback: FlutterSegmentationDataCallback = .init(
+            category: .init(type: exposingCategory, data: []),
+            includeFirstLoad: includeFirstLoad
+        ) { callbackInstance, segments in
+            SegmentationDataStreamHandler.handle(
+                segmentationData: SegmentationData(
+                    instanceId: callbackInstance.instanceId,
+                    data: segments
+                )
+            )
+        }
+        
+        SegmentationManager.shared.addCallback(callbackData: segmentationDataCallback.nativeCallback)
+        segmentationDataCallbacks.append(segmentationDataCallback)
+        result(segmentationDataCallback.instanceId)
+
+    }
+    
+    private func unregisterSegmentationDataStream(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        guard let params = args as? [String: Any],
+              let instanceId = params["instanceId"] as? String else {
+            result(FlutterError(code: errorCode, message: "Invalid arguments for unregisterSegmentationDataStream", details: nil))
+            return
+        }
+        
+        if let callbackToRemove = segmentationDataCallbacks.first(where: { $0.instanceId == instanceId }) {
+            SegmentationManager.shared.removeCallback(callbackData: callbackToRemove.nativeCallback)
+            segmentationDataCallbacks.removeAll { $0.instanceId == instanceId }
+            result(nil)
+        } else {
+            result(FlutterError(code: errorCode, message: "Segmentation data stream with instanceId \(instanceId) not found", details: nil))
+        }
+
     }
 
     private func setupAppInbox(_ args: Any?, with result: FlutterResult) {

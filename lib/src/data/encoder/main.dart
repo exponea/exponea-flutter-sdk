@@ -23,3 +23,4 @@ export 'in_app_message.dart';
 export 'in_app_message_action.dart';
 export 'in_app_message_button.dart';
 export 'purchased_item.dart';
+export 'segmentation_stream_data_handler.dart';
