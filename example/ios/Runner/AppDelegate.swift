@@ -2,7 +2,7 @@ import Foundation
 import Flutter
 import exponea
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: ExponeaFlutterAppDelegate {
 
     override func application(

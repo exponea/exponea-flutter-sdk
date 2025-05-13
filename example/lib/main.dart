@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:exponea_example/page/config.dart';
 import 'package:exponea_example/page/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uni_links/uni_links.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _handleInitialLink() async {
     try {
-      final initialLink = await getInitialLink();
+      final initialLink = await AppLinks().getInitialLink();
       if (initialLink != null) {
         _showSnackBarMessage('App opened with link: $initialLink');
       }
@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _handleIncomingLinks() {
-    _linkSub = linkStream.listen((String? link) {
+    _linkSub = AppLinks().stringLinkStream.listen((String link) {
       _showSnackBarMessage('App resumed with link: $link');
     }, onError: (err) {
       _showSnackBarMessage('App resume with link failed: $err');

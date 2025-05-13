@@ -25,6 +25,7 @@ class InAppMessageEncoder {
       isHtml: data.getOptional('isHtml'),
       hasTrackingConsent: data.getOptional('hasTrackingConsent'),
       consentCategoryTracking: data.getOptional('consentCategoryTracking'),
+      isRichText: data.getOptional('isRichText'),
     );
   }
 
@@ -46,6 +47,7 @@ class InAppMessageEncoder {
       'isHtml': message.isHtml,
       'hasTrackingConsent': message.hasTrackingConsent,
       'consentCategoryTracking': message.consentCategoryTracking,
+      'isRichText': message.isRichText,
     }..removeWhere((key, value) => value == null);
   }
 }

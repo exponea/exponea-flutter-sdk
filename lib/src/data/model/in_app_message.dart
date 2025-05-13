@@ -18,6 +18,7 @@ class InAppMessage {
   final bool? isHtml;
   final bool? hasTrackingConsent;
   final String? consentCategoryTracking;
+  final bool? isRichText;
 
   const InAppMessage({
     required this.id,
@@ -36,6 +37,7 @@ class InAppMessage {
     this.isHtml,
     this.hasTrackingConsent,
     this.consentCategoryTracking,
+    this.isRichText
   });
 
   @override
@@ -57,6 +59,7 @@ class InAppMessage {
         'isHtml: $isHtml, '
         'hasTrackingConsent: $hasTrackingConsent, '
         'consentCategoryTracking: $consentCategoryTracking'
+        'isRichText: $isRichText'
         '}';
   }
 }

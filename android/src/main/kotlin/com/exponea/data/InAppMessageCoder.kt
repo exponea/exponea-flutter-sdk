@@ -32,6 +32,7 @@ class InAppMessageCoder {
                 "isHtml" to source.isHtml,
                 "hasTrackingConsent" to source.hasTrackingConsent,
                 "consentCategoryTracking" to source.consentCategoryTracking,
+                "isRichText" to source.isRichText,
             )
         }
 
@@ -54,6 +55,7 @@ class InAppMessageCoder {
                 isHtml = source.getOptional("isHtml"),
                 rawHasTrackingConsent = source.getOptional("hasTrackingConsent"),
                 consentCategoryTracking = source.getOptional("consentCategoryTracking"),
+                isRichText = source.getOptional("isRichText"),
             )
         }
     }

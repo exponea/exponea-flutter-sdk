@@ -4,9 +4,9 @@ version '2.0.0-SNAPSHOT'
 buildscript {
     ext {
         androidGradlePluginVersion = '7.3.1'
-        kotlinVersion = '1.7.20'
+        kotlinVersion = '1.9.10'
 
-        exponeaSdkVersion = '4.0.1'
+        exponeaSdkVersion = '4.4.0'
         gsonVersion = '2.10.1'
     }
 

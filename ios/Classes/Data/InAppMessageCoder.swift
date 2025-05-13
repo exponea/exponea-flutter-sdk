@@ -25,15 +25,25 @@ class InAppMessageCoder {
             "isHtml": source.isHtml,
             "hasTrackingConsent": source.hasTrackingConsent,
             "consentCategoryTracking": source.consentCategoryTracking,
+            "isRichText": getIsRichText(source)
         ]
     }
     
+    static private func getIsRichText(_ message: InAppMessage) -> Bool {
+        guard let jsonData = try? JSONEncoder().encode(message),
+              let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: []),
+              let jsonDict = jsonObject as? [String: Any] else {
+            return false
+        }
+        return jsonDict["is_rich_text"] as? Bool ?? false
+    }
+    
     static func decode(_ source: [String:Any?]) throws -> InAppMessage {
-        var payload: InAppMessagePayload? = nil
+        var payload: RichInAppMessagePayload? = nil
         if let payloadString: String = try? source.getOptional("payload"),
            let payloadData: Data = payloadString.data(using: .utf8)
         {
-            payload = try? JSONDecoder().decode(InAppMessagePayload.self, from: payloadData)
+            payload = try? JSONDecoder().decode(RichInAppMessagePayload.self, from: payloadData)
         }
         
         guard let triggerString: String = try source.getRequired("trigger"),
@@ -64,7 +74,8 @@ class InAppMessageCoder {
             payloadHtml: try source.getOptional("payloadHtml"),
             isHtml: try source.getOptional("isHtml"),
             hasTrackingConsent: try source.getOptional("hasTrackingConsent"),
-            consentCategoryTracking: try source.getOptional("consentCategoryTracking")
+            consentCategoryTracking: try source.getOptional("consentCategoryTracking"),
+            isRichText: try source.getRequired("isRichText")
         )
     }
 }

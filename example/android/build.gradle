@@ -4,14 +4,14 @@ buildscript {
         compileSdkVersion = 34
         targetSdkVersion = 34
 
-        androidGradlePluginVersion = '7.3.1'
-        kotlinVersion = '1.7.20'
+        androidGradlePluginVersion = '8.1.0'
+        kotlinVersion = '1.9.10'
         multidexVersion = '2.0.1'
         firebaseVersion = '23.0.0'
         agconnectVersion = '1.5.2.300'
         hmsVersion = '6.1.0.300'
         googleServicesVersion = '4.3.14'
-        exponeaSdkVersion = '4.0.1'
+        exponeaSdkVersion = '4.4.0'
         gsonVersion = '2.10.1'
     }
     repositories {
