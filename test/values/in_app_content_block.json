@@ -1,0 +1,147 @@
+[
+  {},
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "placeholders": []
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "placeholders": []
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "placeholders": []
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "load_priority": 1,
+    "placeholders": []
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "load_priority": 1,
+    "consent_category_tracking": "mock-consent_category_tracking",
+    "placeholders": []
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "load_priority": 1,
+    "consent_category_tracking": "mock-consent_category_tracking",
+    "content_type": "mock-content_type",
+    "placeholders": []
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "load_priority": 1,
+    "consent_category_tracking": "mock-consent_category_tracking",
+    "content_type": "mock-content_type",
+    "content": {
+      "mock-content_param": "mock-content_value"
+    },
+    "placeholders": []
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "load_priority": 1,
+    "consent_category_tracking": "mock-consent_category_tracking",
+    "content_type": "mock-content_type",
+    "content": {
+      "mock-content_param": "mock-content_value"
+    },
+    "placeholders": [
+      "placeholder1",
+      "placeholder2"
+    ]
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "load_priority": 1,
+    "consent_category_tracking": "mock-consent_category_tracking",
+    "content_type": "mock-content_type",
+    "content": {
+      "mock-content_param": "mock-content_value"
+    },
+    "placeholders": [
+      "placeholder1",
+      "placeholder2"
+    ],
+    "customerIds": {
+      "mock-customer_id-key": "mock-customer_id-value"
+    }
+  },
+  {
+    "id": "mock-id",
+    "name": "mock-name",
+    "date_filter": {
+      "mock-date_filter-param": "mock-date_filter-content"
+    },
+    "frequency": "mock-frequency",
+    "load_priority": 1,
+    "consent_category_tracking": "mock-consent_category_tracking",
+    "content_type": "mock-content_type",
+    "content": {
+      "mock-content_param": "mock-content_value"
+    },
+    "placeholders": [
+      "placeholder1",
+      "placeholder2"
+    ],
+    "customerIds": {
+      "mock-customer_id-key": "mock-customer_id-value"
+    },
+    "personalizedData": {
+      "id": "mock-id",
+      "status": "mock-status",
+      "ttl_seconds": 3600,
+      "has_tracking_consent": true,
+      "variant_id": 123,
+      "variant_name": "mock-variant",
+      "content_type": "mock-content-type",
+      "content": {
+        "mock-key": "mock-value"
+      },
+      "loadedAt": "mock-loaded-at"
+    }
+  }
+]
+

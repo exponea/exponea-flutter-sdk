@@ -43,6 +43,7 @@ import com.exponea.style.AppInboxStyleParser
 import com.exponea.widget.FlutterAppInboxButton
 import com.exponea.widget.FlutterAppInboxDetailView
 import com.exponea.widget.FlutterAppInboxListView
+import com.exponea.widget.FlutterInAppContentBlockCarouselFactory
 import com.exponea.widget.FlutterInAppContentBlockPlaceholderFactory
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -155,6 +156,9 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         binding
             .platformViewRegistry
             .registerViewFactory("AppInboxListView", FlutterAppInboxListView.Factory(binding))
+        binding
+            .platformViewRegistry
+            .registerViewFactory("InAppContentBlockCarousel", FlutterInAppContentBlockCarouselFactory(binding))
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

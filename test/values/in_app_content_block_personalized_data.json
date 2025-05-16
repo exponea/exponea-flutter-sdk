@@ -1,0 +1,70 @@
+[
+  {},
+  {
+    "id": "mock-id"
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status"
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status",
+    "ttl_seconds": 3600
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status",
+    "ttl_seconds": 3600,
+    "has_tracking_consent": true
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status",
+    "ttl_seconds": 3600,
+    "has_tracking_consent": true,
+    "variant_id": 123
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status",
+    "ttl_seconds": 3600,
+    "has_tracking_consent": true,
+    "variant_id": 123,
+    "variant_name": "mock-variant"
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status",
+    "ttl_seconds": 3600,
+    "has_tracking_consent": true,
+    "variant_id": 123,
+    "variant_name": "mock-variant",
+    "content_type": "mock-content-type"
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status",
+    "ttl_seconds": 3600,
+    "has_tracking_consent": true,
+    "variant_id": 123,
+    "variant_name": "mock-variant",
+    "content_type": "mock-content-type",
+    "content": {
+      "mock-key": "mock-value"
+    }
+  },
+  {
+    "id": "mock-id",
+    "status": "mock-status",
+    "ttl_seconds": 3600,
+    "has_tracking_consent": true,
+    "variant_id": 123,
+    "variant_name": "mock-variant",
+    "content_type": "mock-content-type",
+    "content": {
+      "mock-key": "mock-value"
+    },
+    "loadedAt": "mock-loaded-at"
+  }
+]

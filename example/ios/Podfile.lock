@@ -8,7 +8,7 @@ PODS:
     - Flutter
   - ExponeaSDK (3.4.0):
     - SwiftSoup (= 2.6.1)
-  - ExponeaSDK-Notifications (3.0.1)
+  - ExponeaSDK-Notifications (3.4.0)
   - Flutter (1.0.0)
   - Nimble (9.2.1)
   - Quick (4.0.0)
@@ -55,7 +55,7 @@ SPEC CHECKSUMS:
   app_links: f3e17e4ee5e357b39d8b95290a9b2c299fca71c6
   exponea: cb1287b921f7580b7d73a5e51e4039b9baa7ab23
   ExponeaSDK: e449b40530120f2204702092beb9a7b0d45dafb4
-  ExponeaSDK-Notifications: dff2e03d2e5af71f77f9dfd3b155a0791e317bd5
+  ExponeaSDK-Notifications: b1b69bb2430293f4db20670f0885e00cb6572cbd
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4

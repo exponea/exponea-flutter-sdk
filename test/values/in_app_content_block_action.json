@@ -1,0 +1,15 @@
+[
+  {},
+  {
+    "type": "BROWSER"
+  },
+  {
+    "type": "BROWSER",
+    "name": "mock-name"
+  },
+  {
+    "type": "BROWSER",
+    "name": "mock-name",
+    "url": "https://mock-url.com"
+  }
+]

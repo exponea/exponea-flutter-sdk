@@ -1,5 +1,6 @@
 import '../model/in_app_content_block.dart';
 import '../util/object.dart';
+import 'in_app_content_block_personalized_data.dart';
 
 abstract class InAppContentBlockEncoder {
   static InAppContentBlock decode(Map<dynamic, dynamic> data) {
@@ -16,6 +17,8 @@ abstract class InAppContentBlockEncoder {
           .getRequired<List>('placeholders')
           .map((it) => it.toString())
           .toList(growable: false),
+      customerIds: data.getOptional<Map<String, dynamic>>('customerIds'),
+      personalizedData: data.getOptional<Map<dynamic, dynamic>>('personalizedData')?.let(InAppContentBlockPersonalizedDataEncoder.decode),
     );
   }
 
@@ -30,6 +33,8 @@ abstract class InAppContentBlockEncoder {
       'content_type': contentBlock.contentType,
       'content': contentBlock.content,
       'placeholders': contentBlock.placeholders,
+      'customerIds': contentBlock.customerIds,
+      'personalizedData': contentBlock.personalizedData?.let(InAppContentBlockPersonalizedDataEncoder.encode),
     }..removeWhere((key, value) => value == null);
   }
 }

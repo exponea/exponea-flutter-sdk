@@ -19,6 +19,8 @@ export 'token_frequency.dart';
 export 'app_inbox.dart';
 export 'in_app_content_block.dart';
 export 'in_app_content_block_action.dart';
+export 'in_app_content_block_action_type.dart';
+export 'in_app_content_block_personalized_data.dart';
 export 'in_app_message.dart';
 export 'in_app_message_action.dart';
 export 'in_app_message_button.dart';

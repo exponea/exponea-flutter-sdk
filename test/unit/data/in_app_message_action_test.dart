@@ -1,6 +1,5 @@
 import 'package:exponea/exponea.dart';
 import 'package:exponea/src/data/encoder/main.dart';
-import 'package:exponea/src/data/model/in_app_message_action_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'base.dart';

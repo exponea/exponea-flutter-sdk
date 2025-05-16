@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+import 'in_app_content_block_personalized_data.dart';
+
 @immutable
 class InAppContentBlock {
   final String id;
@@ -11,6 +13,8 @@ class InAppContentBlock {
   final String? contentType;
   final Map<String, dynamic>? content;
   final List<String> placeholders;
+  final Map<String, dynamic>? customerIds;
+  final InAppContentBlockPersonalizedData? personalizedData;
 
   const InAppContentBlock({
     required this.id,
@@ -22,6 +26,8 @@ class InAppContentBlock {
     this.contentType,
     this.content,
     required this.placeholders,
+    this.customerIds,
+    this.personalizedData,
   });
 
   @override
@@ -36,6 +42,8 @@ class InAppContentBlock {
         'contentType: $contentType, '
         'content: $content, '
         'placeholders: $placeholders, '
+        'customerIds: $customerIds, '
+        'personalizedData: $personalizedData'
         '}';
   }
 }

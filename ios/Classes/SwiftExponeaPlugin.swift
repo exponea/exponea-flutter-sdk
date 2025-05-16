@@ -3,6 +3,7 @@ import UIKit
 import ExponeaSDK
 import UserNotifications
 import Foundation
+import Combine
 import WebKit
 
 private let channelName = "com.exponea"
@@ -328,6 +329,7 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         registrar.register(FlutterInAppContentBlockPlaceholderFactory(messenger: registrar.messenger()), withId: "InAppContentBlockPlaceholder")
         registrar.register(FlutterAppInboxDetailViewFactory(), withId: "AppInboxDetailView")
         registrar.register(FlutterAppInboxListViewFactory(messenger: registrar.messenger()), withId: "AppInboxListView")
+        registrar.register(FlutterInAppContentBlockCarouselFactory(messenger: registrar.messenger()), withId: "InAppContentBlockCarousel")
     }
 
     var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
@@ -1472,5 +1474,25 @@ extension PushAction {
         case .browser: return .web
         case .selfCheck: return .app
         }
+    }
+}
+
+extension PassthroughSubject where PassthroughSubject.Failure == Never {
+    func retrieveFirstOrNull(timeout: TimeInterval) -> Output? {
+        let timedOutSem = DispatchSemaphore(value: 0)
+        var cancallableTask: AnyCancellable?
+        var value: Output?
+        cancallableTask = self
+            .timeout(.seconds(timeout), scheduler: DispatchQueue.global(qos: .background))
+            .sink(receiveCompletion: { _ in
+                // timeout
+                timedOutSem.signal()
+            }, receiveValue: {
+                value = $0
+                cancallableTask?.cancel()
+                timedOutSem.signal()
+            })
+        timedOutSem.wait()
+        return value
     }
 }
