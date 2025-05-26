@@ -23,6 +23,7 @@ abstract class ExponeaConfigurationEncoder {
       pushTokenTrackingFrequency: data
           .getOptional<String>('pushTokenTrackingFrequency')
           ?.let(TokenFrequencyEncoder.decode),
+      requirePushAuthorization: data.getOptional('requirePushAuthorization'),
       allowDefaultCustomerProperties: data.getOptional('allowDefaultCustomerProperties'),
       advancedAuthEnabled: data.getOptional('advancedAuthEnabled'),
       android: data
@@ -54,6 +55,7 @@ abstract class ExponeaConfigurationEncoder {
       'advancedAuthEnabled': config.advancedAuthEnabled,
       'pushTokenTrackingFrequency':
           config.pushTokenTrackingFrequency?.let(TokenFrequencyEncoder.encode),
+      'requirePushAuthorization': config.requirePushAuthorization,
       'android': config.android?.let(AndroidExponeaConfigurationEncoder.encode),
       'ios': config.ios?.let(IOSExponeaConfigurationEncoder.encode),
       'inAppContentBlockPlaceholdersAutoLoad': config.inAppContentBlockPlaceholdersAutoLoad,
@@ -78,6 +80,8 @@ abstract class AndroidExponeaConfigurationEncoder {
       httpLoggingLevel: data
           .getOptional<String>('httpLoggingLevel')
           ?.let(HttpLoggingLevelEncoder.decode),
+      appInboxDetailImageInset: data.getOptional<num>('appInboxDetailImageInset')?.toInt(),
+      allowWebViewCookies: data.getOptional('allowWebViewCookies'),
     );
   }
 
@@ -93,6 +97,8 @@ abstract class AndroidExponeaConfigurationEncoder {
           ?.let(PushNotificationImportanceEncoder.encode),
       'httpLoggingLevel':
           config.httpLoggingLevel?.let(HttpLoggingLevelEncoder.encode),
+      'appInboxDetailImageInset': config.appInboxDetailImageInset?.toDouble(),
+      'allowWebViewCookies': config.allowWebViewCookies,
     };
   }
 }

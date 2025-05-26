@@ -37,6 +37,9 @@ class ExponeaConfiguration {
   /// Defines how often should the SDK track push notification token to Exponea
   final TokenFrequency? pushTokenTrackingFrequency;
 
+  /// If true, push notification registration and push token tracking is only done if the device is authorized to display push notifications
+  final bool? requirePushAuthorization;
+
   /// If true, default properties are applied also for 'identifyCustomer' event.
   final bool? allowDefaultCustomerProperties;
 
@@ -65,6 +68,7 @@ class ExponeaConfiguration {
     this.sessionTimeout,
     this.automaticSessionTracking,
     this.pushTokenTrackingFrequency,
+    this.requirePushAuthorization,
     this.allowDefaultCustomerProperties,
     this.advancedAuthEnabled,
     this.android,
@@ -104,6 +108,17 @@ class AndroidExponeaConfiguration {
   /// Level of HTTP logging
   final HttpLoggingLevel? httpLoggingLevel;
 
+  /// Defines margin-top of Image in App Inbox detail screen in dp.
+  /// Default value (null) will result in ?attr/ actionBarSize defined in application theme.
+  /// This is useful in case of transparent toolbar theming.
+  final int? appInboxDetailImageInset;
+
+  /// Flag that enables or disables cookies in WebViews. Cookies in WebView could be misused by malware so it is
+  /// recommended to keep them disabled (default value). According to shared CookieManager in android, this flag could
+  /// affect all WebView instances used by application. If your application is using WebView and page logic depends on
+  /// cookies, you may allow them with true value.
+  final bool? allowWebViewCookies;
+
   const AndroidExponeaConfiguration({
     this.automaticPushNotifications,
     this.pushIcon,
@@ -113,6 +128,8 @@ class AndroidExponeaConfiguration {
     this.pushChannelId,
     this.pushNotificationImportance,
     this.httpLoggingLevel,
+    this.appInboxDetailImageInset,
+    this.allowWebViewCookies,
   });
 }
 
@@ -125,6 +142,7 @@ class IOSExponeaConfiguration {
   final String? appGroup;
 
   const IOSExponeaConfiguration({
+    @Deprecated("Will be removed in a later version of the SDK, use common 'requirePushAuthorization' instead. When both are set, the common one will be used.")
     this.requirePushAuthorization,
     this.appGroup,
   });

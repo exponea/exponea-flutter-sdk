@@ -66,7 +66,8 @@ class ConfigurationParser {
     func parsePushNotificationTracking(_ data: [String:Any?]) throws -> ExponeaSDK.Exponea.PushNotificationTracking {
         let iosData: [String:Any?] = try data.getOptional("ios") ?? [:]
         let appGroup: String = try iosData.getOptional("appGroup") ?? ""
-        let requirePushAuthorization: Bool = try iosData.getOptional("requirePushAuthorization") ?? true
+        let requirePushAuthorization: Bool = try data.getOptional("requirePushAuthorization") ??
+            iosData.getOptional("requirePushAuthorization") ?? true
         var frequency: TokenTrackFrequency?
         if let frequencyString: String = try data.getOptional("pushTokenTrackingFrequency") {
             switch frequencyString {

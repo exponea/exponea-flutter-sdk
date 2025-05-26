@@ -51,7 +51,14 @@ void main() {
           flushMaxRetries: 10,
           sessionTimeout: 60,
           automaticSessionTracking: true,
+          advancedAuthEnabled: true,
+          inAppContentBlockPlaceholdersAutoLoad: [
+            'mock-placeholder-1',
+            'mock-placeholder-2'
+          ],
           pushTokenTrackingFrequency: TokenFrequency.daily,
+          requirePushAuthorization: true,
+          manualSessionAutoClose: true,
           android: AndroidExponeaConfiguration(
             automaticPushNotifications: true,
             pushIcon: 12345,
@@ -61,6 +68,8 @@ void main() {
             pushChannelId: 'mock-push-channel-id',
             pushNotificationImportance: PushNotificationImportance.high,
             httpLoggingLevel: HttpLoggingLevel.body,
+            appInboxDetailImageInset: 16,
+            allowWebViewCookies: true,
           ),
           ios: IOSExponeaConfiguration(
             requirePushAuthorization: false,
@@ -95,7 +104,14 @@ void main() {
           flushMaxRetries: 10,
           sessionTimeout: 45,
           automaticSessionTracking: true,
+          advancedAuthEnabled: true,
+          inAppContentBlockPlaceholdersAutoLoad: [
+            'mock-placeholder-1',
+            'mock-placeholder-2'
+          ],
           pushTokenTrackingFrequency: TokenFrequency.daily,
+          requirePushAuthorization: true,
+          manualSessionAutoClose: true,
           android: AndroidExponeaConfiguration(
             automaticPushNotifications: true,
             pushIcon: 12345,
@@ -105,6 +121,8 @@ void main() {
             pushChannelId: 'mock-push-channel-id',
             pushNotificationImportance: PushNotificationImportance.high,
             httpLoggingLevel: HttpLoggingLevel.body,
+            appInboxDetailImageInset: 16,
+            allowWebViewCookies: true,
           ),
           ios: IOSExponeaConfiguration(
             requirePushAuthorization: false,
@@ -133,6 +151,17 @@ void main() {
 
         expect(decoded.projectToken, 'mock-project-token');
         expect(decoded.authorizationToken, 'mock-auth-token');
+        expect(decoded.projectMapping, null);
+        expect(decoded.defaultProperties, null);
+        expect(decoded.flushMaxRetries, null);
+        expect(decoded.sessionTimeout, null);
+        expect(decoded.automaticSessionTracking, null);
+        expect(decoded.pushTokenTrackingFrequency, null);
+        expect(decoded.requirePushAuthorization, null);
+        expect(decoded.allowDefaultCustomerProperties, null);
+        expect(decoded.advancedAuthEnabled, null);
+        expect(decoded.inAppContentBlockPlaceholdersAutoLoad, null);
+        expect(decoded.manualSessionAutoClose, null);
         expect(decoded.baseUrl, null);
         expect(decoded.android, null);
         expect(decoded.ios, null);
@@ -162,7 +191,10 @@ void main() {
         expect(decoded.sessionTimeout, 60.0);
         expect(decoded.automaticSessionTracking, true);
         expect(decoded.allowDefaultCustomerProperties, true);
+        expect(decoded.advancedAuthEnabled, true);
+        expect(decoded.inAppContentBlockPlaceholdersAutoLoad, ["mock-placeholder-1", "mock-placeholder-2"]);
         expect(decoded.pushTokenTrackingFrequency, TokenFrequency.daily);
+        expect(decoded.requirePushAuthorization, true);
         expect(decoded.android != null, true);
         final android = decoded.android!;
         expect(android.automaticPushNotifications, true);
@@ -174,6 +206,8 @@ void main() {
         expect(android.pushNotificationImportance,
             PushNotificationImportance.high);
         expect(android.httpLoggingLevel, HttpLoggingLevel.body);
+        expect(android.appInboxDetailImageInset, 16);
+        expect(android.allowWebViewCookies, true);
         expect(decoded.ios != null, true);
         final ios = decoded.ios!;
         expect(ios.requirePushAuthorization, false);
@@ -204,7 +238,10 @@ void main() {
         expect(decoded.sessionTimeout, 45.0);
         expect(decoded.automaticSessionTracking, true);
         expect(decoded.allowDefaultCustomerProperties, true);
+        expect(decoded.advancedAuthEnabled, true);
+        expect(decoded.inAppContentBlockPlaceholdersAutoLoad, ["mock-placeholder-1", "mock-placeholder-2"]);
         expect(decoded.pushTokenTrackingFrequency, TokenFrequency.daily);
+        expect(decoded.requirePushAuthorization, true);
         expect(decoded.android != null, true);
         final android = decoded.android!;
         expect(android.automaticPushNotifications, true);
@@ -216,6 +253,8 @@ void main() {
         expect(android.pushNotificationImportance,
             PushNotificationImportance.high);
         expect(android.httpLoggingLevel, HttpLoggingLevel.body);
+        expect(android.appInboxDetailImageInset, 16);
+        expect(android.allowWebViewCookies, true);
         expect(decoded.ios != null, true);
         final ios = decoded.ios!;
         expect(ios.requirePushAuthorization, false);

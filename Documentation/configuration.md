@@ -66,6 +66,13 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
     * `.everyLaunch` - always tracks push token
     * `.daily` - tracks push token once per day
 
+* `requirePushAuthorization`
+  * Flag indicating whether the SDK should check [push notification permission status](https://developer.android.com/develop/ui/views/notifications/notification-permission) and [Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationsettings/1648391-authorizationstatus) and only track the push token if the user granted permission to receive push notifications.
+  * Possible values:
+    * `true` - tracks the push token only if the user granted permission to receive push notifications. An empty token value is tracked if the user denied permission. This is useful to send normal push notifications to a target audience that allows receiving notifications.
+    * `false` - tracks the push token regardless of notification permission status. This is useful to send silent push notifications that do not require permission from the user.
+  * Default value: `false` (Android) / `true` (iOS)
+
 * `flushMaxRetries`
   * Controls how many times the SDK should attempt to flush an event before aborting. Useful for example in case the API is down or some other temporary error happens.
   * The SDK will consider the data to be flushed if this number is exceeded and delete the data from the queue.
@@ -117,11 +124,26 @@ The following parameters are specified in an `AndroidExponeaConfiguration` objec
 * `httpLoggingLevel`
   * Level of HTTP request/response logging.
 
+* `allowWebViewCookies`
+  * Flag to enable or disable cookies in WebViews.
+  * Default value: `false`
+  * > ❗️
+    >
+    > **Disclaimer**:
+    > * For security purposes, cookies are by default disabled in WebViews.
+    > * This setting has effect on all WebViews in the application, NOT ONLY the ones used by the SDK.
+    > * DO NOT CHANGE THIS SETTING unless you know the risks associated with enabling and storing cookies.
+    > * By changing this setting and enabling cookies in WebViews you take full responsibility for any security vulnerabilities or incidents caused by them.
+
+* `appInboxDetailImageInset`
+  * Defines margin-top of Image in App Inbox detail screen in dp. Default value (null) will result in `?attr/actionBarSize` defined in application theme. This is useful in case of transparent toolbar theming.
+
+
 ### iOS-specific configuration parameters
 
 The following parameters are specified in an `IOSExponeaConfiguration` object. Refer to [lib/src/data/model/configuration.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/lib/src/data/model/configuration.dart) for the complete Dart definition
 
-* `requirePushAuthorization`
+* `requirePushAuthorization` - DEPRECATED
   * The SDK can check push notification authorization status ([Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationsettings/1648391-authorizationstatus)) and only track the push token if the user is authorized to receive push notifications.
   * When disabled, the SDK will automatically register for push notifications on app start and track the token to Engagement so your app can receive silent push notifications.
   * When enabled, the SDK will automatically register for push notifications if the app is authorized to show push notifications to the user.

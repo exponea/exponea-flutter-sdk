@@ -45,6 +45,17 @@ class ConfigurationTest {
         assertEquals(config.baseURL, defaultConfig.baseURL);
         assertEquals(config.projectRouteMap.isEmpty(), true);
         assertEquals(config.defaultProperties.isEmpty(), true);
+        assertEquals(config.maxTries, defaultConfig.maxTries);
+        assertEquals(config.sessionTimeout, defaultConfig.sessionTimeout, 0.0);
+        assertEquals(config.automaticSessionTracking, defaultConfig.automaticSessionTracking);
+        assertEquals(config.tokenTrackFrequency, defaultConfig.tokenTrackFrequency);
+        assertEquals(config.requirePushAuthorization, defaultConfig.requirePushAuthorization);
+        assertEquals(config.allowDefaultCustomerProperties, defaultConfig.allowDefaultCustomerProperties);
+        assertEquals(config.advancedAuthEnabled, defaultConfig.advancedAuthEnabled);
+        assertEquals(config.inAppContentBlockPlaceholdersAutoLoad, defaultConfig.inAppContentBlockPlaceholdersAutoLoad);
+        assertEquals(config.appInboxDetailImageInset, defaultConfig.appInboxDetailImageInset);
+        assertEquals(config.allowWebViewCookies, defaultConfig.allowWebViewCookies);
+        assertEquals(config.manualSessionAutoClose, defaultConfig.manualSessionAutoClose);
     }
 
     @Test
@@ -72,7 +83,13 @@ class ConfigurationTest {
         assertEquals(config.sessionTimeout.toInt(), 60);
         assertEquals(config.automaticSessionTracking, true);
         assertEquals(config.tokenTrackFrequency, TokenFrequency.DAILY);
+        assertEquals(config.requirePushAuthorization, true);
         assertEquals(config.allowDefaultCustomerProperties, true);
+        assertEquals(config.advancedAuthEnabled, true);
+        assertEquals(config.inAppContentBlockPlaceholdersAutoLoad, listOf("mock-placeholder-1", "mock-placeholder-2"));
+        assertEquals(config.appInboxDetailImageInset, 16);
+        assertEquals(config.allowWebViewCookies, true);
+        assertEquals(config.manualSessionAutoClose, true);
     }
 
     @Test
@@ -100,6 +117,12 @@ class ConfigurationTest {
         assertEquals(config.sessionTimeout.toInt(), 45);
         assertEquals(config.automaticSessionTracking, true);
         assertEquals(config.tokenTrackFrequency, TokenFrequency.DAILY);
+        assertEquals(config.requirePushAuthorization, true);
         assertEquals(config.allowDefaultCustomerProperties, true);
+        assertEquals(config.advancedAuthEnabled, true);
+        assertEquals(config.inAppContentBlockPlaceholdersAutoLoad, listOf("mock-placeholder-1", "mock-placeholder-2"));
+        assertEquals(config.appInboxDetailImageInset, 16);
+        assertEquals(config.allowWebViewCookies, true);
+        assertEquals(config.manualSessionAutoClose, true);
     }
 }
