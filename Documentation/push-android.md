@@ -27,7 +27,7 @@ Exponea Android SDK supports the following integrations:
 
 ### Standard (Firebase) integration
 
-To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
+To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
 
 1. Set up a Firebase project.
 2. Implement Firebase messaging in your app.
