@@ -2,7 +2,6 @@ package com.exponea.data
 
 import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.InAppMessageButton
-import com.google.gson.Gson
 
 data class InAppMessageAction(
     val type: InAppMessageActionType,

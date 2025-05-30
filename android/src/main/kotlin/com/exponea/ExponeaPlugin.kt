@@ -38,6 +38,7 @@ import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.InAppMessageButton
 import com.exponea.sdk.models.InAppMessageCallback
 import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
+import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
 import com.exponea.widget.FlutterAppInboxButton
@@ -45,7 +46,6 @@ import com.exponea.widget.FlutterAppInboxDetailView
 import com.exponea.widget.FlutterAppInboxListView
 import com.exponea.widget.FlutterInAppContentBlockCarouselFactory
 import com.exponea.widget.FlutterInAppContentBlockPlaceholderFactory
-import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -554,7 +554,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         val action = InAppContentBlockActionCoder.decode(data.getRequired<HashMap<String, Any?>>("action").toMap())
         Exponea.trackInAppContentBlockClickWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock, action = action)
     }
@@ -564,7 +564,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         val action = InAppContentBlockActionCoder.decode(data.getRequired<HashMap<String, Any?>>("action").toMap())
         Exponea.trackInAppContentBlockClickWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock, action = action)
     }
@@ -574,7 +574,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         Exponea.trackInAppContentBlockClose(placeholderId = placeholderId, message = contentBlock)
     }
 
@@ -583,7 +583,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         Exponea.trackInAppContentBlockCloseWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock)
     }
 
@@ -592,7 +592,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         Exponea.trackInAppContentBlockShown(placeholderId = placeholderId, message = contentBlock)
     }
 
@@ -601,7 +601,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         Exponea.trackInAppContentBlockShownWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock)
     }
 
@@ -610,7 +610,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         val errorMessage = data.getRequired<String>("errorMessage")
         Exponea.trackInAppContentBlockError(placeholderId = placeholderId, message = contentBlock, errorMessage = errorMessage)
     }
@@ -620,7 +620,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val data = args as Map<String, Any?>
         val placeholderId = data.getRequired<String>("placeholderId")
         val contentBlockData = data.getRequired<String>("contentBlock")
-        val contentBlock = Gson().fromJson(contentBlockData, InAppContentBlock::class.java)
+        val contentBlock = ExponeaGson.instance.fromJson(contentBlockData, InAppContentBlock::class.java)
         val errorMessage = data.getRequired<String>("errorMessage")
         Exponea.trackInAppContentBlockErrorWithoutTrackingConsent(placeholderId = placeholderId, message = contentBlock, errorMessage = errorMessage)
     }

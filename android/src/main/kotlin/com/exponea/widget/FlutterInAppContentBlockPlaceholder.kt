@@ -9,11 +9,11 @@ import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.InAppContentBlockAction
 import com.exponea.sdk.models.InAppContentBlockCallback
 import com.exponea.sdk.models.InAppContentBlockActionType
+import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
 import com.exponea.sdk.util.HtmlNormalizer
 import com.exponea.sdk.util.HtmlNormalizer.NormalizedResult
 import com.exponea.sdk.view.InAppContentBlockPlaceholderView
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +31,6 @@ class FlutterInAppContentBlockPlaceholder(
     private val inAppContentBlockPlaceholder: InAppContentBlockPlaceholderView?,
     private val overrideDefaultBehavior: Boolean,
     binding: FlutterPlugin.FlutterPluginBinding,
-    private val gson: Gson = Gson(),
 ) : PlatformView, MethodCallHandler {
 
     companion object {
@@ -62,7 +61,7 @@ class FlutterInAppContentBlockPlaceholder(
                     val payload: Map<String, Any?> = mapOf(
                             "eventType" to "onActionClicked",
                             "placeholderId" to placeholderId,
-                            "contentBlock" to gson.toJson(contentBlock),
+                            "contentBlock" to ExponeaGson.instance.toJson(contentBlock),
                             "action" to InAppContentBlockActionCoder.encode(action)
                     )
                     invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
@@ -78,7 +77,7 @@ class FlutterInAppContentBlockPlaceholder(
                     val payload: Map<String, Any?> = mapOf(
                             "eventType" to "onCloseClicked",
                             "placeholderId" to placeholderId,
-                            "contentBlock" to gson.toJson(contentBlock)
+                            "contentBlock" to ExponeaGson.instance.toJson(contentBlock)
                     )
                     invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
                 }
@@ -94,7 +93,7 @@ class FlutterInAppContentBlockPlaceholder(
                     val payload: Map<String, Any?> = mapOf(
                             "eventType" to "onError",
                             "placeholderId" to placeholderId,
-                            "contentBlock" to gson.toJson(contentBlock),
+                            "contentBlock" to ExponeaGson.instance.toJson(contentBlock),
                             "errorMessage" to errorMessage
                     )
                     invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
@@ -114,7 +113,7 @@ class FlutterInAppContentBlockPlaceholder(
                     val payload: Map<String, Any?> = mapOf(
                             "eventType" to "onMessageShown",
                             "placeholderId" to placeholderId,
-                            "contentBlock" to gson.toJson(contentBlock)
+                            "contentBlock" to ExponeaGson.instance.toJson(contentBlock)
                     )
                     invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
                 }
