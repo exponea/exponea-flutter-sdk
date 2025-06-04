@@ -4,7 +4,7 @@
 
     <application>
         <meta-data android:name="ExponeaFlutterSDK" android:value="true" />
-        <meta-data android:name="ExponeaFlutterSDKVersion" android:value="2.0.0" />
+        <meta-data android:name="ExponeaFlutterSDKVersion" android:value="2.1.0" />
         <receiver
             android:name=".ExponeaPushReceiver"
             android:enabled="true"

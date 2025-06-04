@@ -11,6 +11,22 @@ parentDocSlug: flutter-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 2.1.0
+#### TODO: TBD
+* Added:
+  * Adds support for multiple In-App Content Blocks in the same placeholder through InAppContentBlockCarousel. The SDK will loop through the content blocks one at a time in order of the configured Priority.
+  * Adds support for AppInboxDetailView and AppInboxListView as widgets for integrating App Inbox into Flutter apps.
+  * Adds requirePushAuthorization, allowWebCookies, and appInboxDetailImageInset Android-specific parameters to the configuration.
+  * Adds rich styling support for native in-app messages.
+  * Adds Segmentation API feature support
+  * Updates native Android SDK to version 4.4.0.
+  * Updates native iOS SDK to version 3.5.1.
+  * Adds minor documentation improvements.
+  * Increases the minimum supported Android API level to 24.
+* Fixed:
+  * Fixes an issue where, in certain scenarios, the app would crash while parsing In-App message during manual tracking.
+  * Fixes and updates some links in the documentation.
+
 ## Release Notes for 2.0.0
 #### December 13, 2024
 * Added:
@@ -25,7 +41,6 @@ parentDocSlug: flutter-sdk
   * Fixes an issue on iOS where an empty App Inbox caused click events to be passed to the underlying app.
   * Fixes an issue where, in certain scenarios, the app would crash while parsing Recommendations .
 
-## Release Notes
 ## Release Notes for 1.7.0
 #### August 07, 2024
 * Added:
