@@ -110,6 +110,41 @@ void main() {
         expect(decoded.recommendationVariantId, expected.recommendationVariantId);
         expect(decoded.data, expected.data);
       });
+
+      test('data type normalization', () async {
+        // Test case for the inconsistent data types issue
+        final testData = {
+          "engineName": "test-engine",
+          "itemId": "test-item",
+          "recommendationId": "test-rec-id",
+          "recommendationVariantId": "test-variant-id",
+          "data": '{"sku_id": 60583300, "product_code": "60583300", "available": 101, "product_id": "05154586", "price": 6.9, "title": "Soft Lemon Scented Candle"}'
+        };
+
+        final decoded = decode(testData);
+
+        // Verify that sku_id is converted to string
+        expect(decoded.data['sku_id'], isA<String>());
+        expect(decoded.data['sku_id'], '60583300');
+
+        // Verify that product_code is converted to string
+        expect(decoded.data['product_code'], isA<String>());
+        expect(decoded.data['product_code'], '60583300');
+
+        // Verify that available is converted to string
+        expect(decoded.data['available'], isA<String>());
+        expect(decoded.data['available'], '101');
+
+        // Verify that product_id remains a string
+        expect(decoded.data['product_id'], isA<String>());
+        expect(decoded.data['product_id'], '05154586');
+
+        // Verify that other fields maintain their original types
+        expect(decoded.data['price'], isA<double>());
+        expect(decoded.data['price'], 6.9);
+        expect(decoded.data['title'], isA<String>());
+        expect(decoded.data['title'], 'Soft Lemon Scented Candle');
+      });
     });
   });
 

@@ -34,15 +34,47 @@ abstract class RecommendationOptionsEncoder {
 
 abstract class RecommendationEncoder {
   static Recommendation decode(Map<dynamic, dynamic> data) {
+    final rawData = jsonDecode(data.getRequired<String>('data'));
+    final normalizedData = _normalizeDataTypes(rawData);
+    
     return Recommendation(
       engineName: data.getRequired('engineName'),
       itemId: data.getRequired('itemId'),
       recommendationId: data.getRequired('recommendationId'),
       recommendationVariantId: data.getOptional('recommendationVariantId'),
-      data: jsonDecode(data
-          .getRequired<String>('data'))
-          .map<String, dynamic>((k, v) => MapEntry(k.toString(), v)),
+      data: normalizedData.map<String, dynamic>((k, v) => MapEntry(k.toString(), v)),
     );
+  }
+
+  /// Normalizes data types to ensure consistent field types
+  /// Fields like sku_id, product_code, and available are converted to Strings
+  static Map<String, dynamic> _normalizeDataTypes(Map<String, dynamic> data) {
+    final normalized = <String, dynamic>{};
+    
+    for (final entry in data.entries) {
+      final key = entry.key;
+      final value = entry.value;
+      
+      // List of fields that should always be strings
+      const stringFields = [
+        'sku_id',
+        'product_code',
+        'product_id',
+        'item_id',
+        'available',
+        // Add more fields here if needed
+      ];
+      
+      if (stringFields.contains(key) && value != null) {
+        // Convert to string if it's one of the specified fields
+        normalized[key] = value.toString();
+      } else {
+        // Keep original value for other fields
+        normalized[key] = value;
+      }
+    }
+    
+    return normalized;
   }
 
   static Map<String, dynamic> encode(Recommendation recommendation) {
