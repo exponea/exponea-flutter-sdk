@@ -12,7 +12,7 @@ parentDocSlug: flutter-sdk
 
 ## Release Notes
 ## Release Notes for 2.1.0
-#### TODO: TBD
+
 * Added:
   * Adds support for multiple In-App Content Blocks in the same placeholder through InAppContentBlockCarousel. The SDK will loop through the content blocks one at a time in order of the configured Priority.
   * Adds support for AppInboxDetailView and AppInboxListView as widgets for integrating App Inbox into Flutter apps.
