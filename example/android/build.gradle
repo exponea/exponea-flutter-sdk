@@ -5,15 +5,14 @@ buildscript {
         targetSdkVersion = 34
 
         androidGradlePluginVersion = '8.1.0'
-        kotlinVersion = '1.9.10'
         multidexVersion = '2.0.1'
         firebaseVersion = '23.0.0'
         agconnectVersion = '1.9.1.300'
         hmsVersion = '6.11.0.300'
-        googleServicesVersion = '4.3.14'
         exponeaSdkVersion = '4.4.0'
         gsonVersion = '2.10.1'
     }
+
     repositories {
         google()
         mavenCentral()
@@ -21,10 +20,10 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$androidGradlePluginVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "com.google.gms:google-services:$googleServicesVersion"
-        classpath "com.huawei.agconnect:agcp:$agconnectVersion"
+        if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains("hms")) {
+            classpath "com.android.tools.build:gradle:$androidGradlePluginVersion"
+            classpath "com.huawei.agconnect:agcp:$agconnectVersion"
+        }
     }
 }
 
