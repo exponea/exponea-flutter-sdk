@@ -39,7 +39,7 @@ Then run the following command:
 pod install
 ```
 
-The minimum supported iOS version for the SDK is 11.0. You may need to change the iOS version on the first line of your `ios/Podfile` to `platform :ios, '11.0'`, or higher.
+The minimum supported iOS version for the SDK is 13.0. You may need to change the iOS version on the first line of your `ios/Podfile` to `platform :ios, '13.0'`, or higher.
 
 ### Android setup
 
