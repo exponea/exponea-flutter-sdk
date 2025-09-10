@@ -29,7 +29,7 @@ android {
     }
 ```
 
-Minimal supported Android API level for Exponea SDK is 21.
+Minimal supported Android API level for Exponea SDK is 24.
 
 ## Documentation
 

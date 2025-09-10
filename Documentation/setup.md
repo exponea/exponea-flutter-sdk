@@ -43,14 +43,14 @@ The minimum supported iOS version for the SDK is 13.0. You may need to change th
 
 ### Android setup
 
-The minimum supported Android API level for the SDK is 21. You may need to set or update `minSdkVersion` in `android/app/build.gradle` to `21` or higher:
+The minimum supported Android API level for the SDK is 24. You may need to set or update `minSdkVersion` in `android/app/build.gradle` to `24` or higher:
 
 ```gradle
 android {
     ...
     defaultConfig {
         ...
-        minSdkVersion 21
+        minSdkVersion 24
     }
 ```
 
