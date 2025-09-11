@@ -5,7 +5,7 @@ Demonstrates how to use the exponea plugin.
 # flavors
 
 This example application contains 2 flavors: `gms` and `hms`.
-So make to use `---flavor gms` or `--flavor hms` when running the app.
+So make sure to use `---flavor gms` or `--flavor hms` when running the app.
 
 ## Getting Started
 
