@@ -1,6 +1,6 @@
 PODS:
   - AnyCodable-FlightSchool (0.6.3)
-  - app_links (0.0.2):
+  - app_links (6.4.1):
     - Flutter
   - exponea (0.0.1):
     - AnyCodable-FlightSchool (= 0.6.3)
@@ -18,6 +18,7 @@ PODS:
   - SwiftSoup (2.6.1)
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
@@ -27,7 +28,7 @@ DEPENDENCIES:
   - Nimble (= 9.2.1)
   - Quick (= 4.0.0)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -48,11 +49,11 @@ EXTERNAL SOURCES:
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 1c9890be5884140c60da5fde1b66380dec4c244a
-  app_links: 76b66b60cc809390ca1ad69bfd66b998d2387ac7
+  app_links: 3dbc685f76b1693c66a6d9dd1e9ab6f73d97dc0a
   exponea: 7e321207dfb1956669be5378abe658ec20129698
   ExponeaSDK: ca09bc8b3c84d272d8e9800837640fcacc09ce46
   ExponeaSDK-Notifications: 88cfbcb0cd2073336fa45eea3040789cdb4d343f
@@ -61,7 +62,7 @@ SPEC CHECKSUMS:
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   SwiftSoup: 5dd2c1b06afc964f30d99894af6ede22ede627aa
-  webview_flutter_wkwebview: 45a041c7831641076618876de3ba75c712860c6b
+  webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
 
 PODFILE CHECKSUM: 5ea6cb0516605bb32f8b8aedd76c324d9603f667
 
