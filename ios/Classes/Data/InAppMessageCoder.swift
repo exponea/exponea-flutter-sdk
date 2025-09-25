@@ -25,17 +25,8 @@ class InAppMessageCoder {
             "isHtml": source.isHtml,
             "hasTrackingConsent": source.hasTrackingConsent,
             "consentCategoryTracking": source.consentCategoryTracking,
-            "isRichText": getIsRichText(source)
+            "isRichText": source.isRichText
         ]
-    }
-    
-    static private func getIsRichText(_ message: InAppMessage) -> Bool {
-        guard let jsonData = try? JSONEncoder().encode(message),
-              let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: []),
-              let jsonDict = jsonObject as? [String: Any] else {
-            return false
-        }
-        return jsonDict["is_rich_text"] as? Bool ?? false
     }
     
     static func decode(_ source: [String:Any?]) throws -> InAppMessage {
