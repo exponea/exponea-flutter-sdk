@@ -1,6 +1,6 @@
 name: exponea_example
 description: Demonstrates how to use the exponea plugin.
-version: 2.1.0+1
+version: 2.2.0+1
 publish_to: 'none'
 
 environment:

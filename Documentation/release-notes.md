@@ -11,8 +11,19 @@ parentDocSlug: flutter-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
-## Release Notes for 2.1.0
+## Release Notes for 2.2.0
+#### October 2, 2025
+* Added:
+  * Replaces AppCenter with Sentry for internal telemetry usage
+  * Updates native Android SDK to version 4.5.0.
+  * Updates native iOS SDK to version 3.7.0.
+  * Adds minor documentation improvements.
+* Fixed:
+  * Fixes Xcode 26 build issues related to 'performAndWait' method.
+  * Fixes support of example app running on newer Flutter versions.
 
+## Release Notes for 2.1.0
+#### June 4, 2025
 * Added:
   * Adds support for multiple In-App Content Blocks in the same placeholder through InAppContentBlockCarousel. The SDK will loop through the content blocks one at a time in order of the configured Priority.
   * Adds support for AppInboxDetailView and AppInboxListView as widgets for integrating App Inbox into Flutter apps.
