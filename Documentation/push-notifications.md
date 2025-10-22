@@ -20,9 +20,46 @@ Push notifications can also be silent, used only to update the app’s interface
 
 ## Integration
 
-The Flutter SDK relies on the underlying native Android and iOS platforms to handle push notifications.
+The Flutter SDK relies on the underlying native Android and iOS platforms to handle push notifications. Use the checklist below to complete all required setup steps for both platforms.
 
-The following pages describe the steps for each platform to add the minimum push notification functionality (receive alert notifications) to your app.
+### Push notifications integration checklist
+
+Complete these steps in order to ensure reliable push notification delivery and accurate event tracking.
+
+1. **Set up native platform dependencies**
+   - [ ] Ensure your Flutter project is configured for both Android and iOS native integrations.
+
+2. **Android integration**
+   - [ ] Set up a Firebase project and add the `google-services.json` file to your Android project. Refer to the [Firebase Cloud Messaging guide](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase) for step-by-step instructions.
+   - [ ] Implement Firebase messaging by registering a `FirebaseMessagingService` subclass in your app.
+   - [ ] Configure the Firebase Cloud Messaging integration in the Engagement web app.
+   - [ ] Grant notification permission at runtime (required for Android 13+, API level 33+).
+   - [ ] Follow all steps described in the [Android push notifications guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android).
+
+3. **iOS integration**
+   - [ ] Obtain an Apple Push Notification service (APNs) authentication token signing key.
+   - [ ] Add and configure the APNs integration in the Engagement web app.
+   - [ ] Enable push capabilities, background modes, and app groups in your app using Xcode.
+   - [ ] Extend your app's `AppDelegate` with `ExponeaFlutterAppDelegate` to handle push notification events.
+   - [ ] Request notification permission on application startup.
+   - [ ] Complete the setup steps in the [iOS push notifications guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios).
+
+4. **SDK self-check (optional but recommended)**
+   - [ ] Before initializing the SDK, call `ExponeaPlugin().checkPushSetup()` on each platform to verify a successful push setup.
+
+5. **Test your implementation**
+   - [ ] Send test push notifications from the Engagement web app and confirm delivery, receipt, and interaction tracking in your app.
+   - [ ] Register listeners (`openedPushStream`, `receivedPushStream`) to handle notification interactions and delivery events.
+
+6. **Refer to platform-specific documentation**
+   - [ ] For advanced configuration, troubleshooting, or additional features, consult:
+     - [Android (Firebase) setup guide](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase)
+     - [iOS setup guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
+     - [Flutter SDK push notifications documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) for customization, deep linking, and event tracking.
+
+### Platform-specific integration guides
+
+The following pages describe the steps for each platform to add the minimum push notification functionality (receive alert notifications) to your app:
 
 - [Android push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android)
 - [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
