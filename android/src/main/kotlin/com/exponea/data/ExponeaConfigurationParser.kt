@@ -57,6 +57,9 @@ class ExponeaConfigurationParser {
             map.getOptional<Boolean>("manualSessionAutoClose")?.let {
                 manualSessionAutoClose = it
             }
+            map.getOptional<String>("applicationId")?.let {
+                applicationId = it
+            }
         }
     }
 

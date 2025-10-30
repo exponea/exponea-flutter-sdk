@@ -18,6 +18,7 @@ class ExponeaConfiguration {
     var advancedAuthEnabled: Bool? = nil
     var inAppContentBlockPlaceholdersAutoLoad: [String]? = nil
     var manualSessionAutoClose: Bool = true
+    var applicationId: String? = nil
     
     init(_ data: [String: Any?], parser: ConfigurationParser) throws {
         self.projectSettings = try parser.parseProjectSettings(data)
@@ -36,6 +37,9 @@ class ExponeaConfiguration {
         }
         if let manualSessionAutoClose = data["manualSessionAutoClose"] as? Bool {
             self.manualSessionAutoClose = manualSessionAutoClose
+        }
+        if let applicationId = data["applicationId"] as? String {
+            self.applicationId = applicationId
         }
     }
 }

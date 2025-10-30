@@ -37,6 +37,7 @@ abstract class ExponeaConfigurationEncoder {
           ?.map((it) => it.toString())
           .toList(growable: false),
       manualSessionAutoClose: data.getOptional('manualSessionAutoClose'),
+      applicationId: data.getOptional('applicationId')
     );
   }
 
@@ -60,6 +61,7 @@ abstract class ExponeaConfigurationEncoder {
       'ios': config.ios?.let(IOSExponeaConfigurationEncoder.encode),
       'inAppContentBlockPlaceholdersAutoLoad': config.inAppContentBlockPlaceholdersAutoLoad,
       'manualSessionAutoClose' : config.manualSessionAutoClose,
+      'applicationId' : config.applicationId
     }..removeWhere((key, value) => value == null);
   }
 }

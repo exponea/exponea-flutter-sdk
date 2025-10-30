@@ -27,12 +27,14 @@ class _ConfigPageState extends State<ConfigPage> {
   static const _spKeyAdvancedAuth = 'advanced_auth_token';
   static const _spKeyBaseUrl = 'base_url';
   static const _spKeySessionTracking = 'session_tracking';
+  static const _spKeyApplicationId = 'application_id';
 
   final _loading = ValueNotifier(false);
   late final TextEditingController _projectTokenController;
   late final TextEditingController _authTokenController;
   late final TextEditingController _advancedAuthTokenController;
   late final TextEditingController _baseUrlController;
+  late final TextEditingController _applicationIdController;
   late final ValueNotifier<bool> _sessionTrackingController;
 
   Future<int?> getAndroidPushIcon() async {
@@ -49,12 +51,14 @@ class _ConfigPageState extends State<ConfigPage> {
     _authTokenController = TextEditingController(text: '');
     _advancedAuthTokenController = TextEditingController(text: '');
     _baseUrlController = TextEditingController(text: '');
+    _applicationIdController = TextEditingController(text: '');
     _sessionTrackingController = ValueNotifier(true);
     SharedPreferences.getInstance().then((sp) async {
       _projectTokenController.text = sp.getString(_spKeyProject) ?? '';
       _authTokenController.text = sp.getString(_spKeyAuth) ?? '';
       _advancedAuthTokenController.text = sp.getString(_spKeyAdvancedAuth) ?? '';
       _baseUrlController.text = sp.getString(_spKeyBaseUrl) ?? '';
+      _applicationIdController.text = sp.getString(_spKeyApplicationId) ?? '';
       _sessionTrackingController.value =
           sp.getBool(_spKeySessionTracking) ?? true;
     });
@@ -99,6 +103,12 @@ class _ConfigPageState extends State<ConfigPage> {
                     decoration: const InputDecoration(labelText: 'Base URL'),
                   ),
                 ),
+                ListTile(
+                  title: TextField(
+                    controller: _applicationIdController,
+                    decoration: const InputDecoration(labelText: 'Application ID'),
+                  ),
+                ),
                 ValueListenableBuilder<bool>(
                   valueListenable: _sessionTrackingController,
                   builder: (context, enabled, _) => SwitchListTile(
@@ -136,6 +146,7 @@ class _ConfigPageState extends State<ConfigPage> {
     final rawBaseUrl = _baseUrlController.text.trim();
     final baseUrl = rawBaseUrl.isNotEmpty ? rawBaseUrl : null;
     final sessionTracking = _sessionTrackingController.value;
+    final applicationId = _applicationIdController.text.trim();
 
     final sp = await SharedPreferences.getInstance();
     await sp.setString(_spKeyProject, projectToken);
@@ -143,6 +154,7 @@ class _ConfigPageState extends State<ConfigPage> {
     await sp.setString(_spKeyAdvancedAuth, advancedAuthToken);
     await sp.setString(_spKeyBaseUrl, rawBaseUrl);
     await sp.setBool(_spKeySessionTracking, sessionTracking);
+    await sp.setString(_spKeyApplicationId, applicationId);
 
     final config = ExponeaConfiguration(
       projectToken: projectToken,
@@ -183,7 +195,8 @@ class _ConfigPageState extends State<ConfigPage> {
       ios: const IOSExponeaConfiguration(
         appGroup: 'group.com.exponea.ExponeaSDK-Example2',
       ),
-      inAppContentBlockPlaceholdersAutoLoad: const ['example_top', 'example_list']
+      inAppContentBlockPlaceholdersAutoLoad: const ['example_top', 'example_list'],
+      applicationId: applicationId.isNotEmpty ? applicationId : null
     );
     try {
       _plugin.setAppInboxProvider(AppInboxStyle(

@@ -36,6 +36,10 @@ final config = ExponeaConfiguration(
 final configured = await _plugin.configure(config);
 ```
 
+> ❗️
+>
+> Now you need to specify your `applicationId`. Refer to the [Configure application ID](#configure-application-id) for further information.
+
 ## Customer token authorization
 
 Customer token authorization is optional and provides [private API access](https://documentation.bloomreach.com/engagement/docs/authentication#private-api-access) to select Engagement API endpoints. The [customer token](https://documentation.bloomreach.com/engagement/docs/customer-token) contains encoded customer IDs and a signature. When the Bloomreach Engagement API receives a customer token, it first verifies the signature and only processes the request if the signature is valid.
@@ -59,6 +63,11 @@ final config = ExponeaConfiguration(
 );
 final configured = await _plugin.configure(config);
 ```
+
+> ❗️
+>
+> Now you need to specify your `applicationId`. Refer to the [Configure application ID](#configure-application-id) for further information.
+
 
 Additionally, developers must implement an authorization provider that provides a valid JWT token that encodes the relevant customer ID(s) and private API key ID. You must implement a different provider in native code for each platform.
 
@@ -246,3 +255,18 @@ public class ExampleAuthProvider: NSObject, AuthorizationProviderType {
 > ❗️
 >
 > A customer token is valid until its expiration and is assigned to the current customer IDs. Bear in mind that if customer IDs change (due to invoking the `identifyCustomer` or `anonymize` methods), the customer token may become invalid for future HTTP requests invoked for new customer IDs.
+
+
+## Configure application ID
+
+**Multiple mobile apps:** If your Engagement project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
+
+```dart
+final configuration = ExponeaConfiguration(
+...
+applicationId: '<Your application id>',
+...
+```
+Make sure your `applicationId` value matches exactly what you've defined in your Engagement project settings.
+
+**Single mobile app:** If your Engagement project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".

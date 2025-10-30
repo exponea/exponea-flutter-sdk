@@ -1146,11 +1146,16 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                 flushingSetup: config.flushingSetup,
                 allowDefaultCustomerProperties: config.allowDefaultCustomerProperties,
                 advancedAuthEnabled: config.advancedAuthEnabled, 
-                manualSessionAutoClose: config.manualSessionAutoClose
+                manualSessionAutoClose: config.manualSessionAutoClose,
+                applicationID: config.applicationId
             )
-            exponeaInstance.pushNotificationsDelegate = self
-            exponeaInstance.inAppMessagesDelegate = InAppMessageActionStreamHandler.currentInstance
-            result(true)
+            if (!exponeaInstance.isConfigured) {
+                result(FlutterError(code: errorCode, message: ExponeaError.configurationError.errorDescription, details: nil))
+            } else {
+                exponeaInstance.pushNotificationsDelegate = self
+                exponeaInstance.inAppMessagesDelegate = InAppMessageActionStreamHandler.currentInstance
+                result(true)
+            }
         } catch {
             let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)

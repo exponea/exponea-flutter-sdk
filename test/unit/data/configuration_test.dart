@@ -75,6 +75,7 @@ void main() {
             requirePushAuthorization: false,
             appGroup: 'mock-app-group',
           ),
+          applicationId: 'default-application'
         );
 
         expect(encode(config), defaultSession);
@@ -128,6 +129,7 @@ void main() {
             requirePushAuthorization: false,
             appGroup: 'mock-app-group',
           ),
+            applicationId: 'default-application'
         );
 
         expect(encode(config), fullData);

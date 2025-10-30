@@ -52,7 +52,8 @@
     "ios": {
       "requirePushAuthorization": false,
       "appGroup": "mock-app-group"
-    }
+    },
+    "applicationId": "default-application"
   },
   {
     "projectToken": "mock-project-token",
@@ -102,6 +103,7 @@
     "ios": {
       "requirePushAuthorization": false,
       "appGroup": "mock-app-group"
-    }
+    },
+    "applicationId": "default-application"
   }
 ]

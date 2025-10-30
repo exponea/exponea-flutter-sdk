@@ -58,6 +58,9 @@ class ExponeaConfiguration {
   /// If true, `session_end` is automatically tracked for current open session when next `trackSessionStart()` is called
   final bool? manualSessionAutoClose;
 
+  /// If null, 'applicationId' with default value 'default-application' will be used. Otherwise 'applicationId' must be in specific format see Documentation/configuration.md for more details.
+  final String? applicationId;
+
   const ExponeaConfiguration({
     required this.projectToken,
     required this.authorizationToken,
@@ -75,6 +78,7 @@ class ExponeaConfiguration {
     this.ios,
     this.inAppContentBlockPlaceholdersAutoLoad,
     this.manualSessionAutoClose,
+    this.applicationId
   });
 }
 
