@@ -1457,7 +1457,7 @@ extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
     }
 
     @objc
-    static func continueUserActivity(_ userActivity: NSUserActivity) {
+    public static func continueUserActivity(_ userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
             let incomingURL = userActivity.webpageURL
             else { return }
