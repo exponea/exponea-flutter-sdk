@@ -11,6 +11,16 @@ parentDocSlug: flutter-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 2.3.0
+#### November 03, 2025
+* Added:
+  * Adds support for Multiple mobile apps/devices feature. 
+  * Replaces age with timestamp in specific requests. 
+  * Updates native Android SDK to version 4.7.0. 
+  * Updates native iOS SDK to version 3.8.2. 
+  * Expands the integration section with a checklist to help users navigate between multiple steps in the documentation. 
+  * Makes SwiftExponeaPlugin.continueUserActivity public.
+
 ## Release Notes for 2.2.0
 #### October 2, 2025
 * Added:
