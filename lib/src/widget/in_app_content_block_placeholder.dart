@@ -182,7 +182,7 @@ class _InAppContentBlockPlaceholderState extends State<InAppContentBlockPlacehol
           height: min(_height, widget.maxHeight ?? double.infinity),
           child: WebViewWidget(
             controller: controller,
-            gestureRecognizers: {}..add(Factory(() => VerticalDragGestureRecognizer())),
+            gestureRecognizers: {},
           ),
         ),
       ],
