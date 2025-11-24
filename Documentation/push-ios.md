@@ -14,6 +14,10 @@ The Flutter SDK relies on the native iOS SDK to handle push notifications on iOS
 >
 > To enable the setup check, call `ExponeaPlugin().checkPushSetup()` **before** [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk):
 
+> ❗️Important
+>
+> SDK versions 2.3.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#token-tracking-via-notification_state-event).
+
 > ❗️
 >
 > The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.

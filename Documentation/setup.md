@@ -86,7 +86,7 @@ _plugin.configure(configuration).catchError((error) {
 });
 ```
 
-Configure application ID:
+#### Configure application ID
 
 **Multiple mobile apps:** If your Engagement project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
 
@@ -98,7 +98,7 @@ final configuration = ExponeaConfiguration(
     ...
 ```
 
-Make sure your `applicationId` value matches exactly what you've defined in your Engagement project settings.
+Make sure your `applicationId` value matches exactly Application ID configured in your Bloomreach Engagement under **Project Settings > Campaigns > Channels > Push Notifications.**
 
 **Single mobile app:** If your Engagement project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".
 
