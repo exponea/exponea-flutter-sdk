@@ -9,7 +9,7 @@ buildscript {
         firebaseVersion = '23.0.0'
         agconnectVersion = '1.9.1.300'
         hmsVersion = '6.11.0.300'
-        exponeaSdkVersion = '4.7.0'
+        exponeaSdkVersion = '4.8.0'
         gsonVersion = '2.10.1'
     }
 
