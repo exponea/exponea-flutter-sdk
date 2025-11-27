@@ -1,7 +1,7 @@
 name: exponea
 description: >-
   A full featured wrapper for Exponea SDK that supports Android and iOS.
-version: 2.3.0
+version: 2.4.0
 homepage: https://exponea.com
 repository: https://github.com/exponea/exponea-flutter-sdk
 
