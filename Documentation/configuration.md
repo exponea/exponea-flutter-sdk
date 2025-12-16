@@ -19,12 +19,12 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
 * `projectToken` **(required)**
    * Your project token. You can find this in the Engagement web app under `Project settings` > `Access management` > `API`.
 
-* `authorization` **(required)**
+* `authorizationToken` **(required)**
    * Your Engagement API key.
    * The token must be an Engagement **public** key. See [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
    * For more information, refer to [Exponea API documentation](https://docs.exponea.com/reference#access-keys).
 
-* `baseURL`
+* `baseUrl`
   * Your API base URL which can be found in the Engagement web app under `Project settings` > `Access management` > `API`.
   * Default value `https://api.exponea.com`.
   * If you have custom base URL, you must set this property.
@@ -48,6 +48,10 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
   * A list of properties to include in all tracking events.
   * You can change these properties at runtime by calling `ExponeaPlugin().setDefaultProperties()`.
   * You can also override default session event properties. For example, if you don't want to track the customer's IP address, you can include the property `ip` with an empty string value.
+
+* `allowDefaultCustomerProperties`
+  * Flag to apply `defaultProperties` list to `identifyCustomer` tracking event
+  * Default value: `true`
 
 * `automaticSessionTracking`
   * Flag to control the automatic tracking of `session_start` and `session_end` events.
@@ -84,6 +88,10 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
 
 * `inAppContentBlockPlaceholdersAutoLoad`
   * Automatically load the contents of in-app content blocks assigned to these Placeholder IDs.
+
+* `manualSessionAutoClose`
+  * Determines whether the SDK automatically tracks `session_end` for sessions that remain open when `ExponeaPlugin().trackSessionStart()` is called multiple times in manual session tracking mode.
+  * Default value: `true`
 
 * `applicationId`
   * This `applicationId` defines a unique identifier for the mobile app within the Engagement project. Change this value only if your Engagement project contains and supports multiple mobile apps.
