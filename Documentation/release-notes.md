@@ -11,6 +11,15 @@ parentDocSlug: flutter-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 2.4.1
+#### January 5, 2026
+* Updates configuration documentation:
+  * Corrects `authorization` reference to `authorizationToken`.
+  * Corrects `baseURL` reference to `baseUrl`.
+  * Adds missing reference to `allowDefaultCustomerProperties`.
+  * Adds missing reference to `manualSessionAutoClose`.
+* Updates Example App's application and bundle ID and Firebase Cloud Messaging (FCM)/Huawei Mobile Services (HMS) integration configuration.
+
 ## Release Notes for 2.4.0
 #### November 27, 2025
 * Added:
