@@ -1,18 +1,15 @@
 import 'package:exponea/exponea.dart';
+import 'package:exponea_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _plugin = ExponeaPlugin();
 
-typedef ConfigCallback = void Function(ExponeaConfiguration configuration);
-
 class ConfigPage extends StatefulWidget {
-  final ConfigCallback doneCallback;
 
   const ConfigPage({
-    Key? key,
-    required this.doneCallback,
+    Key? key
   }) : super(key: key);
 
   @override
@@ -120,14 +117,25 @@ class _ConfigPageState extends State<ConfigPage> {
                 ),
                 const Spacer(),
                 ValueListenableBuilder<bool>(
-                  valueListenable: _loading,
-                  builder: (context, loading, _) => loading
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: () => _configure(context),
-                          child: const Text('Configure'),
-                        ),
+                    valueListenable: _loading,
+                    builder: (context, loading, _) => loading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () => _configure(context),
+                            child: const Text('Configure'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black,
+                            )
+                    )
                 ),
+                const SizedBox(height: 15),
+                ElevatedButton(
+                    onPressed: () => _clearLocalCustomerData(context),
+                    child: const Text('Clear Local Data'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.red
+                    )
+                )
               ],
             ),
           ),
@@ -248,7 +256,7 @@ class _ConfigPageState extends State<ConfigPage> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       _plugin.setLogLevel(LogLevel.verbose);
-      widget.doneCallback.call(config);
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (route) => false, arguments: config);
     } on PlatformException catch (err) {
       final snackBar = SnackBar(
         content: Text('Configuration failed: $err'),
@@ -256,5 +264,24 @@ class _ConfigPageState extends State<ConfigPage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     _loading.value = false;
+  }
+
+  Future<void> _clearLocalCustomerData(BuildContext context) async {
+    try{
+      await _plugin.clearLocalCustomerData(appGroup: "group.com.exponea.ExponeaSDK-Example2");
+      const String message = "Sdk has been cleared";
+      print(message);
+      const snackBar = SnackBar(
+        content: Text(message),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on PlatformException catch (err) {
+      String message = 'Error: Clearing local customer data failed $err';
+      print(message);
+      final snackBar = SnackBar(
+        content: Text(message),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }

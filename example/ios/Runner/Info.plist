@@ -72,5 +72,18 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+            <key>CFBundleURLName</key>
+		    <string>com.exponea.sdk.example</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>exponea</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

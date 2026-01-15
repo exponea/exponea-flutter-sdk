@@ -69,6 +69,8 @@ enum METHOD_NAME: String {
     case getSegments = "getSegments"
     case registerSegmentationDataStream = "registerSegmentationDataStream"
     case unregisterSegmentationDataStream = "unregisterSegmentationDataStream"
+    case methodStopIntegration = "stopIntegration"
+    case methodClearLocalCustomerData = "clearLocalCustomerData"
 }
 
 
@@ -454,6 +456,10 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             registerSegmentationDataStream(call.arguments, with: result)
         case .unregisterSegmentationDataStream:
             unregisterSegmentationDataStream(call.arguments, with: result)
+        case .methodStopIntegration:
+            stopIntegration(with: result)
+        case .methodClearLocalCustomerData:
+            clearLocalCustomerData(call.arguments, with: result)
         }
     }
     
@@ -1413,6 +1419,24 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         return true
     }
 
+    private func stopIntegration(with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        exponeaInstance.stopIntegration()
+        result(nil)
+    }
+
+    private func clearLocalCustomerData(_ args: Any?, with result: FlutterResult) {
+        guard requireNotConfigured(with: result) else { return }
+        do{
+            let data = args as? NSDictionary
+            let appGroup: String = try data?.getOptionalSafely(property: "appGroup") ?? Constants.General.userDefaultsSuite
+            exponeaInstance.clearLocalCustomerData(appGroup: appGroup)
+            result(nil)
+        } catch {
+            let error = FlutterError(code: errorCode, message: "Clear local customer data failed", details: nil)
+            result(error)
+        }
+    }
 }
 
 extension SwiftExponeaPlugin: PushNotificationManagerDelegate {

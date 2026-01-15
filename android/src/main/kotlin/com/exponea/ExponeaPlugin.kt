@@ -254,6 +254,8 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_GET_SEGMENTS = "getSegments"
         private const val METHOD_REGISTER_SEGMENTATION_DATA_STREAM = "registerSegmentationDataStream"
         private const val METHOD_UNREGISTER_SEGMENTATION_DATA_STREAM = "unregisterSegmentationDataStream"
+        private const val METHOD_STOP_INTEGRATION = "stopIntegration"
+        private const val METHOD_CLEAR_LOCAL_CUSTOMER_DATA = "clearLocalCustomerData"
     }
 
     var activity: Context? = null
@@ -438,6 +440,12 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_UNREGISTER_SEGMENTATION_DATA_STREAM -> {
                 unregisterSegmentationDataStream(call.arguments, result)
+            }
+            METHOD_STOP_INTEGRATION -> {
+                stopIntegration(result)
+            }
+            METHOD_CLEAR_LOCAL_CUSTOMER_DATA -> {
+                clearLocalCustomerData(call.arguments, result)
             }
             else -> {
                 result.notImplemented()
@@ -1036,6 +1044,16 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         val configMap = args as Map<String, Any?>
         val appInboxStyle = AppInboxStyleParser(configMap).parse()
         Exponea.appInboxProvider = StyledAppInboxProvider(appInboxStyle)
+    }
+
+    private fun stopIntegration(result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        Exponea.stopIntegration()
+    }
+
+    private fun clearLocalCustomerData(args: Any?, result: Result) = runWithNoResult(result) {
+        requireNotConfigured()
+        Exponea.clearLocalCustomerData()
     }
 }
 

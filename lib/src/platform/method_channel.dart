@@ -81,6 +81,8 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _getSegments = 'getSegments';
   static const _registerSegmentationDataStream = 'registerSegmentationDataStream';
   static const _unregisterSegmentationDataStream = 'unregisterSegmentationDataStream';
+  static const _methodStopIntegration = 'stopIntegration';
+  static const _methodClearLocalCustomerData = 'clearLocalCustomerData';
 
   late SegmentationStreamDataHandler _segmentationStreamDataHandler;
   Stream<OpenedPush>? _openedPushStream;
@@ -537,5 +539,15 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
 
   Future<void> unregisterSegmentationDataStream(String instanceId) async {
     await _channel.invokeMethod<void>(_unregisterSegmentationDataStream, {'instanceId': instanceId});
+  }
+
+  @override
+  Future<void> stopIntegration() async {
+    await _channel.invokeMethod<void>(_methodStopIntegration);
+  }
+
+  @override
+  Future<void> clearLocalCustomerData({String? appGroup}) async {
+    await _channel.invokeMethod<void>(_methodClearLocalCustomerData, {'appGroup': appGroup});
   }
 }

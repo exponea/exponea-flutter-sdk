@@ -328,4 +328,14 @@ abstract class ExponeaPlatform extends PlatformInterface
 
   @override
   Stream<InAppMessageAction> inAppMessageActionStream({bool overrideDefaultBehavior = false, bool trackActions = true}) => throw UnimplementedError();
+
+  @override
+  Future<void> stopIntegration() async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> clearLocalCustomerData({String? appGroup}) async {
+    throw UnimplementedError();
+  }
 }

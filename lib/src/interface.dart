@@ -217,4 +217,11 @@ abstract class BaseInterface {
 
   /// Returns stream segments for the exposing category
   Future<Stream<List<Map<String, String>>>> segmentationDataStream(String exposingCategory, {bool includeFirstLoad = false});
+
+  /// Stops the SDK completely, clears all local data, and disables any further tracking until reinitialized
+  Future<void> stopIntegration();
+
+  /// Removes all locally stored customer data (IDs, tokens, cache) so the SDK starts fresh
+  /// NOTE: Android doesn't support using appGroup
+  Future<void> clearLocalCustomerData({String? appGroup});
 }

@@ -235,4 +235,10 @@ class ExponeaPlugin implements BaseInterface {
   @override
   Future<Stream<List<Map<String, String>>>> segmentationDataStream(String exposingCategory, {bool includeFirstLoad = false}) =>
       _platform.segmentationDataStream(exposingCategory, includeFirstLoad: includeFirstLoad);
+
+  @override
+  Future<void> stopIntegration() => _platform.stopIntegration();
+
+  @override
+  Future<void> clearLocalCustomerData({String? appGroup}) => _platform.clearLocalCustomerData(appGroup: appGroup);
 }

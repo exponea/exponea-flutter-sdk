@@ -22,6 +22,18 @@ Additionally, you can track any custom event relevant to your business.
 >
 > Also see [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at Bloomreach Support Help Center.
 
+> ❗️ Protect the privacy of your customers
+>
+> Make sure you have obtained and stored tracking consent from your customer before initializing Exponea Flutter SDK.
+>
+> To ensure you're not tracking events without the customer's consent, you can use `ExponeaPlugin().clearLocalCustomerData(appGroup)` when a customer opts out from tracking (this applies to new users or returning customers who have previously opted out). This will bring the SDK to a state as if it was never initialized. This option also prevents reusing existing cookies for returning customers.
+>
+> Refer to [Clear local customer data](#clear-local-customer-data) for details.
+>
+> If customer denied tracking consent after Exponea Flutter SDK is initialized, you can use `ExponeaPlugin().stopIntegration()` to stop SDK integration and remove all locally stored data.
+>
+> Refer to [Stop SDK integration](#stop-sdk-integration) for details.
+
 > 👍
 >
 > All examples on this page assume the `ExponeaPlugin` is available as `_plugin`. Refer to [Initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk) for details.
@@ -110,6 +122,17 @@ Use the `identifyCustomer()` method with a `Customer` object as an argument to i
 The default hard ID is `registered` and its value is typically the customer's email address. However, your Engagement project may define a different hard ID.
 
 Optionally, you can track additional customer properties such as first and last names, age, etc.
+
+#### Customer identification and local data
+
+The SDK stores customer data, including the hard ID, in a local cache on the device. If you need to remove the hard ID from local storage, call [anonymize](#anonymize) in your app.
+
+Although you can use `identifyCustomer` with a [soft ID](https://documentation.bloomreach.com/engagement/docs/customer-identification#section-soft-id), use caution—especially after anonymization. In some cases, this can unintentionally associate the current user with the wrong customer profile.
+
+> ❗️Warning
+>
+> If a customer profile is anonymized or deleted in the Bloomreach Engagement web app, initializing the SDK again in the app can cause the profile to be reidentified or recreated from locally cached data. Always clear local data appropriately to prevent unintended profile recreation.
+
 
 #### Arguments
 
@@ -365,6 +388,166 @@ Pass the `PurchasedItem` to `trackPaymentEvent` as follows:
 ```dart
 ExponeaPlugin().trackPaymentEvent(item)
 ```
+
+## Clear local customer data
+
+Your application should always ask customers for consent to track their app usage. If the customer consents to tracking events at the application level but not at the personal data level, using the `anonymize()` method is usually sufficient.
+
+If the customer doesn't consent to any tracking, it's recommended not to initialize the SDK at all.
+
+If the customer requests deletion of personalized data before the SDK is initialized, use the `clearLocalCustomerData(appGroup)` method to remove all locally stored information. For details on the appGroup parameter, see [Using the appGroup parameter on iOS](#using-the-appgroup-parameter-on-ios)
+
+The customer may also revoke all tracking consent after the SDK is fully initialized and tracking is enabled. In this case, you can stop SDK integration and remove all locally stored data using the [stopIntegration](#stop-sdk-integration) method.
+
+Invoking this method will cause the SDK to:
+
+* Remove the push notification token for the current customer from local device storage.
+* Clear local repositories and caches, including all previously tracked events that haven't been flushed yet.
+* Clear all session start and end information.
+* Remove the customer record stored locally.
+* Clear any previously loaded in-app messages, in-app content blocks, and app inbox messages.
+* Clear the SDK configuration from the last invoked initialization.
+* Stop handling of received push notifications.
+* Stop tracking of deep links and universal links (your app's handling of them isn't affected).
+
+### Using the appGroup parameter on iOS
+The `clearLocalCustomerData()` method includes an optional appGroup parameter:
+* On iOS, set this parameter to match the application group identifier configured for your app.
+* If your app uses multiple application groups, call the method separately for each group.
+* If your app doesn't use an application group, you can omit this parameter.
+* This parameter has no effect on Android.
+
+## Stop SDK integration
+
+Your application should always ask the customer for consent to track their app usage. If the customer consents to tracking of events at the application level but not at the personal data level, using the `anonymize()` method is normally sufficient.
+
+If the customer doesn't consent to any tracking before the SDK is initialized, it's recommended that the SDK isn't initialized at all. For the case of deleting personalized data before SDK initialization, see more info in the usage of the [clearLocalCustomerData](#clear-local-customer-data) method.
+
+The customer may also revoke all tracking consent later, after the SDK is fully initialized and tracking is enabled. In this case, you can stop SDK integration and remove all locally stored data by using the `ExponeaPlugin().stopIntegration()` method.
+
+Use the `stopIntegration()` method to delete all information stored locally and stop the SDK if it is already running.
+
+Invoking this method will cause the SDK to:
+
+* Remove the push notification token for the current customer from local device storage.
+* Clear local repositories and caches, including all previously tracked events that were not flushed yet.
+* Clear all session start and end information.
+* Remove the customer record stored locally.
+* Clear any In-app messages, In-app content blocks, and App inbox messages previously loaded.
+* Clear the SDK configuration from the last invoked initialization.
+* Stop handling of received push notifications.
+* Stop tracking of Deep links and Universal links (your app's handling of them is not affected).
+
+If the SDK is already running, invoking of this method also:
+
+* Stops and disables session start and session end tracking even if your application tries later on.
+* Stops and disables any tracking of events even if your application tries later on.
+* Stops and disables any flushing of tracked events even if your application tries later on.
+* Stops displaying of In-app messages, In-app content blocks, and App inbox messages.
+    * Already displayed messages are dismissed.
+    * Please validate dismiss behaviour if you [customized](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-app-inbox#customize-app-inbox) the App Inbox UI layout.
+
+After invoking the `stopIntegration()` method, the SDK will drop any API method invocation until you [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize_the_sdk) again.
+
+### Use cases
+
+Correct usage of `stopIntegration()` method depends on the use case so consider all scenarios.
+
+#### Request customer consent
+
+Always respect user privacy—not only to comply with regulations like GDPR, but also to build trust and deliver ethical digital experiences.
+
+When requesting permission in your mobile app, make sure your requests are clear, transparent, and relevant to the context. Clearly explain why you need the permission and ask for it only when necessary, so users can make an informed decision.
+
+You may use system dialog or in-app messages for that purpose.
+
+![](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/gdpr-dialog-example.png)
+
+In the case of the in-app message dialog, you can customize [In-app message action callback](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-messages#customize-in-app-message-actions) to handle the user's decision about allowing or denying tracking permission.
+
+```dart
+// If overrideDefaultBehavior is set to true, default in-app action will not be performed ( e.g. deep link )
+const overrideDefaultBehavior = false;
+// If trackActions is set to false, click and close in-app events will not be tracked automatically
+const trackActions = false;
+final subscription = _plugin.inAppMessageActionStream(overrideDefaultBehavior: overrideDefaultBehavior, trackActions: trackActions).listen((inAppMessageAction) {
+  if (<your-special-condition>) {
+    switch(inAppMessageAction.type) {
+      case InAppMessageActionType.click:
+        _plugin.trackInAppMessageClick(inAppMessageAction.message!, inAppMessageAction.button!);
+        break;
+      case InAppMessageActionType.close:
+        _plugin.trackInAppMessageClose(inAppMessageAction.message!, interaction: inAppMessageAction.interaction ?? true);
+        break;
+      case InAppMessageActionType.error:
+        // Here goes your code
+        break;
+      case InAppMessageActionType.show:
+        // Here goes your code
+        break;
+    }
+  }
+});
+```
+
+#### Stop the SDK but upload tracked data
+
+The SDK caches data (such as sessions, events, and customer properties) in an internal local database and periodically sends them to Bloomreach Engagement. These data are kept locally if the device has no network, or if you configured SDK to upload them less frequently.
+
+Invoking the `stopIntegration()` method will remove all these locally stored data that may not be uploaded yet. To avoid loss of these data, invoke request to flush them before stopping the SDK:
+
+```dart
+// Flushing requires that SDK is initialized
+final _plugin = ExponeaPlugin();
+_plugin.configure(...);
+// Invoke flush force-fully
+_plugin.setFlushMode(FlushMode.manual);
+await _plugin.flushData();
+// All data are uploaded, we may stop SDK
+_plugin.stopIntegration();
+```
+
+#### Stop the SDK and wipe all tracked data
+
+The SDK caches data (such as sessions, events, and customer properties) in an internal local database and periodically sends them to the Bloomreach Engagement app. These data are kept locally if the device has no network, or if you configured SDK to upload them less frequently.
+
+If a customer is removed from the Bloomreach Engagement platform, you may also need to remove their data from local storage.
+
+**Don't initialize the SDK after deleting the customer.** Depending on your configuration, initializing the SDK could trigger an upload of any locally stored events, which may unintentionally recreate the customer profile in Bloomreach Engagement using the stored customer IDs.
+
+To prevent this, invoke `stopIntegration()` immediately without initializing the SDK:
+
+```dart
+ExponeaPlugin().stopIntegration();
+```
+
+This results in all previously stored data being removed from the device. The next SDK initialization will be considered a fresh new start.
+
+#### Stop the already running SDK
+
+The method `stopIntegration()` can be invoked anytime on a configured and running SDK.
+
+This is useful if a customer initially consented to tracking but later revokes their consent. When consent is withdrawn, invoke `stopIntegration()` immediately to stop all tracking activities.
+
+```dart
+// User gave you permission to track
+final _plugin = ExponeaPlugin();
+_plugin.configure(...);
+
+// Later, user decides to stop tracking
+_plugin.stopIntegration()
+```
+
+This results in the SDK stopping all internal processes (such as session tracking and push notifications handling) and removing all locally stored data.
+
+> ❗️
+>
+> After calling `stopIntegration()`, the SDK will not track or upload any further data. If you need to upload any tracked data to Bloomreach Engagement before stopping the SDK, [flush the data synchronously](#stop-the-sdk-but-upload-tracked-data) before invoking `stopIntegration()`.
+
+#### Customer denies tracking consent
+
+Ask for the customer’s tracking consent as early as possible in your application. If the customer denies consent, don't initialize the SDK. This prevents any tracking or data storage from occurring.
+
 
 ## Default properties
 

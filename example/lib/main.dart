@@ -1,10 +1,19 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
+import 'package:exponea/exponea.dart';
 import 'package:exponea_example/page/config.dart';
 import 'package:exponea_example/page/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+
+final _plugin = ExponeaPlugin();
+
+class Routes {
+  static const String config = '/';
+  static const String home = '/home';
+}
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +28,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  final _navigatorKey = GlobalKey<NavigatorState>();
   StreamSubscription? _linkSub;
 
   @override
@@ -33,6 +43,8 @@ class _MyAppState extends State<MyApp> {
       final initialLink = await AppLinks().getInitialLink();
       if (initialLink != null) {
         _showSnackBarMessage('App opened with link: $initialLink');
+        print('App opened with link: $initialLink');
+        _handleStopIntegrationDeepLinks(initialLink.toString());
       }
     } on PlatformException catch (err) {
       // ignore: avoid_print
@@ -43,9 +55,22 @@ class _MyAppState extends State<MyApp> {
   void _handleIncomingLinks() {
     _linkSub = AppLinks().stringLinkStream.listen((String link) {
       _showSnackBarMessage('App resumed with link: $link');
+      print('App resumed with link: $link');
+      _handleStopIntegrationDeepLinks(link);
     }, onError: (err) {
       _showSnackBarMessage('App resume with link failed: $err');
     });
+  }
+
+  Future<void> _handleStopIntegrationDeepLinks(String link) async {
+    if (link.toLowerCase().contains("stopandcontinue")) {
+      print("Stop SDK and Continue: $link");
+      await _plugin.stopIntegration();
+    } else if (link.toLowerCase().contains("stopandrestart")) {
+      print("Stop SDK and Restart: $link");
+       await _plugin.stopIntegration();
+      _navigatorKey.currentState?.pushNamedAndRemoveUntil(Routes.config, (route) => false);
+    }
   }
 
   void _showSnackBarMessage(String text) {
@@ -62,6 +87,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       scaffoldMessengerKey: _scaffoldMessengerKey,
       theme: ThemeData.from(
         colorScheme: const ColorScheme.light(
@@ -69,19 +95,29 @@ class _MyAppState extends State<MyApp> {
           secondary: Colors.blueAccent,
         ),
       ),
-      home: Builder(
-        builder: (context) => ConfigPage(
-          doneCallback: (config) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => HomePage(config: config),
-              ),
-              (route) => false,
-            );
-          },
-        ),
-      ),
+      initialRoute: Routes.config,
+      onGenerateRoute: _onGenerateRoute,
       builder: (context, child) => child!,
     );
+  }
+
+  Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case Routes.config:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const ConfigPage(),
+        );
+
+      case Routes.home:
+        final config = settings.arguments as ExponeaConfiguration;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => HomePage(config: config),
+        );
+
+      default:
+        return null;
+    }
   }
 }

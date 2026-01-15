@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:exponea/exponea.dart';
+import 'package:exponea_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'app_inbox_list_page.dart';
 import 'in_app_cb_carousel_page.dart';
@@ -50,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     _openedPushSub = _plugin.openedPushStream.listen(_onPushEvent);
     _receivedPushSub = _plugin.receivedPushStream.listen(_onPushEvent);
     _inAppMessageActionSub = _plugin
-        .inAppMessageActionStream()
+        .inAppMessageActionStream(overrideDefaultBehavior: true)
         .listen(_onInAppMessageActionEvent);
     initializeSegmentationDataStreams();
     super.initState();
@@ -121,6 +123,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+                ),
+                ListTile(
+                  title: ElevatedButton(
+                      onPressed: () => _stopIntegration(context),
+                      child: const Text('Stop Integration'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      )),
                 ),
                 ListTile(
                   title: const Text('Default Properties'),
@@ -605,15 +615,163 @@ class _HomePageState extends State<HomePage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  Future<void> _stopIntegration(BuildContext context) =>
+      _runAndShowResult(context, () async {
+        await _plugin.stopIntegration();
+        showStopIntegrationInfoDialog(context);
+      });
+
   void _onPushEvent(dynamic push) {
     _pushController.value = '$push\nat: ${DateTime.now().toIso8601String()}';
   }
 
   void _onInAppMessageActionEvent(InAppMessageAction action) {
-    print('received in-app action: $action');
+
+    switch (action.type) {
+      case InAppMessageActionType.show:
+        _handleStopSDKInAppMessage(action.message);
+        break;
+      case InAppMessageActionType.click:
+        _handleGdprInAppMessage(action);
+        break;
+      case InAppMessageActionType.close:
+        _handleInAppMessageClose(action);
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _handleStopSDKInAppMessage(InAppMessage? message) {
+    if (message == null) return;
+
+    print('InApp message ${message.name} has been shown');
+
+    if (message.name.contains('StopSDK')) {
+      print('InApp message ${message.name} will stop SDK');
+
+      Future.delayed(const Duration(seconds: 4), () async {
+        print('Stopping SDK');
+        await _plugin.stopIntegration();
+      });
+    }
+  }
+
+  Future<void> _handleGdprInAppMessage(InAppMessageAction action) async {
+    final message = action.message;
+    final button = action.button;
+
+    if (message == null || button == null) return;
+
+    final url = button.url;
+    if (url == null || url.isEmpty) {
+      print('InApp message ${message.id} has invalid URL!');
+      return;
+    }
+
+    print('InApp action $url received for message ${message.id}');
+
+    _plugin.trackInAppMessageClick(message, button);
+
+    if(messageIsForGdpr(message)){
+        switch (url) {
+          case 'https://bloomreach.com/tracking/allow':
+            const event = Event(
+              name: 'gdpr',
+              properties: {'status': 'allowed'},
+            );
+            await _plugin.trackEvent(event);
+            break;
+          case 'https://bloomreach.com/tracking/deny':
+            print('Stopping SDK');
+            await _plugin.stopIntegration();
+            break;
+          default:
+            print('Unknown GDPR URL: $url');
+            break;
+        }
+      } else {
+        openUrl(url);
+      }
+    }
+  }
+
+  Future<void> openUrl(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print('Could not launch url: $url error: $e');
+    }
+  }
+
+  Future<void> _handleInAppMessageClose(InAppMessageAction action) async {
+    final message = action.message;
+    final button = action.button;
+    final interaction = action.interaction == true;
+
+    if (message == null) return;
+    print('InApp message ${message.id} closed by ${button?.text} with interaction: $interaction');
+
+    _plugin.trackInAppMessageClose(
+      message,
+      button: button,
+      interaction: interaction,
+    ).then(
+          (_) {
+        print('InApp message close track has been done successfully');
+      },
+      onError: (error) {
+        print("InApp message close track has been rejected with '$error'",);
+      },
+    );
+
+    if (messageIsForGdpr(message) && interaction) {
+      print('Stopping SDK');
+      await _plugin.stopIntegration();
+    }
+  }
+
+  bool messageIsForGdpr(InAppMessage message) {
+    final trigger = message.trigger;
+    if (trigger == null) return false;
+
+    if (trigger['event_type'] != 'event_name') return false;
+
+    final triggerFilter = trigger['filter'];
+    if (triggerFilter is! List) return false;
+
+    final value = triggerFilter.first?['constraint']?['operands']?[0]?['value'];
+    return value == 'gdpr';
   }
 
   void _onSegmentationDataEvent(String exposingCategory, List<Map<String, String>> data) {
     print('Segments: New for category $exposingCategory with IDs: $data');
   }
-}
+
+  void showStopIntegrationInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('SDK stopped!'),
+          content: Text("SDK has been de-integrated from your app. You may return app 'Back to Auth' to re-integrate or 'Continue' in using the app without an initialised SDK."),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Back to Auth'),
+              onPressed: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(Routes.config, (route) => false,);
+              },
+            ),
+            TextButton(
+              child: const Text('Continue'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+

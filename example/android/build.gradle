@@ -4,7 +4,7 @@ buildscript {
         compileSdkVersion = 36
         targetSdkVersion = 36
 
-        androidGradlePluginVersion = '8.6.0'
+        androidGradlePluginVersion = '8.9.1'
         multidexVersion = '2.0.1'
         firebaseVersion = '23.0.0'
         agconnectVersion = '1.9.1.300'
