@@ -1,5 +1,5 @@
 ---
-title: Example app
+title: Example app for Flutter SDK
 excerpt: Build, run, and navigate the example app included with the Flutter SDK
 slug: flutter-sdk-example-app
 categorySlug: integrations
@@ -64,9 +64,9 @@ You must have the following software installed to be able to build and run the e
 
 When you run the app in the simulator, you'll see the **ConfigPage**. 
 1. Enter your [project token, API token, and API base URL](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management).
-2. Optionally, enter `Application ID` if your Engagement project supports multiple mobile apps. If you leave this blank, the SDK uses the default value "default-application". [Learn more about configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
+2. Optionally, enter `Application ID` if your Engagement project supports multiple mobile apps. If you leave this blank, the SDK uses the default value "default-application". See [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for more.
 3. Optionally, disable `Automatic Session Tracking` using the switch (default enabled).
-4. Then click `Configure` to [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk).
+4. Then click `Configure` to [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk).
 > [`config.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/config.dart)
 
 The **HomePage** provides several buttons to test the different SDK features.

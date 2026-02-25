@@ -1,5 +1,5 @@
 ---
-title: SDK version update guide
+title: Flutter SDK version update guide
 excerpt: Update Exponea Flutter SDK in your app to a new version
 slug: flutter-sdk-version-update
 categorySlug: integrations
@@ -23,7 +23,7 @@ Each mobile application integrated with the SDK can now have its own unique `app
 - **Multiple mobile apps:** You must specify a unique `applicationId` for each app in the SDK configuration. The value must match the Application ID configured in Bloomreach Engagement under **Project Settings > Campaigns > Channels > Push Notifications.**
 - **Single mobile app:** If you use only one mobile application, you don't need to set `applicationId`. The SDK uses the default value `default-application` automatically.
 
-Learn more about [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) and [Configure Application ID](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#configure-application-id).
+Learn more about [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) and [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#configure-application-id).
 
 ## Update from version 1.x.x to 2.x.x
 

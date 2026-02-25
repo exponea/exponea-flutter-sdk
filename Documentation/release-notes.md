@@ -1,5 +1,5 @@
 ---
-title: Release notes
+title: Release notes for Flutter SDK
 excerpt: Exponea Flutter SDK release notes
 slug: flutter-sdk-release-notes
 categorySlug: integrations
@@ -8,7 +8,7 @@ parentDocSlug: flutter-sdk
 
 > 📘
 >
-> Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
+> Refer to the [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
 ## Release Notes for 2.4.1
@@ -23,7 +23,7 @@ parentDocSlug: flutter-sdk
 ## Release Notes for 2.4.0
 #### November 27, 2025
 * Added:
-  * Documents [major push notification updates](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update#update-to-version-230-or-higher): `notification_state` event as a new token tracking method, Application ID configuration, and migration requirements for the Multiple mobile apps feature.
+  * Documents [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update#update-to-version-230-or-higher) (major push notification updates): `notification_state` event as a new token tracking method, Application ID configuration, and migration requirements for the Multiple mobile apps feature.
   * Updates native Android SDK to version 4.8.0.
   * Updates native iOS SDK to version 3.9.0.
 * Fixed:

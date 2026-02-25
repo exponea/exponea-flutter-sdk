@@ -1,5 +1,5 @@
 ---
-title: Configuration
+title: Configuration for Flutter SDK
 excerpt: Full configuration reference for the Flutter SDK
 slug: flutter-sdk-configuration
 categorySlug: integrations

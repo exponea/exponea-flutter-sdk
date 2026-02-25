@@ -1,5 +1,5 @@
 ---
-title: Android push notifications
+title: Android push notifications for Flutter SDK
 excerpt: Enable push notifications on Android using the Flutter SDK
 slug: flutter-sdk-push-android
 categorySlug: integrations
@@ -16,11 +16,11 @@ The Flutter SDK relies on the [native Android SDK](https://documentation.bloomre
 
 > ❗️Important
 >
-> SDK versions 2.3.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#token-tracking-via-notification_state-event).
+> SDK versions 2.3.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#token-tracking-via-notification_state-event) (Token tracking via notification_state event).
 
 > ❗️
 >
-> The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.
+> The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [Tracking consent for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) for details.
 
 ## Integration
 
@@ -31,7 +31,7 @@ Exponea Android SDK supports the following integrations:
 
 ### Standard (Firebase) integration
 
-To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
+To be able to send [Push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
 
 1. Set up a Firebase project.
 2. Implement Firebase messaging in your app.
@@ -125,7 +125,7 @@ You must also define an intent filter that can respond to push notification's li
 
 By default, if a notification arrives while the app is in the foreground, the notification ends up in the notification drawer and a notification icon appears in the status bar.
 
-To enable notification banners while the app is in the foreground, you can set up a [listener for received push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#respond-to-received-push-notifications) using `ExponeaPlugin.receivedPushStream` and implement display of the notification banner using a third-party plugin such as [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications).
+To enable notification banners while the app is in the foreground, you can set up a listener for received push notifications (see [Push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#respond-to-received-push-notifications)) using `ExponeaPlugin.receivedPushStream` and implement display of the notification banner using a third-party plugin such as [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications).
 
 ```dart
 final subscription = _plugin.receivedPushStream.listen((receivedPush) {

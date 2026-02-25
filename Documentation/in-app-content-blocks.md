@@ -1,12 +1,12 @@
 ---
-title: In-app content blocks
+title: In-app content blocks for Flutter SDK
 excerpt: Display native in-app content blocks based on definitions set up in Engagement using the Flutter SDK
 slug: flutter-sdk-in-app-content-blocks
 categorySlug: integrations
 parentDocSlug: flutter-sdk-in-app-personalization
 ---
 
-In-app content blocks provide a way to display campaigns within your mobile applications that seamlessly blend with the overall app design. Unlike [in-app messages](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-messages) that appear as overlays or pop-ups demanding immediate attention, in-app content blocks display inline with the app's existing content.
+In-app content blocks provide a way to display campaigns within your mobile applications that seamlessly blend with the overall app design. Unlike [In-app messages for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-messages) that appear as overlays or pop-ups demanding immediate attention, in-app content blocks display inline with the app's existing content.
 
 You can strategically position placeholders for in-app content blocks within your app. You can customize the behavior and presentation to meet your specific requirements.
 
@@ -30,11 +30,11 @@ InAppContentBlockPlaceholder(
 )
 ```
 
-After the SDK [initializes](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk), it will identify any in-app content blocks with matching placeholder ID and select the one with the highest priority to display within the placeholder view.
+After the SDK initializes (see [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk)), it will identify any in-app content blocks with matching placeholder ID and select the one with the highest priority to display within the placeholder view.
 
 > 📘
 >
-> Refer to [in_app_cb_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_page.dart) in the [example app](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app) for a reference implementation.
+> Refer to [in_app_cb_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_page.dart) in the [Example app for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app) for a reference implementation.
 
 > 👍
 >
@@ -60,7 +60,7 @@ InAppContentBlockCarousel(
 
 > 📘
 >
-> Refer to [in_app_cb_carousel_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_carousel_page.dart) in the [example app](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app) for a reference implementation.
+> Refer to [in_app_cb_carousel_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_carousel_page.dart) in the [Example app for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app) for a reference implementation.
 
 > 👍
 >
@@ -82,7 +82,7 @@ The SDK automatically tracks `banner` events for in-app content blocks with the 
 
 > ❗️
 >
-> The behavior of in-app content block tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) documentation for details.
+> The behavior of in-app content block tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [Tracking consent for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) documentation for details.
 
 ## Customization
 
@@ -256,7 +256,7 @@ SingleChildScrollView(
 This section provides helpful pointers for troubleshooting in-app content block issues.
 
 > 👍 Enable verbose logging
-> The SDK logs a lot of information in verbose mode while loading in-app content blocks. When troubleshooting in-app content block issues, first ensure to [set the SDK's log level](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#log-level) to `verbose`.
+> The SDK logs a lot of information in verbose mode while loading in-app content blocks. When troubleshooting in-app content block issues, first ensure to set the SDK's log level (see [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#log-level)) to `verbose`.
 
 ### In-app content block not displayed
 

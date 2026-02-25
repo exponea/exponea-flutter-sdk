@@ -1,5 +1,5 @@
 ---
-title: In-app messages
+title: In-app messages for Flutter SDK
 excerpt: Display native in-app messages based on definitions set up in Engagement using the Flutter SDK
 slug: flutter-sdk-in-app-messages
 categorySlug: integrations
@@ -8,7 +8,7 @@ parentDocSlug: flutter-sdk-in-app-personalization
 
 The SDK enables you to display native in-app messages in your app based on definitions set up in Engagement. 
 
-In-app messages work out-of-the-box once the [SDK is installed and configured](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup) in your app; no development work is required. However, you can customize the behavior to meet your specific requirements.
+In-app messages work out-of-the-box once the SDK is installed and configured (see [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup)) in your app; no development work is required. However, you can customize the behavior to meet your specific requirements.
 
 > 📘
 >
@@ -33,7 +33,7 @@ The SDK automatically tracks `banner` events for in-app messages with the follow
 
 > ❗️
 >
-> The behavior of in-app message tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) documentation for details.
+> The behavior of in-app message tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [Tracking consent for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) documentation for details.
 
 
 ## Customization
@@ -87,14 +87,14 @@ The `trackInAppMessageClose` method will track a 'close' event with the 'interac
 
 > ❗️
 >
-> The behaviour of `trackInAppMessageClick` and `trackInAppMessageClose` may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [Tracking Consent](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) documentation for details.
+> The behaviour of `trackInAppMessageClick` and `trackInAppMessageClose` may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [Tracking consent for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent) documentation for details.
 
 ## Troubleshooting
 
 This section provides helpful pointers for troubleshooting in-app message issues.
 
 > 👍 Set verbose log level
-> The SDK logs a lot of information in at `verbose` level while loading in-app messages. When troubleshooting in-app message issues, ensure to [set the SDK's log level](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#log-level) at least to `verbose`.
+> The SDK logs a lot of information in at `verbose` level while loading in-app messages. When troubleshooting in-app message issues, ensure to set the SDK's log level to `verbose` (see [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#log-level)).
 
 ### In-app message not displayed
 
@@ -115,7 +115,7 @@ When troubleshooting why an in-app message did not display on your device, alway
 
 > ❗️
 >
-> Invoking `ExponeaPlugin.anonymize` triggers fetching in-app messages immediately but `ExponeaPlugin.identifyCustomer` needs to be flushed to the backend successfully first. This is because the backend must know the customer so it can assign the in-app messages with matching audience. If you have set [flush mode](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-data-flushing#flushing-modes) to anything other then `FlushMode.immediate`, you must call `ExponeaPlugin.flushData()` to finalize the `identifyCustomer` process and trigger an in-app messages fetch.
+> Invoking `ExponeaPlugin.anonymize` triggers fetching in-app messages immediately but `ExponeaPlugin.identifyCustomer` needs to be flushed to the backend successfully first. This is because the backend must know the customer so it can assign the in-app messages with matching audience. If you have set the flush mode in [Data flushing for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-data-flushing#flushing-modes) to anything other than `FlushMode.immediate`, you must call `ExponeaPlugin.flushData()` to finalize the `identifyCustomer` process and trigger an in-app messages fetch.
 
 #### Troubleshoot in-app message display issues
 

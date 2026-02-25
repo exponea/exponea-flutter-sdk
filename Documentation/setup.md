@@ -1,5 +1,5 @@
 ---
-title: Initial SDK setup
+title: Initial setup for Flutter SDK
 excerpt: Install and configure the Flutter SDK
 slug: flutter-sdk-setup
 categorySlug: integrations

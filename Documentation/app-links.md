@@ -1,5 +1,5 @@
 ---
-title: Links
+title: Links for Flutter SDK
 excerpt: Enable and track Android App Links and iOS Universal Links in your app using the Flutter SDK
 slug: flutter-sdk-links
 categorySlug: integrations

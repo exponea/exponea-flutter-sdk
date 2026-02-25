@@ -1,5 +1,5 @@
 ---
-title: Tracking
+title: Tracking for Flutter SDK
 excerpt: Track customers and events using the Flutter SDK
 slug: flutter-sdk-tracking
 categorySlug: integrations

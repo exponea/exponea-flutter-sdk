@@ -1,5 +1,5 @@
 ---
-title: Tracking Consent
+title: Tracking consent for Flutter SDK
 excerpt: Manage tracking consent using the Flutter SDK.
 slug: flutter-sdk-tracking-consent
 categorySlug: integrations

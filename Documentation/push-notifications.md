@@ -1,5 +1,5 @@
 ---
-title: Push notifications
+title: Push notifications for Flutter SDK
 excerpt: Enable push notifications in your app using the Flutter SDK
 slug: flutter-sdk-push-notifications
 categorySlug: integrations
@@ -34,7 +34,7 @@ Complete these steps in order to ensure reliable push notification delivery and 
    - [ ] Implement Firebase messaging by registering a `FirebaseMessagingService` subclass in your app.
    - [ ] Configure the Firebase Cloud Messaging integration in the Engagement web app.
    - [ ] Grant notification permission at runtime (required for Android 13+, API level 33+).
-   - [ ] Follow all steps described in the [Android push notifications guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android).
+   - [ ] Follow all steps described in the [Android push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android).
 
 3. **iOS integration**
    - [ ] Obtain an Apple Push Notification service (APNs) authentication token signing key.
@@ -42,7 +42,7 @@ Complete these steps in order to ensure reliable push notification delivery and 
    - [ ] Enable push capabilities, background modes, and app groups in your app using Xcode.
    - [ ] Extend your app's `AppDelegate` with `ExponeaFlutterAppDelegate` to handle push notification events.
    - [ ] Request notification permission on application startup.
-   - [ ] Complete the setup steps in the [iOS push notifications guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios).
+   - [ ] Complete the setup steps in the [iOS push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios).
 
 4. **SDK self-check (optional but recommended)**
    - [ ] Before initializing the SDK, call `ExponeaPlugin().checkPushSetup()` on each platform to verify a successful push setup.
@@ -54,15 +54,15 @@ Complete these steps in order to ensure reliable push notification delivery and 
 6. **Refer to platform-specific documentation**
    - [ ] For advanced configuration, troubleshooting, or additional features, consult:
      - [Android (Firebase) setup guide](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase)
-     - [iOS setup guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
-     - [Flutter SDK push notifications documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) for customization, deep linking, and event tracking.
+     - [iOS push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
+     - [Push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) for customization, deep linking, and event tracking.
 
 ### Platform-specific integration guides
 
 The following pages describe the steps for each platform to add the minimum push notification functionality (receive alert notifications) to your app:
 
-- [Android push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android)
-- [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
+- [Android push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android)
+- [iOS push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)
 
 ## Customization
 
@@ -72,9 +72,9 @@ This section describes the customizations you can implement once you have integr
 
 By default, the SDK tracks push notifications automatically. The SDK will display push notifications from Engagement and track a "campaign" event for every delivered/opened push notification with the relevant properties.
 
-In the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency with which the SDK tracks the push notification token to Engagement using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`).
+In the [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency with which the SDK tracks the push notification token to Engagement using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`).
 
-On Android, you can disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotifications` property to `false` in the SDK's [Android-specific configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration#android-specific-configuration-parameters).
+On Android, you can disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotifications` property to `false` in the SDK's [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration#android-specific-configuration-parameters) (Android-specific configuration).
 
 > ❗️Important
 >
@@ -117,7 +117,7 @@ We recommend registering the listener as soon as possible to ensure proper appli
 
 > ❗️
 >
-> To support deep links, additional set up steps are required. Refer to the documentation for the respective native platforms ([Android](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android), [iOS](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)). Alternatively, use the `Open app` action instead and add your payload to `Additional data`.
+> To support deep links, additional set up steps are required. Refer to the documentation for the respective native platforms ([Android push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android), [iOS push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios)). Alternatively, use the `Open app` action instead and add your payload to `Additional data`.
 
 
 ### Respond to received push notifications
@@ -154,7 +154,7 @@ Use the `trackPushToken` method to manually track the FCM push token:
 ExponeaPlugin().trackPushToken("382d4221-3441-44b7-a676-3eb5f515157f")
 ```
 
-Invoking this method will track the push token immediately regardless of the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for `pushTokenTrackingFrequency`.
+Invoking this method will track the push token immediately regardless of the [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for `pushTokenTrackingFrequency`.
 
 > ❗️Important
 >
@@ -182,7 +182,7 @@ ExponeaPlugin().trackDeliveredPush(payload)
 
 > ❗️
 >
-> The behaviour of `trackDeliveredPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
+> The behaviour of `trackDeliveredPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [Tracking consent for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
 
 #### Track clicked push notification
 
@@ -204,7 +204,7 @@ final Map<String, dynamic> payload = {
 ExponeaPlugin().trackClickedPush(payload)
 ```
 
-> The behaviour of `trackClickedPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
+> The behaviour of `trackClickedPush` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Read more in the [Tracking consent for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking-consent).
 
 ### Custom push notification data processing
 
@@ -292,7 +292,7 @@ _plugin.requestPushAuthorization()
 .catchError((error) => print('Error: $error'));
 ```
 
-The frequency of `notification_state` event tracking depends on the `pushTokenTrackingFrequency` configuration property. [See SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
+The frequency of `notification_state` event tracking depends on the `pushTokenTrackingFrequency` configuration property. See [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
 
 ### notification_state event properties
 
@@ -307,7 +307,7 @@ The frequency of `notification_state` event tracking depends on the `pushTokenTr
 
 > 📘 Note
 >
-> If you don't specify an `application_id` in your SDK configuration, the default value `default-application` is used. [See SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
+> If you don't specify an `application_id` in your SDK configuration, the default value `default-application` is used. See [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
 
 ### Understanding token states
 
@@ -316,14 +316,14 @@ The combination of `valid` and `description` properties indicates the token's cu
 | Valid | Description         | When this occurs                                                                                                                                             |
 |-------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `false` | `Invalidated`         | New token received \(old token becomes invalid\) or `ExponeaPlugin().anonymize()` called                                                                     |
-| `false` | `Permission denied`   | [requirePushAuthorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) is `true` and user denied notification permission |
+| `false` | `Permission denied`   | [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) (`requirePushAuthorization`) is `true` and user denied notification permission |
 | `true`  | `Permission granted`  | Valid token tracked successfully \(all other cases\)                                                                                                         |
 
 ### Configuring Application ID
 
 > 📘 Note
 >
-> See this section to configure `application_id`. [Configure Application ID](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#configure-application-id).
+> See this section to configure `application_id`. [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#configure-application-id) (Configure Application ID).
 
 > ❗️Important
 >

@@ -1,5 +1,5 @@
 ---
-title: Authorization
+title: Authorization for Flutter SDK
 excerpt: Full authorization reference for the Flutter SDK
 slug: flutter-sdk-authorization
 categorySlug: integrations
