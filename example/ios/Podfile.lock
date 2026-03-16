@@ -4,11 +4,11 @@ PODS:
     - Flutter
   - exponea (0.0.1):
     - AnyCodable-FlightSchool (= 0.6.3)
-    - ExponeaSDK (= 3.10.0)
+    - ExponeaSDK (= 3.11.0)
     - Flutter
-  - ExponeaSDK (3.10.0):
+  - ExponeaSDK (3.11.0):
     - SwiftSoup (< 3.0, >= 2.7.6)
-  - ExponeaSDK-Notifications (3.10.0)
+  - ExponeaSDK-Notifications (3.11.0)
   - Flutter (1.0.0)
   - Nimble (9.2.1)
   - Quick (4.0.0)
@@ -16,6 +16,8 @@ PODS:
     - Flutter
     - FlutterMacOS
   - SwiftSoup (2.7.6)
+  - url_launcher_ios (0.0.1):
+    - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -28,6 +30,7 @@ DEPENDENCIES:
   - Nimble (= 9.2.1)
   - Quick (= 4.0.0)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
@@ -48,21 +51,24 @@ EXTERNAL SOURCES:
     :path: Flutter
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 1c9890be5884140c60da5fde1b66380dec4c244a
-  app_links: 3dbc685f76b1693c66a6d9dd1e9ab6f73d97dc0a
-  exponea: 53c83d5e9261f0e4ef3482a9a7175b8a832dbbc0
-  ExponeaSDK: d0968d28a21a52be51fe369fbd74c32e08f031ea
-  ExponeaSDK-Notifications: d1a8ab6accfb361280a31a54ca52123ca879742c
+  app_links: 585674be3c6661708e6cd794ab4f39fb9d8356f9
+  exponea: 147f3767a9f07d9ea11cf0b287e5780e04081633
+  ExponeaSDK: 2359dca71396a77855f809abd2d639e2f6d67ff6
+  ExponeaSDK-Notifications: 6e4abe1e40400e19f628ab54646381e6ed0b4a31
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
-  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   SwiftSoup: 9ec2526c76ebc3fe5d3157c82b40b45a27eeb82d
-  webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
+  url_launcher_ios: bb13df5870e8c4234ca12609d04010a21be43dfa
+  webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
 
 PODFILE CHECKSUM: 5ea6cb0516605bb32f8b8aedd76c324d9603f667
 
