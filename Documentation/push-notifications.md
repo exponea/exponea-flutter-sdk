@@ -281,8 +281,10 @@ The SDK automatically tracks `notification_state` events in the following scenar
 
 * SDK initialization
 * App transitions from background to foreground
+* SDK version changes (app update)
+* `application_id` changes in the SDK configuration
 * New token received from Firebase, Huawei, or APNs
-* Manual token tracking using `ExponeaPlugin().trackPushToken(...)` (Android, iOS) or `ExponeaPlugin().trackHmsPushToken(...)` (Huawei)
+* Manual token tracking using `ExponeaPlugin().trackPushToken(...)` (Android, iOS) or `ExponeaPlugin().trackHmsPushToken(...)` (Huawei) (this method allows you to force tracking/sending the current push token via notification_state event)
 * User anonymization via `ExponeaPlugin().anonymize()`
 * Notification permission requested via `ExponeaPlugin().requestPushAuthorization()`
 
