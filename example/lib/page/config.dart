@@ -201,7 +201,9 @@ class _ConfigPageState extends State<ConfigPage> {
         pushIcon: pushIcon,
       ),
       ios: const IOSExponeaConfiguration(
-        appGroup: 'group.com.exponea.ExponeaSDK-Example2',
+        // Must match Runner + ExampleNotificationService entitlements and
+        // ExampleNotificationService/NotificationService.swift (push delivery tracking).
+        appGroup: 'group.com.exponea.sdk.example',
       ),
       inAppContentBlockPlaceholdersAutoLoad: const ['example_top', 'example_list'],
       applicationId: applicationId.isNotEmpty ? applicationId : null
@@ -268,7 +270,7 @@ class _ConfigPageState extends State<ConfigPage> {
 
   Future<void> _clearLocalCustomerData(BuildContext context) async {
     try{
-      await _plugin.clearLocalCustomerData(appGroup: "group.com.exponea.ExponeaSDK-Example2");
+      await _plugin.clearLocalCustomerData(appGroup: "group.com.exponea.sdk.example");
       const String message = "Sdk has been cleared";
       print(message);
       const snackBar = SnackBar(

@@ -671,8 +671,6 @@ class _HomePageState extends State<HomePage> {
 
     print('InApp action $url received for message ${message.id}');
 
-    _plugin.trackInAppMessageClick(message, button);
-
     if(messageIsForGdpr(message)){
         switch (url) {
           case 'https://bloomreach.com/tracking/allow':
@@ -712,19 +710,6 @@ class _HomePageState extends State<HomePage> {
 
     if (message == null) return;
     print('InApp message ${message.id} closed by ${button?.text} with interaction: $interaction');
-
-    _plugin.trackInAppMessageClose(
-      message,
-      button: button,
-      interaction: interaction,
-    ).then(
-          (_) {
-        print('InApp message close track has been done successfully');
-      },
-      onError: (error) {
-        print("InApp message close track has been rejected with '$error'",);
-      },
-    );
 
     if (messageIsForGdpr(message) && interaction) {
       print('Stopping SDK');
