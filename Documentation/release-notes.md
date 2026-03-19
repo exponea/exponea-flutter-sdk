@@ -11,6 +11,18 @@ parentDocSlug: flutter-sdk
 > Refer to the [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 2.5.0
+#### March 19, 2026
+* Added:
+  * Adds stopIntegration and clearLocalCustomerData methods.
+  * Updates documentation page titles for improved searchability and navigation.
+  * Updates documentation related to notification_state event tracking.
+  * Updates native Android SDK to version 4.10.0.
+  * Updates native iOS SDK to version 3.11.0.
+  * Updates Example App's universal and app links to new domain.
+* Fixed:
+  * Fixes duplicate tracking for banner click/close events and adds the missing campaign delivered event in the Example App.
+
 ## Release Notes for 2.4.1
 #### January 5, 2026
 * Updates configuration documentation:
