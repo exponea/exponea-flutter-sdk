@@ -1403,12 +1403,39 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
 
     private func requestPushAuthorization(with result: @escaping FlutterResult) {
         guard requireConfigured(with: result) else { return }
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { (granted, _) in
+
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
             DispatchQueue.main.async {
-                if granted {
+                switch settings.authorizationStatus {
+                case .authorized, .provisional:
+                    // Preserve original success behavior: register + true
                     UIApplication.shared.registerForRemoteNotifications()
+                    result(true)
+
+                case .notDetermined:
+                    // Preserve original request flow for first-time prompt
+                    center.requestAuthorization(options: [.badge, .alert, .sound]) { granted, _ in
+                        DispatchQueue.main.async {
+                            if granted {
+                                UIApplication.shared.registerForRemoteNotifications()
+                            }
+                            result(granted)
+                        }
+                    }
+
+                case .denied:
+                    // Preserve original "not granted" behavior
+                    result(false)
+
+                case .ephemeral:
+                    // Keep bool API semantics aligned with "authorized now"
+                    UIApplication.shared.registerForRemoteNotifications()
+                    result(true)
+
+                @unknown default:
+                    result(false)
                 }
-                result(granted)
             }
         }
     }
