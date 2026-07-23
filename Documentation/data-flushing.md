@@ -51,5 +51,27 @@ ExponeaPlugin().setFlushPeriod(period);
 To manually trigger a data flush to the API, use the following method:
 
 ```dart
-ExponeaPlugin().flushData();
+await ExponeaPlugin().flushData();
+```
+
+`flushData()` returns a `Future<void>` that completes when the native flush finishes uploading all pending events—including any queued customer identify—to the backend.
+
+Caches refreshed as a result of the upload (for example, in-app messages) are re-fetched asynchronously and separately from the flush. Caches may still be populating when the future resolves; under normal conditions this finishes shortly after.
+
+The method can be called in any [flushing mode](#flushing-modes), without the need to switch to`FlushMode.manual`.
+
+Awaiting the returned future is the recommended way to sequence operations that depend on the upload completing. The most common case is identifying a customer and then tracking an event whose evaluation depends on the updated customer state:
+
+```dart
+await ExponeaPlugin().identifyCustomer(customer);
+await ExponeaPlugin().flushData();
+await ExponeaPlugin().trackSessionStart();
+```
+
+If you don't need to wait for the upload to finish, you can drop the future:
+
+```dart
+import 'dart:async'; // for unawaited
+
+unawaited(ExponeaPlugin().flushData().catchError((_) {}));
 ```

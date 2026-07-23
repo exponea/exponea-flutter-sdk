@@ -58,7 +58,27 @@ abstract class BaseInterface {
   Future<void> identifyCustomer(Customer customer);
 
   /// Flush data to Exponea backend.
-  /// Only usable in [FlushMode.manual].
+  ///
+  /// Can be called in any [FlushMode]; switching to [FlushMode.manual] is not required.
+  /// The returned [Future] completes after the native flush of pending events
+  /// (including any queued customer identify) has finished uploading to the backend.
+  /// Caches that are re-fetched in reaction to those uploads (for example in-app
+  /// messages) are refreshed asynchronously and may not be fully populated when the
+  /// future resolves; in normal conditions this happens shortly after. Awaiting the
+  /// future is therefore the recommended way to sequence operations whose evaluation
+  /// depends on the just-uploaded customer state (for example [trackSessionStart]).
+  ///
+  /// The future may complete with a [PlatformException] on native flush failure
+  /// (e.g. no internet connection, SDK stopped, or — on iOS only — the internal
+  /// flush-already-in-progress retry budget of ~2 s is exhausted). Wrap awaiting
+  /// callers in `try`/`catch` to handle these cases. For fire-and-forget callers
+  /// that do not need to handle errors, attach an error handler before dropping
+  /// the future with `unawaited` from `dart:async`:
+  ///
+  /// ```dart
+  /// import 'dart:async';
+  /// unawaited(ExponeaPlugin().flushData().catchError((_) {}));
+  /// ```
   Future<void> flushData();
 
   /// Track custom event to Exponea backend.

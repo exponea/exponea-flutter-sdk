@@ -924,12 +924,22 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         Exponea.defaultProperties = HashMap(data)
     }
 
-    private fun flush(result: Result) = runWithNoResult(result) {
+    private fun flush(result: Result) = runAsync(result) {
         requireConfigured()
-        if (Exponea.flushMode != FlushMode.MANUAL) {
-            throw ExponeaException.flushModeNotManual()
+        Exponea.flushData { flushResult ->
+            handler.post {
+                flushResult.fold(
+                    onSuccess = { result.success(null) },
+                    onFailure = { error ->
+                        result.error(
+                            TAG,
+                            error.message ?: error.javaClass.simpleName,
+                            null
+                        )
+                    }
+                )
+            }
         }
-        Exponea.flushData()
     }
 
     private fun getFlushMode(result: Result) = runWithResult(result) {

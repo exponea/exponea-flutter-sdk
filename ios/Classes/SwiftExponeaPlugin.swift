@@ -1238,10 +1238,74 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    private func flush(with result: FlutterResult) {
+    private func flush(with result: @escaping FlutterResult) {
         guard requireConfigured(with: result) else { return }
-        exponeaInstance.flushData()
-        result(nil)
+        Self.awaitFlushCompletion(
+            flushOperation: { [weak self] completion in
+                guard let self = self else {
+                    completion(.error(NSError(
+                        domain: "ExponeaPlugin",
+                        code: 0,
+                        userInfo: [NSLocalizedDescriptionKey: "Plugin deallocated during flush retry."]
+                    )))
+                    return
+                }
+                self.exponeaInstance.flushData(completion: completion)
+            },
+            attemptsRemaining: Self.flushInProgressMaxRetries,
+            retryDelay: Self.flushInProgressRetryDelay,
+            onComplete: { flushResult in
+                DispatchQueue.main.async {
+                    switch flushResult {
+                    case .success:
+                        result(nil)
+                    case .flushAlreadyInProgress:
+                        result(FlutterError(
+                            code: errorCode,
+                            message: "Flush already in progress; retry budget exhausted.",
+                            details: nil
+                        ))
+                    case .noInternetConnection:
+                        result(FlutterError(
+                            code: errorCode,
+                            message: "No internet connection while flushing.",
+                            details: nil
+                        ))
+                    case .error(let error):
+                        result(FlutterError(
+                            code: errorCode,
+                            message: error.localizedDescription,
+                            details: nil
+                        ))
+                    }
+                }
+            }
+        )
+    }
+
+    internal static let flushInProgressMaxRetries: Int = 20
+    internal static let flushInProgressRetryDelay: DispatchTimeInterval = .milliseconds(100)
+
+    internal static func awaitFlushCompletion(
+        flushOperation: @escaping (@escaping (FlushResult) -> Void) -> Void,
+        attemptsRemaining: Int,
+        retryDelay: DispatchTimeInterval,
+        onComplete: @escaping (FlushResult) -> Void
+    ) {
+        flushOperation { flushResult in
+            if case .flushAlreadyInProgress = flushResult, attemptsRemaining > 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + retryDelay) {
+                    awaitFlushCompletion(
+                        flushOperation: flushOperation,
+                        attemptsRemaining: attemptsRemaining - 1,
+                        retryDelay: retryDelay,
+                        onComplete: onComplete
+                    )
+                }
+                return
+            }
+            onComplete(flushResult)
+        }
     }
 
     private func getFlushMode(with result: FlutterResult) {
