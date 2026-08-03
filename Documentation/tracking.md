@@ -275,6 +275,25 @@ The SDK automatically tracks a number of default properties for the `session_sta
 
 You can override the value of any of these properties by including them in the `defaultProperties` configuration parameter (see below). For example, if you don't want to track customers' IP addresses, you can set the `ip` property's default value to an empty string.
 
+### Get the current customer cookie
+
+Use `getCustomerCookie()` to retrieve the cookie that identifies the current customer being tracked. The value is available only after the SDK is initialized.
+
+By default, the SDK tracks events for an anonymous customer identified by a cookie. When you identify the customer with a hard ID, the SDK keeps using the same cookie alongside the hard ID. The cookie persists until you call:
+
+* `ExponeaPlugin().anonymize()` to generate a new cookie immediately.
+* `ExponeaPlugin().stopIntegration()` or `ExponeaPlugin().clearLocalCustomerData(appGroup)` to remove the cookie. A new one is created only on the next SDK initialization.
+
+Use this cookie value to work with the current anonymous identity in your app, for example, to synchronize identity with a webview.
+
+#### Example
+
+```dart
+_plugin_.getCustomerCookie()
+    .then((cookie) => print(cookie))
+    .catchError((error) => print('Error: $error'));
+```
+
 ## Push notifications
 
 If developers [integrate push notification functionality](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#integration) in their app, the SDK automatically tracks the push notification token by default.
