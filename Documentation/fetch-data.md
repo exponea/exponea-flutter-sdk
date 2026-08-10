@@ -9,7 +9,7 @@ content:
   excerpt: Fetch data from Bloomreach Engagement using the Flutter SDK
 ---
 
-The SDK provides methods to retrieve data from the Engagement platform.
+The SDK provides methods to retrieve data from the {user.mkg} platform.
 
 > 👍
 >
@@ -17,7 +17,7 @@ The SDK provides methods to retrieve data from the Engagement platform.
 
 ## Fetch recommendations
 
-Use the `fetchRecommendations` method to get personalized recommendations for the current customer from an Engagement [recommendation model](https://documentation.bloomreach.com/engagement/docs/recommendations).
+Use the `fetchRecommendations` method to get personalized recommendations for the current customer from an {user.mkg} [recommendation model](https://documentation.bloomreach.com/engagement/docs/recommendations).
 
 The method returns a list of `Recommendation` objects containing the recommendation engine data and recommended item IDs.
 

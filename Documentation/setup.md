@@ -73,7 +73,7 @@ Now that you have installed the SDK in your project, you must import, configure,
 >
 > Refer to [Stop SDK integration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking#stop-sdk-integration) for details.
 
-The required configuration parameters are `projectToken`, `authorizationToken`, and `baseURL`. You can find these in the Bloomreach Engagement webapp under `Project settings` > `Access management` > `API`.
+The required configuration parameters are `projectToken`, `authorizationToken`, and `baseURL`. You can find these in the {user.mkg} webapp under `Project settings` > `Access management` > `API`.
 
 > 📘
 >
@@ -103,7 +103,7 @@ _plugin.configure(configuration).catchError((error) {
 
 #### Configure application ID
 
-**Multiple mobile apps:** If your Engagement project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
+**Multiple mobile apps:** If your {user.mkg} project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
 
 
 ```dart
@@ -113,9 +113,9 @@ final configuration = ExponeaConfiguration(
     ...
 ```
 
-Make sure your `applicationId` value matches exactly Application ID configured in your Bloomreach Engagement under **Project Settings > Campaigns > Channels > Push Notifications.**
+Make sure your `applicationId` value matches exactly Application ID configured in your {user.mkg} under **Project Settings > Campaigns > Channels > Push Notifications.**
 
-**Single mobile app:** If your Engagement project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".
+**Single mobile app:** If your {user.mkg} project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".
 
 
 ### Configure the SDK on every Flutter engine attach
@@ -174,4 +174,4 @@ _plugin.setLogLevel(LogLevel.verbose);
 
 ### Data flushing
 
-Read [Data flushing](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-data-flushing) to learn more about how the SDK uploads data to the Engagement API and how to customize this behavior.
+Read [Data flushing](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-data-flushing) to learn more about how the SDK uploads data to the {user.mkg} API and how to customize this behavior.

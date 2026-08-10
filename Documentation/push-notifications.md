@@ -9,17 +9,17 @@ content:
   excerpt: Enable push notifications in your app using the Flutter SDK
 ---
 
-Engagement enables sending push notifications to your app users using [scenarios](https://documentation.bloomreach.com/engagement/docs/scenarios-1). The mobile application handles the push message using the SDK and renders the notification on the customer's device.
+{user.mkg} enables sending push notifications to your app users using [scenarios](https://documentation.bloomreach.com/engagement/docs/scenarios-1). The mobile application handles the push message using the SDK and renders the notification on the customer's device.
 
 Push notifications can also be silent, used only to update the app’s interface or trigger some background task.
 
 > 📘
 >
-> Refer to [Mobile push notifications](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) to learn how to create push notifications in the Engagement web app.
+> Refer to [Mobile push notifications](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) to learn how to create push notifications in the {user.mkg} web app.
 
 > 📘
 >
-> Also see [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at Bloomreach Support Help Center.
+> Also see [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at {user.br} Support Help Center.
 
 ## Integration
 
@@ -35,13 +35,13 @@ Complete these steps in order to ensure reliable push notification delivery and 
 2. **Android integration**
    - [ ] Set up a Firebase project and add the `google-services.json` file to your Android project. Refer to the [Firebase Cloud Messaging guide](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase) for step-by-step instructions.
    - [ ] Implement Firebase messaging by registering a `FirebaseMessagingService` subclass in your app.
-   - [ ] Configure the Firebase Cloud Messaging integration in the Engagement web app.
+   - [ ] Configure the Firebase Cloud Messaging integration in the {user.mkg} web app.
    - [ ] Grant notification permission at runtime (required for Android 13+, API level 33+).
    - [ ] Follow all steps described in the [Android push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-android).
 
 3. **iOS integration**
    - [ ] Obtain an Apple Push Notification service (APNs) authentication token signing key.
-   - [ ] Add and configure the APNs integration in the Engagement web app.
+   - [ ] Add and configure the APNs integration in the {user.mkg} web app.
    - [ ] Enable push capabilities, background modes, and app groups in your app using Xcode.
    - [ ] Extend your app's `AppDelegate` with `ExponeaFlutterAppDelegate` to handle push notification events.
    - [ ] Request notification permission on application startup.
@@ -51,7 +51,7 @@ Complete these steps in order to ensure reliable push notification delivery and 
    - [ ] Before initializing the SDK, call `ExponeaPlugin().checkPushSetup()` on each platform to verify a successful push setup.
 
 5. **Test your implementation**
-   - [ ] Send test push notifications from the Engagement web app and confirm delivery, receipt, and interaction tracking in your app.
+   - [ ] Send test push notifications from the {user.mkg} web app and confirm delivery, receipt, and interaction tracking in your app.
    - [ ] Register listeners (`openedPushStream`, `receivedPushStream`) to handle notification interactions and delivery events.
 
 6. **Refer to platform-specific documentation**
@@ -73,9 +73,9 @@ This section describes the customizations you can implement once you have integr
 
 ### Configure automatic push notification tracking
 
-By default, the SDK tracks push notifications automatically. The SDK will display push notifications from Engagement and track a "campaign" event for every delivered/opened push notification with the relevant properties.
+By default, the SDK tracks push notifications automatically. The SDK will display push notifications from {user.mkg} and track a "campaign" event for every delivered/opened push notification with the relevant properties.
 
-In the [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency with which the SDK tracks the push notification token to Engagement using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`).
+In the [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration), you can set the desired frequency with which the SDK tracks the push notification token to {user.mkg} using the `pushTokenTrackingFrequency` property (default value is `TokenFrequency.onTokenChange`).
 
 On Android, you can disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotifications` property to `false` in the SDK's [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration#android-specific-configuration-parameters) (Android-specific configuration).
 
@@ -213,7 +213,7 @@ ExponeaPlugin().trackClickedPush(payload)
 
 If the provided native `ExponeaModule.Companion.handleRemoteMessage` (Android) and `ExponeaNotificationService().process` (iOS)  methods don't fit the requirements of your app, or you decide to disable automatic push notifications, you must handle push notifications and process their payload yourself.
 
-Notification payloads are generated from (possibly complex) scenarios in the Engagement platform and contain all data for Android, iOS and web platforms. Therefore, the payload itself can be complex.
+Notification payloads are generated from (possibly complex) scenarios in the {user.mkg} platform and contain all data for Android, iOS and web platforms. Therefore, the payload itself can be complex.
 
 Notification payloads use a JSON data structure.
 
@@ -328,7 +328,7 @@ The frequency of `notification_state` event tracking depends on the `pushTokenTr
 | `os_name`                 | Operating-system name                    | `Android`, `iOS`                                            |
 | `os_version`              | Operating-system version                 | `14`, `17.4`                                                |
 | `sdk`                     | SDK identifier                           | `Exponea Android SDK`, `Exponea iOS SDK`                    |
-| `sdk_version`             | Version of the native Bloomreach SDK     | `5.2.1`, `4.2.0`                                            |
+| `sdk_version`             | Version of the native {user.br} SDK     | `5.2.1`, `4.2.0`                                            |
 | `device_model`            | Device model name                        | `Pixel 8`, `iPhone 15 Pro`                                  |
 | `device_type`             | Device form factor                       | `mobile`, `tablet`                                          |
 | `app_version`             | Host app version                         | `1.0`, `2.3.1`                                              |
@@ -356,12 +356,12 @@ The combination of `valid` and `description` properties indicates the token's cu
 > ❗️Important
 >
 > The SDK can automatically generate `notification_state` events,
-> but your Engagement project must have event creation enabled. If your project uses custom event schemas
+> but your {user.mkg} project must have event creation enabled. If your project uses custom event schemas
 > or restricts event creation, add `notification_state` to the list of allowed events. Otherwise, push token registration will fail silently.
 
 ### Verifying token tracking
 
-You can verify that tokens are being tracked correctly in the Bloomreach Engagement web application:
+You can verify that tokens are being tracked correctly in the {user.mkg} web application:
 
 1. Navigate to Data & Assets > Customers
 2. Locate the customer profile

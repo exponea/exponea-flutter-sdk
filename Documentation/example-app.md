@@ -9,7 +9,7 @@ content:
   excerpt: 'Build, run, and navigate the example app included with the Flutter SDK'
 ---
 
-The Exponea Flutter SDK includes an example application you can use as a reference implementation. You can build and run the app, test Engagement features, and compare the code and behavior of your implementation with the expected behavior and code in the example app.
+The Exponea Flutter SDK includes an example application you can use as a reference implementation. You can build and run the app, test {user.mkg} features, and compare the code and behavior of your implementation with the expected behavior and code in the example app.
 
 ## Prerequisites
 
@@ -67,7 +67,7 @@ You must have the following software installed to be able to build and run the e
 
 When you run the app in the simulator, you'll see the **ConfigPage**. 
 1. Enter your [project token, API token, and API base URL](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management).
-2. Optionally, enter `Application ID` if your Engagement project supports multiple mobile apps. If you leave this blank, the SDK uses the default value "default-application". See [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for more.
+2. Optionally, enter `Application ID` if your {user.mkg} project supports multiple mobile apps. If you leave this blank, the SDK uses the default value "default-application". See [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for more.
 3. Optionally, disable `Automatic Session Tracking` using the switch (default enabled).
 4. Then click `Configure` to [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk).
 > [`config.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/config.dart)
@@ -100,11 +100,11 @@ The **HomePage** provides several buttons to test the different SDK features.
 - Using the `In App CB Example Page` button, you can access the **InAppCbPage** to test in-app content blocks. Use the placeholder IDs `example_top` and `example_list` for the corresponding placeholders. Use the placeholder IDs `ph_x_example_iOS` and `ph_x_example_Android` to test platform-specific content blocks in the placeholder labeled "platformSpecificPlaceholderId".
   > [in_app_cb_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_page.dart)
 
-Try out the different features in the app, then find the customer profile in the Engagement web app (under `Data & Assets` > `Customers`) to see the properties and events tracked by the SDK.
+Try out the different features in the app, then find the customer profile in the {user.mkg} web app (under `Data & Assets` > `Customers`) to see the properties and events tracked by the SDK.
 
-By default, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value in the logs and find the corresponding profile in the Engagement web app.
+By default, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value in the logs and find the corresponding profile in the {user.mkg} web app.
 
-If you used the `Identify` button, the customer can be found in Engagement web app by the test email address (`test-user-1@test.com`).
+If you used the `Identify` button, the customer can be found in {user.mkg} web app by the test email address (`test-user-1@test.com`).
 
 > 📘
 >

@@ -13,7 +13,7 @@ This guide will help you upgrade your Exponea SDK to the new version.
 
 ## Update to version 2.3.0 or higher
 
-SDK versions 2.3.0 and higher support multiple mobile applications within a single Bloomreach Engagement project.
+SDK versions 2.3.0 and higher support multiple mobile applications within a single {user.mkg} project.
 
 This update introduces two major changes:
 
@@ -23,7 +23,7 @@ Each mobile application integrated with the SDK can now have its own unique `app
 
 **When to configure Application ID:**
 
-- **Multiple mobile apps:** You must specify a unique `applicationId` for each app in the SDK configuration. The value must match the Application ID configured in Bloomreach Engagement under **Project Settings > Campaigns > Channels > Push Notifications.**
+- **Multiple mobile apps:** You must specify a unique `applicationId` for each app in the SDK configuration. The value must match the Application ID configured in {user.mkg} under **Project Settings > Campaigns > Channels > Push Notifications.**
 - **Single mobile app:** If you use only one mobile application, you don't need to set `applicationId`. The SDK uses the default value `default-application` automatically.
 
 Learn more about [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) and [Initial setup for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#configure-application-id).

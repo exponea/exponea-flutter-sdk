@@ -9,7 +9,7 @@ content:
   excerpt: Track customers and events using the Flutter SDK
 ---
 
-You can track events in Engagement to learn more about your app’s usage patterns and to segment your customers by their interactions.
+You can track events in {user.mkg} to learn more about your app’s usage patterns and to segment your customers by their interactions.
 
 By default, the SDK tracks certain events automatically, including:
 
@@ -23,7 +23,7 @@ Additionally, you can track any custom event relevant to your business.
 
 > 📘
 >
-> Also see [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at Bloomreach Support Help Center.
+> Also see [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at {user.br} Support Help Center.
 
 > ❗️ Protect the privacy of your customers
 >
@@ -122,7 +122,7 @@ Without identification, events are tracked for an anonymous customer, only ident
 
 Use the `identifyCustomer()` method with a `Customer` object as an argument to identify a customer using their unique [hard ID](https://documentation.bloomreach.com/engagement/docs/customer-identification#hard-id).
 
-The default hard ID is `registered` and its value is typically the customer's email address. However, your Engagement project may define a different hard ID.
+The default hard ID is `registered` and its value is typically the customer's email address. However, your {user.mkg} project may define a different hard ID.
 
 Optionally, you can track additional customer properties such as first and last names, age, etc.
 
@@ -134,7 +134,7 @@ Although you can use `identifyCustomer` with a [soft ID](https://documentation.b
 
 > ❗️Warning
 >
-> If a customer profile is anonymized or deleted in the Bloomreach Engagement web app, initializing the SDK again in the app can cause the profile to be reidentified or recreated from locally cached data. Always clear local data appropriately to prevent unintended profile recreation.
+> If a customer profile is anonymized or deleted in the {user.mkg} web app, initializing the SDK again in the app can cause the profile to be reidentified or recreated from locally cached data. Always clear local data appropriately to prevent unintended profile recreation.
 
 
 #### Arguments
@@ -147,7 +147,7 @@ Although you can use `identifyCustomer` with a [soft ID](https://documentation.b
 
 | Name               | Type                 | Description |
 | -------------------| -------------------- | ----------- |
-| ids **(required)** | Map<String, String>  | Dictionary of customer unique identifiers. Only identifiers defined in the Engagement project are accepted. |
+| ids **(required)** | Map<String, String>  | Dictionary of customer unique identifiers. Only identifiers defined in the {user.mkg} project are accepted. |
 | properties         | Map<String, dynamic> | Dictionary of customer properties. |
 
 #### Examples
@@ -191,10 +191,10 @@ Use the `anonymize()` method to delete all information stored locally and reset 
 
 Invoking this method will cause the SDK to:
 
-* Remove the push notification token for the current customer from local device storage and the customer profile in Engagement.
+* Remove the push notification token for the current customer from local device storage and the customer profile in {user.mkg}.
 * Clear local repositories and caches, excluding tracked events.
 * Track a new session start if `automaticSessionTracking` is enabled.
-* Create a new customer record in Engagement (a new `cookie` soft ID is generated).
+* Create a new customer record in {user.mkg} (a new `cookie` soft ID is generated).
 * Regenerate `device_id` for the new customer if `regenerateDeviceIdOnAnonymize` is set to `true`.
   For more information, see [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
 * Assign the previous push notification token to the new customer record.
@@ -217,7 +217,7 @@ The SDK removes push notification tokens differently depending on the version:
 >
 > Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#token-tracking-via-notification_state-event).
 
-You can also use the `anonymize` method to switch to a different Engagement project. The SDK will then track events to a new customer record in the new project, similar to the first app session after installation on a new device.
+You can also use the `anonymize` method to switch to a different {user.mkg} project. The SDK will then track events to a new customer record in the new project, similar to the first app session after installation on a new device.
 
 #### Examples
 
@@ -516,7 +516,7 @@ final subscription = _plugin.inAppMessageActionStream(overrideDefaultBehavior: o
 
 #### Stop the SDK but upload tracked data
 
-The SDK caches data (such as sessions, events, and customer properties) in an internal local database and periodically sends them to Bloomreach Engagement. These data are kept locally if the device has no network, or if you configured SDK to upload them less frequently.
+The SDK caches data (such as sessions, events, and customer properties) in an internal local database and periodically sends them to {user.mkg}. These data are kept locally if the device has no network, or if you configured SDK to upload them less frequently.
 
 Invoking the `stopIntegration()` method will remove all these locally stored data that may not be uploaded yet. To avoid loss of these data, invoke request to flush them before stopping the SDK:
 
@@ -533,11 +533,11 @@ _plugin.stopIntegration();
 
 #### Stop the SDK and wipe all tracked data
 
-The SDK caches data (such as sessions, events, and customer properties) in an internal local database and periodically sends them to the Bloomreach Engagement app. These data are kept locally if the device has no network, or if you configured SDK to upload them less frequently.
+The SDK caches data (such as sessions, events, and customer properties) in an internal local database and periodically sends them to the {user.mkg} app. These data are kept locally if the device has no network, or if you configured SDK to upload them less frequently.
 
-If a customer is removed from the Bloomreach Engagement platform, you may also need to remove their data from local storage.
+If a customer is removed from the {user.mkg} platform, you may also need to remove their data from local storage.
 
-**Don't initialize the SDK after deleting the customer.** Depending on your configuration, initializing the SDK could trigger an upload of any locally stored events, which may unintentionally recreate the customer profile in Bloomreach Engagement using the stored customer IDs.
+**Don't initialize the SDK after deleting the customer.** Depending on your configuration, initializing the SDK could trigger an upload of any locally stored events, which may unintentionally recreate the customer profile in {user.mkg} using the stored customer IDs.
 
 To prevent this, invoke `stopIntegration()` immediately without initializing the SDK:
 
@@ -566,7 +566,7 @@ This results in the SDK stopping all internal processes (such as session trackin
 
 > ❗️
 >
-> After calling `stopIntegration()`, the SDK will not track or upload any further data. If you need to upload any tracked data to Bloomreach Engagement before stopping the SDK, [flush the data synchronously](#stop-the-sdk-but-upload-tracked-data) before invoking `stopIntegration()`.
+> After calling `stopIntegration()`, the SDK will not track or upload any further data. If you need to upload any tracked data to {user.mkg} before stopping the SDK, [flush the data synchronously](#stop-the-sdk-but-upload-tracked-data) before invoking `stopIntegration()`.
 
 #### Customer denies tracking consent
 

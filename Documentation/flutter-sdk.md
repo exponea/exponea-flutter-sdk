@@ -9,11 +9,11 @@ content:
 
 > 📘 
 > 
-> Bloomreach Engagement was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the Flutter SDK.
+> {user.mkg} was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the Flutter SDK.
 
 ## What is the Exponea Flutter SDK?
 
-The Exponea Flutter SDK allows you to integrate your Flutter-based mobile application with Bloomreach Engagement and track your customers' behavior in your app. Integrating the SDK in your app will enable you to track events and customer properties, send push notifications, and display in-app messages and content blocks.
+The Exponea Flutter SDK allows you to integrate your Flutter-based mobile application with {user.mkg} and track your customers' behavior in your app. Integrating the SDK in your app will enable you to track events and customer properties, send push notifications, and display in-app messages and content blocks.
 
 The Flutter SDK is implemented as a wrapper around the native [Android](https://documentation.bloomreach.com/engagement/docs/android-sdk) and [iOS](https://documentation.bloomreach.com/engagement/docs/ios-sdk) SDKs.
 
@@ -54,6 +54,6 @@ This short video guide provides a step-by-step introduction to integrating the F
 
 ## Frequently asked questions
 
-- [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at Bloomreach Support Help Center
-- [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at Bloomreach Support Help Center
-- [In-app messages FAQ](https://support.bloomreach.com/hc/en-us/articles/18152718785437-In-App-Messages-FAQ) at Bloomreach Support Help Center
+- [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at {user.br} Support Help Center
+- [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at {user.br} Support Help Center
+- [In-app messages FAQ](https://support.bloomreach.com/hc/en-us/articles/18152718785437-In-App-Messages-FAQ) at {user.br} Support Help Center

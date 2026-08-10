@@ -13,7 +13,7 @@ content:
 
 The Exponea Flutter SDK is written as a wrapper around our native [Android](https://documentation.bloomreach.com/engagement/docs/android-sdk) and [iOS](https://documentation.bloomreach.com/engagement/docs/ios-sdk) SDKs using [platform channels](https://flutter.dev/docs/development/platform-integration/platform-channels#architecture). Messages and responses are passed asynchronously to ensure the user interface remains responsive. As a result, our interface is also asynchronous; there are no properties you can access synchronously.
 
-The Flutter SDK exposes most Engagement functionality in a platform-agnostic way. However, some features require integrating directly with the underlying native Android and iOS SDKs and writing custom platform-specific code. Therefore, besides Flutter experience, some knowledge of Kotlin (Android) and Swift (iOS) is required.
+The Flutter SDK exposes most {user.mkg} functionality in a platform-agnostic way. However, some features require integrating directly with the underlying native Android and iOS SDKs and writing custom platform-specific code. Therefore, besides Flutter experience, some knowledge of Kotlin (Android) and Swift (iOS) is required.
 
 The documentation indicates whenever platform-specific code is required, provides examples, and links to the relevant documentation of the native Android and iOS SDKs for more details.
 

@@ -13,7 +13,7 @@ The Flutter SDK relies on the [native Android SDK](https://documentation.bloomre
 
 > 👍
 >
-> The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the Engagement backend to send a silent push to the device, and check if the app is ready to open push notifications.
+> The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the {user.mkg} backend to send a silent push to the device, and check if the app is ready to open push notifications.
 >
 > To enable the setup check, call `ExponeaPlugin().checkPushSetup()` **before** [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk):
 
@@ -34,11 +34,11 @@ Exponea Android SDK supports the following integrations:
 
 ### Standard (Firebase) integration
 
-To be able to send [Push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
+To be able to send [Push notifications for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications) from the {user.mkg} platform and receive them in your app on Android devices, you must:
 
 1. Set up a Firebase project.
 2. Implement Firebase messaging in your app.
-3. Configure the Firebase Cloud Messaging integration in the Engagement web app.
+3. Configure the Firebase Cloud Messaging integration in the {user.mkg} web app.
 
 > 📘
 >
@@ -48,15 +48,15 @@ To be able to send [Push notifications for Flutter SDK](https://documentation.bl
 
 > 👍
 >
-> Please note that with Google deprecating and removing the FCM legacy API in June 2024, Bloomreach Engagement is now using Firebase HTTP v1 API. Refer to [Firebase upgrade to HTTP v1 API](https://support.bloomreach.com/hc/en-us/articles/18931691055133-Firebase-upgrade-to-HTTP-v1-API) at the Bloomreach Support Help Center for upgrade information.
+> Please note that with Google deprecating and removing the FCM legacy API in June 2024, {user.mkg} is now using Firebase HTTP v1 API. Refer to [Firebase upgrade to HTTP v1 API](https://support.bloomreach.com/hc/en-us/articles/18931691055133-Firebase-upgrade-to-HTTP-v1-API) at the {user.br} Support Help Center for upgrade information.
 
 ### Huawei integration
 
-To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/android-push-notifications) from the Engagement platform and receive them in your app on Huawei devices, you must:
+To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/android-push-notifications) from the {user.mkg} platform and receive them in your app on Huawei devices, you must:
 
 1. Set up Huawei Mobile Services (HMS)
 2. Implement HMS in your app.
-3. Configure the Huawei Push Service integration in the Engagement web app.
+3. Configure the Huawei Push Service integration in the {user.mkg} web app.
 
 > 📘
 >

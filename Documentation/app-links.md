@@ -11,7 +11,7 @@ content:
     the Flutter SDK
 ---
 
-Android App Links and iOS Universal Links allow the links you send through Engagement to open directly in your mobile application without any redirects that would hinder your users' experience.
+Android App Links and iOS Universal Links allow the links you send through {user.mkg} to open directly in your mobile application without any redirects that would hinder your users' experience.
 
 For details on how App Links and Universal Links work and how they can improve your users' experience, refer to the [Universal Links](https://documentation.bloomreach.com/engagement/docs/universal-link) section in the Campaigns documentation.
 
@@ -30,7 +30,7 @@ The official [Flutter documentation](https://docs.flutter.dev/ui/navigation/deep
 
 No changes are required to make App Links work.
 
-To track the links to Engagement, you must add 2 methods to the `MainActivity` that will respond to incoming intents:
+To track the links to {user.mkg}, you must add 2 methods to the `MainActivity` that will respond to incoming intents:
 
 ```kotlin
 package com.exponea.example

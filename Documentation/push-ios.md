@@ -13,7 +13,7 @@ The Flutter SDK relies on the native iOS SDK to handle push notifications on iOS
 
 > 👍
 >
-> The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the Engagement backend to send a silent push to the device, and check if the app is ready to open push notifications.
+> The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the {user.mkg} backend to send a silent push to the device, and check if the app is ready to open push notifications.
 >
 > To enable the setup check, call `ExponeaPlugin().checkPushSetup()` **before** [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk):
 
@@ -27,10 +27,10 @@ The Flutter SDK relies on the native iOS SDK to handle push notifications on iOS
 
 ## Prerequisites
 
-To be able to send push notifications to iOS devices from Engagement, you must:
+To be able to send push notifications to iOS devices from {user.mkg}, you must:
 
 - Obtain an Apple Push Notification service (APNs) authentication token signing key
-- Add and configure the Apple Push Notification Service integration in the Engagement web app
+- Add and configure the Apple Push Notification Service integration in the {user.mkg} web app
 
 > 📘
 >
@@ -121,7 +121,7 @@ _plugin.requestPushAuthorization()
 
 ### Checklist:
 
- - [ ] Engagement should now be able to send push notifications to iOS devices. Refer to the [Creating a new notification](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) guide for instructions.
+ - [ ] {user.mkg} should now be able to send push notifications to iOS devices. Refer to the [Creating a new notification](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) guide for instructions.
  - [ ] At this point, your app doesn't show images or actions in push notifications. Follow the instructions to implement [rich push notifications](#rich-push-notifications) if you want to support this.
 
 ## Customization
@@ -137,7 +137,7 @@ For each extension, follow the instructions in [Notification Extensions](https:/
 Calling the `ExponeaNotificationContentService.didReceive()` method will enhance the notification body with the image and actions delivered within the `UNNotification` payload. Notification actions shown by `ExponeaNotificationContentService` are registered with configurations to open your application with required information and handle campaign clicks automatically.
 
 #### Checklist:
- - [ ] Check that push notifications with images and buttons sent from Engagement are correctly displayed on your device. Push delivery tracking should work.
+ - [ ] Check that push notifications with images and buttons sent from {user.mkg} are correctly displayed on your device. Push delivery tracking should work.
  - [ ] If you don't see buttons in the expanded push notification, the content extension is **not** running. Double check `UNNotificationExtensionCategory` in `Info.plist` - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for the extensions and the main app.
 
 ### Retrieve push notification token manually

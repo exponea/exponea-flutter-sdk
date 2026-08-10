@@ -20,20 +20,20 @@ This page provides an overview of all configuration parameters for the SDK. In a
 The following parameters are specified in an `ExponeaConfiguration` object. Refer to [lib/src/data/model/configuration.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/lib/src/data/model/configuration.dart) for the complete Dart definition.
 
 * `projectToken` **(required)**
-   * Your project token. You can find this in the Engagement web app under `Project settings` > `Access management` > `API`.
+   * Your project token. You can find this in the {user.mkg} web app under `Project settings` > `Access management` > `API`.
 
 * `authorizationToken` **(required)**
-   * Your Engagement API key.
-   * The token must be an Engagement **public** key. See [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
+   * Your {user.mkg} API key.
+   * The token must be an {user.mkg} **public** key. See [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
    * For more information, refer to [Exponea API documentation](https://docs.exponea.com/reference#access-keys).
 
 * `baseUrl`
-  * Your API base URL which can be found in the Engagement web app under `Project settings` > `Access management` > `API`.
+  * Your API base URL which can be found in the {user.mkg} web app under `Project settings` > `Access management` > `API`.
   * Default value `https://api.exponea.com`.
   * If you have custom base URL, you must set this property.
 
 * `projectMapping`
-  * If you need to track some events to a different Engagement project, you can define a mapping between event types and Engagement projects.
+  * If you need to track some events to a different {user.mkg} project, you can define a mapping between event types and {user.mkg} projects.
   * An event is always tracked to the default project and any projects it is mapped to.
   * Example:
     ```dart
@@ -66,7 +66,7 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
   * Read more about [Tracking Sessions](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking#session)
 
 * `pushTokenTrackingFrequency`
-  * Indicates the frequency with which the SDK should track the push notification token to Engagement.
+  * Indicates the frequency with which the SDK should track the push notification token to {user.mkg}.
   * Default value: `TokenFrequency.onTokenChange`
   * Possible values:
     * `.onTokenChange` - tracks the push token if it differs from a previously tracked one. The SDK also automatically refreshes the `notification_state` event every 30 days, even when the token hasn't changed.
@@ -84,7 +84,7 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
   * Default value: `10`
 
 * `advancedAuthEnabled`
-  * If set, advanced authorization is used for communication with the Engagement APIs listed in [Customer Token Authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#customer-token-authorization).
+  * If set, advanced authorization is used for communication with the {user.mkg} APIs listed in [Customer Token Authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#customer-token-authorization).
   * Refer to the [authorization documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization) for details.
 
 * `inAppContentBlockPlaceholdersAutoLoad`
@@ -100,10 +100,10 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
   * Default value: `false`
 
 * `applicationId`
-  * This `applicationId` defines a unique identifier for the mobile app within the Engagement project. Change this value only if your Engagement project contains and supports multiple mobile apps.
+  * This `applicationId` defines a unique identifier for the mobile app within the {user.mkg} project. Change this value only if your {user.mkg} project contains and supports multiple mobile apps.
   * This identifier distinguishes between different apps in the same project.
-  * Your `applicationId` value must be the same as the one defined in your Engagement project settings.
-  * If your Engagement project supports only one app, skip the `applicationId` configuration. The SDK will use the default value automatically.
+  * Your `applicationId` value must be the same as the one defined in your {user.mkg} project settings.
+  * If your {user.mkg} project supports only one app, skip the `applicationId` configuration. The SDK will use the default value automatically.
   * Must be in a specific format, see rules:
     * Starts with one or more lowercase letters or digits
     * Additional words are separated by single hyphens or dots
@@ -124,7 +124,7 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
 The following parameters are specified in an `AndroidExponeaConfiguration` object. Refer to [lib/src/data/model/configuration.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/lib/src/data/model/configuration.dart) for the complete Dart definition
 
 * `automaticPushNotifications`
-  * By default, the SDK will set up a Firebase service and try to process push notifications sent from the Engagement platform automatically. You can opt out by setting this to `false`.
+  * By default, the SDK will set up a Firebase service and try to process push notifications sent from the {user.mkg} platform automatically. You can opt out by setting this to `false`.
   * Default value: `true`
 
 * `pushIcon`
