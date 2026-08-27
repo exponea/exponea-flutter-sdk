@@ -21,6 +21,7 @@ class FlutterInAppContentBlockCarouselFactory(private val binding: FlutterPlugin
         val scrollDelay = creationParams.getOptional<Int>("scrollDelay")
         val filtrationSet = creationParams.getRequired<Boolean>("filtrationSet")
         val sortingSet = creationParams.getRequired<Boolean>("sortingSet")
+        val responseTimeoutMillis = (creationParams["responseTimeoutMillis"] as? Number)?.toLong()
         val inAppContentBlockCarousel = Exponea.getInAppContentBlocksCarousel(
             context!!,
             placeholderId,
@@ -37,6 +38,7 @@ class FlutterInAppContentBlockCarouselFactory(private val binding: FlutterPlugin
             trackActions,
             filtrationSet,
             sortingSet,
+            responseTimeoutMillis,
             binding,
         )
     }

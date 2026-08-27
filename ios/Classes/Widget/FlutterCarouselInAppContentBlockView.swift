@@ -72,7 +72,9 @@ class FlutterCarouselInAppContentBlockView: CarouselInAppContentBlockView {
     }
     override func sortContentBlocks(data: [StaticReturnData]) -> [StaticReturnData] {
         let contentBlocksToSort = data.compactMap { $0.message }
-        let sortedContentBlocks = widget.sortContentBlocks(contentBlocksToSort)
+        guard let sortedContentBlocks = widget.sortContentBlocks(contentBlocksToSort) else {
+            return super.sortContentBlocks(data: data)
+        }
         let sortedStaticData = sortedContentBlocks.compactMap { sortedContentBlock in
             data.first { $0.message?.id == sortedContentBlock.id }
         }

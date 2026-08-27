@@ -34,10 +34,12 @@ public class FlutterInAppContentBlockCarouselFactory: NSObject, FlutterPlatformV
               scrollDelay: nil,
               filtrationSet: false,
               sortingSet: false,
+              responseTimeoutMillis: nil,
               binaryMessenger: messenger)
       }
         let maxMessagesCount: Int? = try? data.getOptionalSafely(property: "maxMessagesCount")
         let scrollDelay: TimeInterval? = try? data.getOptionalSafely(property: "scrollDelay")
+        let responseTimeoutMillis = (data["responseTimeoutMillis"] as? NSNumber)?.doubleValue
         return FlutterInAppContentBlockCarousel(
             frame: frame,
             viewIdentifier: viewId,
@@ -48,6 +50,7 @@ public class FlutterInAppContentBlockCarouselFactory: NSObject, FlutterPlatformV
             scrollDelay: scrollDelay,
             filtrationSet: filtrationSet,
             sortingSet: sortingSet,
+            responseTimeoutMillis: responseTimeoutMillis,
             binaryMessenger: messenger)
     }
     

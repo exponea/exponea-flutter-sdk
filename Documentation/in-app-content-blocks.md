@@ -213,6 +213,8 @@ You can implement additional filtration and sorting by registering your own `fil
 ```dart
 InAppContentBlockCarousel(
   placeholderId: 'example_carousel',
+  // The SDK waits up to 500 ms for each custom filter or sort result.
+  responseTimeoutMillis: 500,
   filterContentBlocks: (contentBlocks) {
     // if you want keep default filtration, do not register this method
     // you can add your own filtration, for example ignore any item named "discarded"
@@ -229,6 +231,10 @@ InAppContentBlockCarousel(
 > ❗️
 >
 > A carousel view accepts the results from the filtration and sorting implementations. Ensure that you return all wanted items as result from your implementations to avoid any missing items.
+
+> 📘
+>
+> The SDK waits up to 250 milliseconds by default for each custom filtration or sorting result. Set `responseTimeoutMillis` to adjust this per carousel. Non-positive values use the default timeout and log a warning.
 
 > ❗️
 >

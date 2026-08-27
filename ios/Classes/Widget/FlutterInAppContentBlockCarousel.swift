@@ -20,7 +20,7 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
     private let filtrationSet: Bool
     private let sortingSet: Bool
     private var channel: FlutterMethodChannel
-    private let responseTimeout: TimeInterval = 2
+    private let responseTimeout: TimeInterval
     private var filterResponse: PassthroughSubject<[InAppContentBlockResponse], Never>?
     private var sortResponse: PassthroughSubject<[InAppContentBlockResponse], Never>?
     
@@ -34,10 +34,22 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
         scrollDelay: TimeInterval?,
         filtrationSet: Bool,
         sortingSet: Bool,
+        responseTimeoutMillis: Double?,
         binaryMessenger messenger: FlutterBinaryMessenger
     ) {
         self.placeholderId = placeholderId
         self.channel = FlutterMethodChannel(name: "\(channelName)/\(viewId)", binaryMessenger: messenger)
+        if let responseTimeoutMillis, responseTimeoutMillis > 0 {
+            self.responseTimeout = responseTimeoutMillis / 1000
+        } else {
+            self.responseTimeout = 0.25
+            if responseTimeoutMillis != nil {
+                ExponeaSDK.Exponea.logger.log(
+                    .warning,
+                    message: "InAppCbCarousel: responseTimeoutMillis must be positive; using 250 ms."
+                )
+            }
+        }
         
         let callback = FlutterInAppContentBlockCarouselCallback(overrideDefaultBehavior: overrideDefaultBehavior, trackActions: trackActions, channel: channel)
         self.filtrationSet = filtrationSet
@@ -77,6 +89,7 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
                 return
             }
             filterResponse?.send(messages)
+            result(nil)
         case methodSortContentBlocksResult:
             if sortResponse == nil {
                 result(FlutterError(
@@ -98,6 +111,7 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
                 return
             }
             sortResponse?.send(messages)
+            result(nil)
         default:
             let error = FlutterError(code: "", message: "\(call.method) is not supported by iOS", details: nil)
             result(error)
@@ -111,20 +125,26 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
         }
         filterResponse = PassthroughSubject<[InAppContentBlockResponse], Never>()
         channel.invokeMethod(methodFilterContentBlocks, arguments: input.map { String(data: try! JSONEncoder().encode($0), encoding: .utf8 )})
-        let responseData = filterResponse?.retrieveFirstOrNull(timeout: responseTimeout) ?? input
+        let responseData = filterResponse?.retrieveFirstOrNull(timeout: responseTimeout)
         filterResponse = nil
+        guard let responseData else {
+            return input
+        }
         let filteredResponseData = retrieveMatchingById(input, responseData)
         return filteredResponseData
     }
 
-    func sortContentBlocks(_ input: [InAppContentBlockResponse]) -> [InAppContentBlockResponse] {
+    func sortContentBlocks(_ input: [InAppContentBlockResponse]) -> [InAppContentBlockResponse]? {
         if !sortingSet {
-            return input
+            return nil
         }
         sortResponse = PassthroughSubject<[InAppContentBlockResponse], Never>()
         channel.invokeMethod(methodSortContentBlocks, arguments: input.map { String(data: try! JSONEncoder().encode($0), encoding: .utf8 )})
-        let responseData = sortResponse?.retrieveFirstOrNull(timeout: responseTimeout) ?? input
+        let responseData = sortResponse?.retrieveFirstOrNull(timeout: responseTimeout)
         sortResponse = nil
+        guard let responseData else {
+            return nil
+        }
         let sortedResponseData = retrieveMatchingById(input, responseData)
         return sortedResponseData
     }

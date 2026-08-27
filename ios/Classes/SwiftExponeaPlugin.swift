@@ -149,7 +149,7 @@ public class FlutterInAppContentBlockPlaceholderFactory: NSObject, FlutterPlatfo
 public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView {
     
     private let channelName = "com.exponea/InAppContentBlockPlaceholder"
-    private let methodHandleInAppContentBlockClick = "handleInAppContentBlockClick"
+    private let methodOnInAppContentBlockEvent = "onInAppContentBlockEvent"
     
     private let inAppContentBlockPlaceholder: StaticInAppContentBlockView?
     private let placeholderId: String
@@ -173,37 +173,25 @@ public class FlutterInAppContentBlockPlaceholder: NSObject, FlutterPlatformView 
             let messenger {
             channel = FlutterMethodChannel(name: "\(channelName)/\(viewId)", binaryMessenger: messenger)
             guard let channel else { return }
-            channel.setMethodCallHandler(onMethodCall)
             
             let origBehaviour = inAppContentBlockPlaceholder.behaviourCallback
             inAppContentBlockPlaceholder.behaviourCallback = CustomInAppContentBlockCallback(originalBehaviour: origBehaviour, overrideOriginalBehaviour: overrideDefaultBehavior, channel: channel)
+            inAppContentBlockPlaceholder.heightCompletion = { [weak self] height in
+                self?.sendHeightUpdate(height)
+            }
             inAppContentBlockPlaceholder.reload()
         }
     }
     
-    func onMethodCall(call : FlutterMethodCall, result: @escaping FlutterResult) {
-        switch call.method {
-        case methodHandleInAppContentBlockClick:
-            if inAppContentBlockPlaceholder == nil {
-                result(FlutterError(
-                    code: "InAppCB",
-                    message: "Handling of url was invoked even when InAppCB is not initialized", details: nil
-                ))
-                return
-            }
-            guard let data = call.arguments as? NSDictionary,
-                  let actionUrl: String = try? data.getRequiredSafely(property: "actionUrl") else {
-                result(FlutterError(
-                    code: "InAppCB",
-                    message: "unable to parse action URL ", details: nil
-                ))
-                return
-            }
-            inAppContentBlockPlaceholder?.invokeActionClick(actionUrl:actionUrl)
-        default:
-            let error = FlutterError(code: errorCode, message: "\(call.method) is not supported by iOS", details: nil)
-            result(error)
-            return
+    private func sendHeightUpdate(_ height: Int) {
+        let payload: [String: Any] = [
+            "eventType": "onHeightUpdate",
+            "placeholderId": placeholderId,
+            "height": height
+        ]
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.channel?.invokeMethod(self.methodOnInAppContentBlockEvent, arguments: payload)
         }
     }
     
@@ -219,7 +207,6 @@ public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
     
     private let channel: FlutterMethodChannel
     private let methodOnInAppContentBlockEvent = "onInAppContentBlockEvent"
-    private let methodOnInAppContentBlockHtmlChanged = "onInAppContentBlockHtmlChanged"
     
     init(originalBehaviour: InAppContentBlockCallbackType, overrideOriginalBehaviour: Bool, channel: FlutterMethodChannel) {
         self.originalBehaviour = originalBehaviour
@@ -230,13 +217,6 @@ public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
     public func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
         if !overrideOriginalBehaviour {
             originalBehaviour.onMessageShown(placeholderId: placeholderId, contentBlock: contentBlock)
-        }
-        let htmlContent = contentBlock.content?.html ?? contentBlock.personalizedMessage?.content?.html
-        let normalizerConf = HtmlNormalizerConfig(makeResourcesOffline: true, ensureCloseButton: false)
-        if let htmlContent,
-            var normalizedHtml = HtmlNormalizer(htmlContent).normalize(normalizerConf).html {
-            let arguments: [String: Any?] = ["htmlContent": normalizedHtml]
-            invokeMethod(method: methodOnInAppContentBlockHtmlChanged, arguments: arguments)
         }
         let payload: [String: Any?] = [
             "eventType": "onMessageShown",
@@ -250,8 +230,6 @@ public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
         if !overrideOriginalBehaviour {
             originalBehaviour.onNoMessageFound(placeholderId: placeholderId)
         }
-        let arguments: [String: Any?] = ["htmlContent": nil]
-        invokeMethod(method: methodOnInAppContentBlockHtmlChanged, arguments: arguments)
         let payload: [String: Any?] = [
             "eventType": "onNoMessageFound",
             "placeholderId": placeholderId

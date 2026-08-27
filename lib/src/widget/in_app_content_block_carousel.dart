@@ -28,6 +28,13 @@ class InAppContentBlockCarousel extends StatefulWidget {
   final List<InAppContentBlock> Function(List<InAppContentBlock> contentBlocks)? filterContentBlocks;
   final List<InAppContentBlock> Function(List<InAppContentBlock> contentBlocks)? sortContentBlocks;
 
+  /// Maximum time, in milliseconds, to wait for [filterContentBlocks] or
+  /// [sortContentBlocks] to return a result.
+  ///
+  /// Defaults to 250 milliseconds. Non-positive values fall back to the
+  /// default and log a warning on the native platform.
+  final int? responseTimeoutMillis;
+
   const InAppContentBlockCarousel({
     Key? key,
     required this.placeholderId,
@@ -46,6 +53,7 @@ class InAppContentBlockCarousel extends StatefulWidget {
     this.onHeightUpdate,
     this.filterContentBlocks,
     this.sortContentBlocks,
+    this.responseTimeoutMillis,
   }) : super(key: key);
 
   @override
@@ -60,8 +68,6 @@ class _InAppContentBlockCarouselState extends State<InAppContentBlockCarousel> {
   static const _methodOnInAppContentBlockCarouselEvent = 'onInAppContentBlockCarouselEvent';
   static const _methodFilterContentBlocks = 'filterContentBlocks';
   static const _methodSortContentBlocks = 'sortContentBlocks';
-
-
   MethodChannel? _channel;
   Widget? platformView;
 
@@ -162,6 +168,9 @@ class _InAppContentBlockCarouselState extends State<InAppContentBlockCarousel> {
         'filtrationSet': widget.filterContentBlocks != null,
         'sortingSet': widget.sortContentBlocks != null,
       };
+      if (widget.responseTimeoutMillis != null) {
+        creationParams['responseTimeoutMillis'] = widget.responseTimeoutMillis;
+      }
       if (defaultTargetPlatform == TargetPlatform.android) {
         platformView = AndroidView(
           viewType: _viewType,

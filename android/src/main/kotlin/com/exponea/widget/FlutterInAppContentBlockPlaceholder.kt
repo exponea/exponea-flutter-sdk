@@ -8,20 +8,13 @@ import com.exponea.data.InAppContentBlockActionCoder
 import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.InAppContentBlockAction
 import com.exponea.sdk.models.InAppContentBlockCallback
-import com.exponea.sdk.models.InAppContentBlockActionType
 import com.exponea.sdk.util.ExponeaGson
-import com.exponea.sdk.util.Logger
-import com.exponea.sdk.util.HtmlNormalizer
-import com.exponea.sdk.util.HtmlNormalizer.NormalizedResult
 import com.exponea.sdk.view.InAppContentBlockPlaceholderView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.platform.PlatformView
 
 class FlutterInAppContentBlockPlaceholder(
@@ -31,22 +24,20 @@ class FlutterInAppContentBlockPlaceholder(
     private val inAppContentBlockPlaceholder: InAppContentBlockPlaceholderView?,
     private val overrideDefaultBehavior: Boolean,
     binding: FlutterPlugin.FlutterPluginBinding,
-) : PlatformView, MethodCallHandler {
+) : PlatformView {
 
     companion object {
         private const val CHANNEL_NAME = "com.exponea/InAppContentBlockPlaceholder"
-        private const val METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED = "onInAppContentBlockHtmlChanged"
         private const val METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT = "onInAppContentBlockEvent"
-        private const val METHOD_HANDLE_IN_APP_CONTENT_BLOCK_CLICK = "handleInAppContentBlockClick"
     }
 
     private var channel: MethodChannel? = null
     private var view: View? = null
+    private var lastReportedHeight: Int? = null
 
     init {
         if (inAppContentBlockPlaceholder != null) {
             channel = MethodChannel(binding.binaryMessenger, "$CHANNEL_NAME/$id")
-            channel!!.setMethodCallHandler(this)
 
             val origBehaviour = inAppContentBlockPlaceholder.behaviourCallback
             inAppContentBlockPlaceholder.behaviourCallback = object : InAppContentBlockCallback {
@@ -106,10 +97,6 @@ class FlutterInAppContentBlockPlaceholder(
                     if (!overrideDefaultBehavior) {
                         origBehaviour.onMessageShown(placeholderId, contentBlock)
                     }
-                    val normalizedResult = getNormalizedResult(contentBlock, placeholderId)
-                    val arguments: Map<String, String?> =
-                        mapOf("htmlContent" to normalizedResult?.html)
-                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED, arguments)
                     val payload: Map<String, Any?> = mapOf(
                             "eventType" to "onMessageShown",
                             "placeholderId" to placeholderId,
@@ -119,11 +106,10 @@ class FlutterInAppContentBlockPlaceholder(
                 }
 
                 override fun onNoMessageFound(placeholderId: String) {
+                    lastReportedHeight = null
                     if (!overrideDefaultBehavior) {
                         origBehaviour.onNoMessageFound(placeholderId)
                     }
-                    val arguments: Map<String, String?> = mapOf("htmlContent" to null)
-                    invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_HTML_CHANGED, arguments)
                     val payload: Map<String, Any?> = mapOf(
                             "eventType" to "onNoMessageFound",
                             "placeholderId" to placeholderId,
@@ -140,72 +126,43 @@ class FlutterInAppContentBlockPlaceholder(
                     }
                 }
             }
+            inAppContentBlockPlaceholder.setOnHeightUpdateListener { height ->
+                notifyHeightUpdate(height)
+            }
+            inAppContentBlockPlaceholder.setOnContentReadyListener { contentLoaded ->
+                if (!contentLoaded) {
+                    return@setOnContentReadyListener
+                }
+                inAppContentBlockPlaceholder.post {
+                    if (inAppContentBlockPlaceholder.width == 0) {
+                        return@post
+                    }
+                    inAppContentBlockPlaceholder.measure(
+                        View.MeasureSpec.makeMeasureSpec(
+                            inAppContentBlockPlaceholder.width,
+                            View.MeasureSpec.EXACTLY
+                        ),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    )
+                    notifyHeightUpdate(inAppContentBlockPlaceholder.measuredHeight)
+                }
+            }
         }
 
     }
 
-    private fun getNormalizedResult(
-        contentBlock: InAppContentBlock,
-        placeholderId: String
-    ): NormalizedResult? {
-        val rawHtml = contentBlock.htmlContent ?: return null
-        val normalizer = HtmlNormalizer(context, rawHtml)
-        val normalizeConf = HtmlNormalizer.HtmlNormalizerConfig(
-            makeResourcesOffline = true, ensureCloseButton = false
+    private fun notifyHeightUpdate(height: Int) {
+        if (height == lastReportedHeight) {
+            return
+        }
+        lastReportedHeight = height
+        val payload: Map<String, Any?> = mapOf(
+            "eventType" to "onHeightUpdate",
+            "placeholderId" to placeholderId,
+            "height" to height
         )
-        val normalizedHtmlResult = normalizer.normalize(normalizeConf)
-        if (!normalizedHtmlResult.valid) {
-            Logger.e(
-                this,
-                """
-                InAppCB: Unable to normalize HTML content for block ${contentBlock.id} for placeholder $placeholderId
-                """.trimIndent()
-            )
-        }
-        return normalizedHtmlResult
-    }
-
-    private fun determineInAppActionType(url: String): InAppContentBlockActionType {
-        if ("https://exponea.com/close_action" == url) {
-            return InAppContentBlockActionType.CLOSE
-        }
-        if (url.startsWith("http://") || url.startsWith("https://")) {
-            return InAppContentBlockActionType.BROWSER
-        } else {
-            return InAppContentBlockActionType.DEEPLINK
-        }
-    }
-
-    override fun onMethodCall(call: MethodCall, result: Result) {
-
-        when (call.method) {
-            METHOD_HANDLE_IN_APP_CONTENT_BLOCK_CLICK -> {
-
-                if (inAppContentBlockPlaceholder == null) {
-                    result.error(
-                        "InAppCB",
-                        "Handling of url was invoked even when InAppCB is not initialized",
-                        null
-                    )
-                    return
-                }
-
-                val args = call.arguments as Map<String, Any>
-                val actionUrl = args["actionUrl"] as? String
-                if (actionUrl == null) {
-                    result.error(
-                        "InAppCB",
-                        "unable to parse action URL ",
-                        null
-                    )
-                    return
-                }
-                inAppContentBlockPlaceholder.invokeActionClick(actionUrl)
-            }
-
-            else -> {
-                result.notImplemented()
-            }
+        CoroutineScope(Dispatchers.Main).launch {
+            channel?.invokeMethod(METHOD_ON_IN_APP_CONTENT_BLOCK_EVENT, payload)
         }
     }
 
@@ -232,7 +189,6 @@ class FlutterInAppContentBlockPlaceholder(
     }
 
     override fun dispose() {
-        channel?.setMethodCallHandler(null)
         channel = null
         view = null
     }

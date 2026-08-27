@@ -32,6 +32,7 @@ class FlutterInAppContentBlockCarousel(
     private val trackActions: Boolean,
     private val filtrationSet: Boolean,
     private val sortingSet: Boolean,
+    private val responseTimeoutMillis: Long?,
     binding: FlutterPlugin.FlutterPluginBinding,
 ) : PlatformView, MethodCallHandler {
 
@@ -70,7 +71,8 @@ class FlutterInAppContentBlockCarousel(
                                 source.map { ExponeaGson.instance.toJson(it) }
                             )
                         }
-                    } else null
+                    } else null,
+                    responseTimeoutMillis = responseTimeoutMillis,
                 )
             }
             inAppContentBlockCarousel.behaviourCallback = object : ContentBlockCarouselCallback {
@@ -179,10 +181,12 @@ class FlutterInAppContentBlockCarousel(
             METHOD_FILTER_CONTENT_BLOCKS_RESULT -> {
                 val source = (call.arguments as List<Any?>).map { ExponeaGson.instance.fromJson(it as String, InAppContentBlock::class.java) }
                 (inAppContentBlockCarousel?.contentBlockSelector as? FlutterContentBlockCarouselSelector)?.onFilterResponse(source)
+                result.success(null)
             }
             METHOD_SORT_CONTENT_BLOCKS_RESULT -> {
                 val source = (call.arguments as List<Any?>).map { ExponeaGson.instance.fromJson(it as String, InAppContentBlock::class.java) }
                 (inAppContentBlockCarousel?.contentBlockSelector as? FlutterContentBlockCarouselSelector)?.onSortResponse(source)
+                result.success(null)
             }
             else -> {
                 result.notImplemented()
