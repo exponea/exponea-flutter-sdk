@@ -10,14 +10,23 @@ import ExponeaSDK
 
 open class ExponeaFlutterAppDelegate: FlutterAppDelegate {
 
+    /// Sets `UNUserNotificationCenter.current().delegate` to `self`.
+    ///
+    /// Called automatically from `application(_:didFinishLaunchingWithOptions:)` before `super`.
+    /// Override that method and call this at the start (before `super`) if you need custom launch
+    /// logic. If you do not extend `ExponeaFlutterAppDelegate`, call
+    /// `SwiftExponeaPlugin.setUserNotificationCenterDelegate(_:)` instead.
+    @objc open func configurePushNotificationDelegate() {
+        UNUserNotificationCenter.current().delegate = self
+    }
+
     @discardableResult
     open override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        super.application(application, didFinishLaunchingWithOptions: launchOptions)
-        UNUserNotificationCenter.current().delegate = self
-        return true
+        configurePushNotificationDelegate()
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
     open override func application(
@@ -70,6 +79,9 @@ open class ExponeaFlutterAppDelegate: FlutterAppDelegate {
         }
     }
 
+    // Sole legacy-path Universal Link entry point. SwiftExponeaPlugin intentionally does not
+    // implement application(_:continue:) (to avoid double-firing with this override); UIScene
+    // apps receive links via FlutterSceneLifeCycleDelegate instead.
     open override func application(
         _ application: UIApplication,
         continue userActivity: NSUserActivity,

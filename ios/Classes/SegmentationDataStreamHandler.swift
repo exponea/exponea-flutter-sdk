@@ -45,7 +45,15 @@ public class SegmentationDataStreamHandler: NSObject, FlutterStreamHandler {
         return nil
     }
 
+    static func detachFromEngine() {
+        currentInstance?.eventSink = nil
+        pendingData = nil
+    }
+
     private func internalHandle(segmentationData: SegmentationData) -> Bool {
+        guard EngineDeliveryGuard.isSafeToDeliver() else {
+            return false
+        }
         guard let sink = eventSink else {
             return false
         }

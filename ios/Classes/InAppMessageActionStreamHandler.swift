@@ -37,8 +37,17 @@ public class InAppMessageActionStreamHandler: NSObject, FlutterStreamHandler, In
         trackActions = true
         return nil
     }
+
+    func detachFromEngine() {
+        eventSink = nil
+        pendingData = nil
+    }
     
     private func handle(action: InAppMessageAction) -> Bool {
+        guard EngineDeliveryGuard.isSafeToDeliver() else {
+            pendingData = action
+            return false
+        }
         guard let sink = eventSink else {
             pendingData = action
             return false

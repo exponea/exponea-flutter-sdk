@@ -11,16 +11,13 @@ PODS:
   - ExponeaSDK-Notifications (4.3.0)
   - Flutter (1.0.0)
   - Nimble (9.2.1)
-  - Quick (4.0.0)
+  - Quick (5.0.1)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - SwiftSoup (2.11.3)
   - url_launcher_ios (0.0.1):
     - Flutter
-  - webview_flutter_wkwebview (0.0.1):
-    - Flutter
-    - FlutterMacOS
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
@@ -28,10 +25,9 @@ DEPENDENCIES:
   - ExponeaSDK-Notifications
   - Flutter (from `Flutter`)
   - Nimble (= 9.2.1)
-  - Quick (= 4.0.0)
+  - Quick (= 5.0.1)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -53,23 +49,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
-  webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 1c9890be5884140c60da5fde1b66380dec4c244a
-  app_links: 585674be3c6661708e6cd794ab4f39fb9d8356f9
-  exponea: 159e169a7bd14321cebb63e51de92c24cbb0de6d
+  app_links: 3dbc685f76b1693c66a6d9dd1e9ab6f73d97dc0a
+  exponea: 48e79740146f22e6e1869db9955f7da2050bb33e
   ExponeaSDK: bb135577b3eae733d0f08e46fea1a1476b6f78a4
   ExponeaSDK-Notifications: b11db8d3edef301146577f2b6ad4f7a2050ed7fb
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
-  Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
+  Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   SwiftSoup: 959c9ac70d7053fbf476341bfac90ab228523f2a
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
-  webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
 
-PODFILE CHECKSUM: 5ea6cb0516605bb32f8b8aedd76c324d9603f667
+PODFILE CHECKSUM: dbba6a58cc29f86ff6a5885a361e43151a96c4c1
 
 COCOAPODS: 1.16.2

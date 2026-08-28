@@ -87,6 +87,7 @@ class FlutterInAppContentBlockCarouselCallback : DefaultContentBlockCarouselCall
     
     private func invokeMethod(method: String, arguments: [String: Any?]) {
         DispatchQueue.main.async {
+            guard EngineDeliveryGuard.isSafeToDeliver() else { return }
             self.channel.invokeMethod(method, arguments: arguments)
         }
     }

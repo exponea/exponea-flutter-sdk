@@ -45,7 +45,15 @@ public class ReceivedPushStreamHandler: NSObject, FlutterStreamHandler {
         return nil
     }
 
+    static func detachFromEngine() {
+        currentInstance?.eventSink = nil
+        pendingData = nil
+    }
+
     private func internalHandle(push: ReceivedPush) -> Bool {
+        guard EngineDeliveryGuard.isSafeToDeliver() else {
+            return false
+        }
         guard let sink = eventSink else {
             return false
         }

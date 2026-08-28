@@ -72,20 +72,25 @@ import Foundation
 import Flutter
 import exponea
 
-@UIApplicationMain
-@objc class AppDelegate: ExponeaFlutterAppDelegate {
+@main
+@objc class AppDelegate: ExponeaFlutterAppDelegate, FlutterImplicitEngineDelegate {
 
-    override func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-    ) -> Bool {
-        GeneratedPluginRegistrant.register(with: self)
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+        GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     }
 }
 ```
 
-If, for some reason, you don't want to or are not able to extend `ExponeaFlutterAppDelegate`, you can use it as a reference for implementing the required delegate methods yourself.
+> ❗️
+>
+> When adopting the UIScene lifecycle (Flutter 3.38+), you must:
+> 1. Extend `ExponeaFlutterAppDelegate` — push notification delegate setup is automatic unless you override `application(_:didFinishLaunchingWithOptions:)`. If you override it, call `configurePushNotificationDelegate()` at the start of your override, before `super`, so the push notification delegate is configured before launch returns. If you don't extend `ExponeaFlutterAppDelegate`, call `SwiftExponeaPlugin.setUserNotificationCenterDelegate(yourDelegate)` at the start of `application(_:didFinishLaunchingWithOptions:)` instead.
+> 2. Add `FlutterImplicitEngineDelegate` conformance to your `AppDelegate` and move `GeneratedPluginRegistrant.register` to `didInitializeImplicitFlutterEngine` — calling `GeneratedPluginRegistrant.register(with: self)` in `application:didFinishLaunchingWithOptions:` doesn't work in UIScene mode.
+> 3. Add a `UIApplicationSceneManifest` entry to your `Info.plist` with `UISceneDelegateClassName` set to `FlutterSceneDelegate`.
+>
+> Refer to Flutter's [UISceneDelegate adoption guide](https://docs.flutter.dev/release/breaking-changes/uiscenedelegate) for full migration instructions, and to the [Flutter SDK version update guide](version-update.md#update-to-version-300-or-higher) for the complete Exponea SDK 3.0.0+ checklist.
+
+If you don't want to or are not able to extend `ExponeaFlutterAppDelegate`, use it as a reference for implementing the required delegate methods yourself.
 
 ### Step 3: Configure app group
 

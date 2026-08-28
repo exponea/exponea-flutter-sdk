@@ -49,6 +49,7 @@ public class FlutterAppInboxListView: NSObject, FlutterPlatformView {
     
     private func onItemClicked(item: MessageItem) {
         DispatchQueue.main.async {
+            guard EngineDeliveryGuard.isSafeToDeliver() else { return }
             self.channel.invokeMethod(self.methodOnAppInboxItemClicked, arguments: try? AppInboxCoder.encode(item))
         }
     }

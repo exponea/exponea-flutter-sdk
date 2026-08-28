@@ -123,6 +123,9 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
         if !filtrationSet {
             return input
         }
+        guard EngineDeliveryGuard.isSafeToDeliver() else {
+            return input
+        }
         filterResponse = PassthroughSubject<[InAppContentBlockResponse], Never>()
         channel.invokeMethod(methodFilterContentBlocks, arguments: input.map { String(data: try! JSONEncoder().encode($0), encoding: .utf8 )})
         let responseData = filterResponse?.retrieveFirstOrNull(timeout: responseTimeout)
@@ -137,6 +140,9 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
     func sortContentBlocks(_ input: [InAppContentBlockResponse]) -> [InAppContentBlockResponse]? {
         if !sortingSet {
             return nil
+        }
+        guard EngineDeliveryGuard.isSafeToDeliver() else {
+            return input
         }
         sortResponse = PassthroughSubject<[InAppContentBlockResponse], Never>()
         channel.invokeMethod(methodSortContentBlocks, arguments: input.map { String(data: try! JSONEncoder().encode($0), encoding: .utf8 )})

@@ -283,6 +283,7 @@ public class CustomInAppContentBlockCallback: InAppContentBlockCallbackType {
 
     private func invokeMethod(method: String, arguments: [String: Any?]) {
         DispatchQueue.main.async {
+            guard EngineDeliveryGuard.isSafeToDeliver() else { return }
             self.channel.invokeMethod(method, arguments: arguments)
         }
     }
@@ -315,9 +316,13 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         registrar.register(FlutterAppInboxDetailViewFactory(), withId: "AppInboxDetailView")
         registrar.register(FlutterAppInboxListViewFactory(messenger: registrar.messenger()), withId: "AppInboxListView")
         registrar.register(FlutterInAppContentBlockCarouselFactory(messenger: registrar.messenger()), withId: "InAppContentBlockCarousel")
+        // Intentionally kept for apps that have not migrated to UIScene; Flutter recommends plugins
+        // remain registered as application delegates even when adopting scene lifecycle.
+        registrar.addApplicationDelegate(instance)
+        registrar.addSceneDelegate(instance)
     }
 
-    var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
+    lazy var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
     var segmentationDataCallbacks: [FlutterSegmentationDataCallback] = []
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -1602,6 +1607,11 @@ extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
     }
 
     @objc
+    public static func setUserNotificationCenterDelegate(_ delegate: UNUserNotificationCenterDelegate) {
+        UNUserNotificationCenter.current().delegate = delegate
+    }
+
+    @objc
     public static func handlePushNotificationToken(deviceToken: Data) {
         ExponeaSDK.Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)
     }
@@ -1622,6 +1632,44 @@ extension SwiftExponeaPlugin: PushNotificationManagerDelegate {
             let incomingURL = userActivity.webpageURL
             else { return }
         ExponeaSDK.Exponea.shared.trackCampaignClick(url: incomingURL, timestamp: nil)
+    }
+
+    static func browsingWebUserActivity(from userActivities: Set<NSUserActivity>) -> NSUserActivity? {
+        userActivities.first(where: {
+            $0.activityType == NSUserActivityTypeBrowsingWeb && $0.webpageURL != nil
+        })
+    }
+}
+
+extension SwiftExponeaPlugin: FlutterSceneLifeCycleDelegate {
+    // Handles Universal Links delivered on cold launch via UIScene connection options.
+    public func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions?
+    ) -> Bool {
+        if let userActivity = SwiftExponeaPlugin.browsingWebUserActivity(
+            from: connectionOptions?.userActivities ?? []
+        ) {
+            SwiftExponeaPlugin.continueUserActivity(userActivity)
+        }
+        return false
+    }
+
+    // Handles Universal Links delivered on warm launch (app already running in background).
+    // Returns false after tracking so Flutter can still run handleDeeplink and other plugins
+    // can receive the activity (returning true would consume the event).
+    public func scene(_ scene: UIScene, continue userActivity: NSUserActivity) -> Bool {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+              userActivity.webpageURL != nil else {
+            return false
+        }
+        SwiftExponeaPlugin.continueUserActivity(userActivity)
+        return false
+    }
+
+    public func sceneDidDisconnect(_ scene: UIScene) {
+        EngineDeliveryGuard.detachStreamHandlersFromEngine()
     }
 }
 

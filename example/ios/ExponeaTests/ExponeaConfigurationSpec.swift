@@ -338,8 +338,8 @@ class ExponeaConfigurationParserSpec: QuickSpec {
                     fail("Expected integration configuration change")
                     return
                 }
-                let settings = integrationConfig as! ExponeaSDK.Exponea.StreamSettings
-                expect(settings.streamId).to(equal("mock-stream-id"))
+                let integration = integrationConfig as! ExponeaSDK.ExponeaIntegration
+                expect(integration.streamId).to(equal("mock-stream-id"))
                 expect(routeMap).to(beNil())
             }
 

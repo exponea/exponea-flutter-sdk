@@ -34,6 +34,14 @@
 		5531B70929B1514F00BF354F /* ExampleAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5531B70829B1514F00BF354F /* ExampleAuthProvider.swift */; };
 		5531B70B29B1519300BF354F /* CustomerTokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5531B70A29B1519300BF354F /* CustomerTokenStorage.swift */; };
 		603CC5882FD2D10F005A7A64 /* FlushDataAwaitingCompletionSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CC5872FD2D10E005A7A64 /* FlushDataAwaitingCompletionSpec.swift */; };
+		6097F2093035B79F007731F8 /* SegmentationDataStreamHandlerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6097F2073035B79F007731F8 /* SegmentationDataStreamHandlerSpec.swift */; };
+		6097F20A3035B79F007731F8 /* OpenedPushStreamHandlerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6097F2053035B79F007731F8 /* OpenedPushStreamHandlerSpec.swift */; };
+		6097F20B3035B79F007731F8 /* SwiftExponeaPluginSceneLifeCycleSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6097F2083035B79F007731F8 /* SwiftExponeaPluginSceneLifeCycleSpec.swift */; };
+		6097F20C3035B79F007731F8 /* EngineDeliveryGuardSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6097F2033035B79F007731F8 /* EngineDeliveryGuardSpec.swift */; };
+		6097F20D3035B79F007731F8 /* ReceivedPushStreamHandlerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6097F2063035B79F007731F8 /* ReceivedPushStreamHandlerSpec.swift */; };
+		6097F20E3035B79F007731F8 /* InAppMessageActionStreamHandlerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6097F2043035B79F007731F8 /* InAppMessageActionStreamHandlerSpec.swift */; };
+		6097F2163035BFC6007731F8 /* values in Resources */ = {isa = PBXBuildFile; fileRef = 6097F2153035BFC6007731F8 /* values */; };
+		6097F2183035CC8D007731F8 /* ExponeaFlutterAppDelegateSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6097F2173035CC8C007731F8 /* ExponeaFlutterAppDelegateSpec.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -130,6 +138,15 @@
 		5531B70829B1514F00BF354F /* ExampleAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleAuthProvider.swift; sourceTree = "<group>"; };
 		5531B70A29B1519300BF354F /* CustomerTokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerTokenStorage.swift; sourceTree = "<group>"; };
 		603CC5872FD2D10E005A7A64 /* FlushDataAwaitingCompletionSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushDataAwaitingCompletionSpec.swift; sourceTree = "<group>"; };
+		6097F2033035B79F007731F8 /* EngineDeliveryGuardSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineDeliveryGuardSpec.swift; sourceTree = "<group>"; };
+		6097F2043035B79F007731F8 /* InAppMessageActionStreamHandlerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppMessageActionStreamHandlerSpec.swift; sourceTree = "<group>"; };
+		6097F2053035B79F007731F8 /* OpenedPushStreamHandlerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedPushStreamHandlerSpec.swift; sourceTree = "<group>"; };
+		6097F2063035B79F007731F8 /* ReceivedPushStreamHandlerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedPushStreamHandlerSpec.swift; sourceTree = "<group>"; };
+		6097F2073035B79F007731F8 /* SegmentationDataStreamHandlerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationDataStreamHandlerSpec.swift; sourceTree = "<group>"; };
+		6097F2083035B79F007731F8 /* SwiftExponeaPluginSceneLifeCycleSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftExponeaPluginSceneLifeCycleSpec.swift; sourceTree = "<group>"; };
+		6097F20F3035BD22007731F8 /* push_received.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = push_received.json; path = ../../test/values/push_received.json; sourceTree = "<group>"; };
+		6097F2153035BFC6007731F8 /* values */ = {isa = PBXFileReference; lastKnownFileType = folder; name = values; path = ../../test/values; sourceTree = "<group>"; };
+		6097F2173035CC8C007731F8 /* ExponeaFlutterAppDelegateSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaFlutterAppDelegateSpec.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -226,6 +243,7 @@
 		31B4ADE12679F1BE009655A3 /* ExponeaTests */ = {
 			isa = PBXGroup;
 			children = (
+				6097F2173035CC8C007731F8 /* ExponeaFlutterAppDelegateSpec.swift */,
 				603CC5872FD2D10E005A7A64 /* FlushDataAwaitingCompletionSpec.swift */,
 				31B4ADE42679F1BE009655A3 /* Info.plist */,
 				31B4AE162679F46E009655A3 /* JsonDataParserSpec.swift */,
@@ -240,6 +258,12 @@
 				3177F35C267E2DD400257D01 /* FlushModeSpec.swift */,
 				312086FE267FC30800C4F592 /* OpenedPushSpec.swift */,
 				31208701267FC31300C4F592 /* ReceivedPushSpec.swift */,
+				6097F2033035B79F007731F8 /* EngineDeliveryGuardSpec.swift */,
+				6097F2043035B79F007731F8 /* InAppMessageActionStreamHandlerSpec.swift */,
+				6097F2053035B79F007731F8 /* OpenedPushStreamHandlerSpec.swift */,
+				6097F2063035B79F007731F8 /* ReceivedPushStreamHandlerSpec.swift */,
+				6097F2073035B79F007731F8 /* SegmentationDataStreamHandlerSpec.swift */,
+				6097F2083035B79F007731F8 /* SwiftExponeaPluginSceneLifeCycleSpec.swift */,
 			);
 			path = ExponeaTests;
 			sourceTree = "<group>";
@@ -277,6 +301,8 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				6097F2153035BFC6007731F8 /* values */,
+				6097F20F3035BD22007731F8 /* push_received.json */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				31B4ADE12679F1BE009655A3 /* ExponeaTests */,
@@ -419,6 +445,7 @@
 					};
 					31B4ADDF2679F1BE009655A3 = {
 						CreatedOnToolsVersion = 12.3;
+						TestTargetID = 97C146ED1CF9000F007C117D;
 					};
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -467,6 +494,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6097F2163035BFC6007731F8 /* values in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,6 +699,13 @@
 				31BE44EF268A60900074229D /* ConsentSpec.swift in Sources */,
 				31B4AE172679F46E009655A3 /* JsonDataParserSpec.swift in Sources */,
 				312086FF267FC30800C4F592 /* OpenedPushSpec.swift in Sources */,
+				6097F2093035B79F007731F8 /* SegmentationDataStreamHandlerSpec.swift in Sources */,
+				6097F20A3035B79F007731F8 /* OpenedPushStreamHandlerSpec.swift in Sources */,
+				6097F20B3035B79F007731F8 /* SwiftExponeaPluginSceneLifeCycleSpec.swift in Sources */,
+				6097F20C3035B79F007731F8 /* EngineDeliveryGuardSpec.swift in Sources */,
+				6097F20D3035B79F007731F8 /* ReceivedPushStreamHandlerSpec.swift in Sources */,
+				6097F2183035CC8D007731F8 /* ExponeaFlutterAppDelegateSpec.swift in Sources */,
+				6097F20E3035B79F007731F8 /* InAppMessageActionStreamHandlerSpec.swift in Sources */,
 				31B4AE342679F71B009655A3 /* ExponeaConfigurationSpec.swift in Sources */,
 				31208702267FC31300C4F592 /* ReceivedPushSpec.swift in Sources */,
 			);
@@ -1017,6 +1052,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C936AA4F3A4E4B81C498DE0A /* Pods-ExponeaTests.debug.xcconfig */;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1041,6 +1077,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = Debug;
 		};
@@ -1048,6 +1085,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AA39587E58FB48185C6DA969 /* Pods-ExponeaTests.release.xcconfig */;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1069,6 +1107,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = Release;
 		};
@@ -1076,6 +1115,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AFA72B72D207E775DC40DF8C /* Pods-ExponeaTests.profile.xcconfig */;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1097,6 +1137,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = Profile;
 		};

@@ -6,21 +6,21 @@
 import Foundation
 import Quick
 
-struct TestUtil {
-    private static let packageRootPath = URL(fileURLWithPath: #file).pathComponents
-        .dropLast() // file name
-        .dropLast() // ExponeaTests
-        .dropLast() // ios
-        .dropLast() // example
-        .joined(separator: "/")
+private final class TestBundleLocator {}
 
+struct TestUtil {
     static func loadFile(_ fileName: String) -> String {
+        let bundle = Bundle(for: TestBundleLocator.self)
+        guard let url = bundle.url(forResource: fileName, withExtension: "json", subdirectory: "values") else {
+            XCTFail("Missing fixture: \(fileName).json in test bundle")
+            return ""
+        }
         do {
-            return try String(contentsOfFile: self.packageRootPath + "/test/values/\(fileName).json")
+            return try String(contentsOf: url, encoding: .utf8)
         } catch {
             XCTFail(error.localizedDescription)
+            return ""
         }
-        return ""
     }
 
     static func parseJson(_ jsonString: String) -> [String:Any?] {
