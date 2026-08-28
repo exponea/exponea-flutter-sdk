@@ -12,11 +12,15 @@ import com.exponea.data.AppInboxCoder
 import com.exponea.data.ConsentEncoder
 import com.exponea.data.Customer
 import com.exponea.data.Event
+import com.exponea.data.CustomerIdentityParser
+import com.exponea.data.ConfigurationChangeParser
 import com.exponea.data.ExponeaConfigurationParser
+import com.exponea.data.ParsedConfigurationChange
 import com.exponea.data.FlutterSegmentationDataCallback
 import com.exponea.data.InAppContentBlockActionCoder
 import com.exponea.data.OpenedPush
 import com.exponea.data.ReceivedPush
+import com.exponea.data.toBridge
 import com.exponea.data.InAppMessageAction
 import com.exponea.data.InAppMessageActionType
 import com.exponea.data.RecommendationEncoder
@@ -29,11 +33,15 @@ import com.exponea.data.getOptional
 import com.exponea.exception.ExponeaException
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
+import com.exponea.sdk.models.CustomerIdentity
 import com.exponea.sdk.models.ExponeaConfiguration
+import com.exponea.sdk.models.ExponeaConfigurationOverrides
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.PropertiesList
+import com.exponea.sdk.models.SdkAuthCallback
+import com.exponea.sdk.models.SdkAuthError as NativeSdkAuthError
 import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.InAppMessageButton
 import com.exponea.sdk.models.InAppMessageCallback
@@ -74,6 +82,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         private const val STREAM_NAME_RECEIVED_PUSH = "$CHANNEL_NAME/received_push"
         private const val STREAM_NAME_IN_APP_MESSAGES = "$CHANNEL_NAME/in_app_messages"
         private const val STREAM_NAME_SEGMENTATION_DATA = "$CHANNEL_NAME/segmentation_data"
+        private const val STREAM_NAME_SDK_AUTH = "$CHANNEL_NAME/sdk_auth"
 
         fun handleCampaignIntent(intent: Intent?, applicationContext: Context) {
             Log.d(TAG, "handleCampaignIntent()")
@@ -118,6 +127,7 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
     private var receivedPushChannel: EventChannel? = null
     private var inAppMessagesChannel: EventChannel? = null
     private var segmentationDataChannel: EventChannel? = null
+    private var sdkAuthChannel: EventChannel? = null
 
     override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         val context = binding.applicationContext
@@ -143,6 +153,9 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         segmentationDataChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_SEGMENTATION_DATA).apply {
             val handler = SegmentationDataStreamHandler()
             setStreamHandler(handler)
+        }
+        sdkAuthChannel = EventChannel(binding.binaryMessenger, STREAM_NAME_SDK_AUTH).apply {
+            setStreamHandler(SdkAuthStreamHandler())
         }
         binding
             .platformViewRegistry
@@ -174,6 +187,8 @@ class ExponeaPlugin : FlutterPlugin, ActivityAware {
         inAppMessagesChannel = null
         segmentationDataChannel?.setStreamHandler(null)
         segmentationDataChannel = null
+        sdkAuthChannel?.setStreamHandler(null)
+        sdkAuthChannel = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -200,6 +215,7 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_IS_CONFIGURED = "isConfigured"
         private const val METHOD_GET_CUSTOMER_COOKIE = "getCustomerCookie"
         private const val METHOD_IDENTIFY_CUSTOMER = "identifyCustomer"
+        private const val METHOD_SET_SDK_AUTH_TOKEN = "setSdkAuthToken"
         private const val METHOD_ANONYMIZE = "anonymize"
         private const val METHOD_GET_DEFAULT_PROPERTIES = "getDefaultProperties"
         private const val METHOD_SET_DEFAULT_PROPERTIES = "setDefaultProperties"
@@ -278,6 +294,9 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_IDENTIFY_CUSTOMER -> {
                 identifyCustomer(call.arguments, result)
+            }
+            METHOD_SET_SDK_AUTH_TOKEN -> {
+                setSdkAuthToken(call.arguments, result)
             }
             METHOD_ANONYMIZE -> {
                 anonymize(call.arguments, result)
@@ -799,10 +818,15 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     }
 
     private fun unregisterSegmentationDataStream(args: Any?, result: Result) = runWithNoResult(result) {
-        requireConfigured()
         val params = args as Map<String, Any?>
         val callbackInstanceId = params.getRequired<String>("instanceId")
         val segmentationCallbackToRemove = segmentationDataCallbacks.find { it.instanceId == callbackInstanceId }
+        // Unregistering after the SDK has been stopped (e.g. stream teardown triggered by
+        // disposing widgets after stopIntegration) is a no-op rather than an error.
+        if (!Exponea.isInitialized) {
+            segmentationCallbackToRemove?.let { segmentationDataCallbacks.remove(it) }
+            return@runWithNoResult
+        }
         if (segmentationCallbackToRemove == null) {
             throw ExponeaException.common("Segmentation data stream with instanceId $callbackInstanceId not found")
         }
@@ -867,15 +891,27 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     private fun configure(args: Any?, result: Result) = runWithResult<Boolean>(result) {
         val data = args as Map<String, Any?>
         val configuration = ExponeaConfigurationParser().parseConfig(data)
+        val customerIdentity = CustomerIdentityParser.parse(
+            data.getOptional<Map<String, Any?>>("customerIdentity"),
+        )
         val alreadyConfigured = Exponea.isInitialized
         if (!alreadyConfigured) {
-            Exponea.init(activity ?: context, configuration)
+            if (customerIdentity != null) {
+                Exponea.init(activity ?: context, configuration, customerIdentity)
+            } else {
+                Exponea.init(activity ?: context, configuration)
+            }
         }
         if (!alreadyConfigured || this.configuration == null) {
             this.configuration = configuration
         }
         Exponea.notificationDataCallback = { ReceivedPushStreamHandler.handle(ReceivedPush(it)) }
         Exponea.inAppMessageActionCallback = InAppMessageActionStreamHandler.currentInstance
+        Exponea.sdkAuthCallback = object : SdkAuthCallback {
+            override fun onAuthFailure(error: NativeSdkAuthError) {
+                SdkAuthStreamHandler.handle(error.toBridge())
+            }
+        }
         return@runWithResult !alreadyConfigured
     }
 
@@ -891,25 +927,57 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
     private fun identifyCustomer(args: Any?, result: Result) = runWithNoResult(result) {
         requireConfigured()
         val data = args as Map<String, Any?>
-        val customer = Customer.fromMap(data)
-        Exponea.identifyCustomer(
+        if (data.containsKey("customerIds")) {
+            val customerIdentity = CustomerIdentityParser.parse(data)
+                ?: throw com.exponea.exception.ExponeaDataException(
+                    "customerIds payload is invalid.",
+                )
+            val properties = (data["properties"] as? Map<String, Any>) ?: emptyMap()
+            Exponea.identifyCustomer(customerIdentity, properties)
+        } else {
+            val customer = Customer.fromMap(data)
+            Exponea.identifyCustomer(
                 CustomerIds(HashMap(customer.ids)),
-                PropertiesList(HashMap(customer.properties))
-        )
+                PropertiesList(HashMap(customer.properties)),
+            )
+        }
+    }
+
+    private fun setSdkAuthToken(args: Any?, result: Result) = runWithNoResult(result) {
+        requireConfigured()
+        val data = args as Map<String, Any?>
+        val token = data["token"] as? String
+            ?: throw com.exponea.exception.ExponeaDataException(
+                "setSdkAuthToken requires a non-null token.",
+            )
+        Exponea.setSdkAuthToken(token)
     }
 
     private fun anonymize(args: Any?, result: Result) = runWithNoResult(result) {
         requireConfigured()
         val data = args as Map<String, Any?>
-        val configChange = ExponeaConfigurationParser().parseConfigChange(data, configuration!!.baseURL)
-        if (configChange.project != null && configChange.mapping != null) {
-            Exponea.anonymize(configChange.project, configChange.mapping)
-        } else if (configChange.project != null) {
-            Exponea.anonymize(configChange.project)
-        } else if (configChange.mapping != null) {
-            Exponea.anonymize(projectRouteMap = configChange.mapping)
-        } else {
-            Exponea.anonymize()
+        val parser = ExponeaConfigurationParser()
+        when (val change = ConfigurationChangeParser.parse(data, parser)) {
+            is ParsedConfigurationChange.Integration -> {
+                Exponea.anonymize(
+                    change.integrationConfig,
+                    ExponeaConfigurationOverrides(
+                        integrationRouteMap = change.integrationRouteMap ?: emptyMap(),
+                    ),
+                )
+            }
+            is ParsedConfigurationChange.Legacy -> {
+                val configChange = change.change
+                if (configChange.project != null && configChange.mapping != null) {
+                    Exponea.anonymize(configChange.project, configChange.mapping)
+                } else if (configChange.project != null) {
+                    Exponea.anonymize(configChange.project)
+                } else if (configChange.mapping != null) {
+                    Exponea.anonymize(projectRouteMap = configChange.mapping)
+                } else {
+                    Exponea.anonymize()
+                }
+            }
         }
     }
 

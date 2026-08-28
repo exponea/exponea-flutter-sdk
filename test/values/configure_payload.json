@@ -1,0 +1,49 @@
+[
+  {
+    "integrationConfig": {
+      "projectToken": "mock-project-token",
+      "authorizationToken": "mock-auth-token"
+    }
+  },
+  {
+    "integrationConfig": {
+      "streamId": "mock-stream-id",
+      "baseUrl": "https://stream.exponea.com"
+    },
+    "customerIdentity": {
+      "customerIds": {
+        "registered": "test@mail.com"
+      },
+      "sdkAuthToken": "mock-jwt-token"
+    }
+  },
+  {
+    "integrationConfig": {
+      "projectToken": "mock-project-token",
+      "authorizationToken": "mock-auth-token"
+    },
+    "customerIdentity": {
+      "customerIds": {
+        "registered": "test@mail.com"
+      }
+    }
+  },
+  {
+    "integrationConfig": {
+      "streamId": "mock-stream-id",
+      "baseUrl": "https://stream.exponea.com"
+    },
+    "customerIdentity": {
+      "customerIds": {
+        "registered": "test@mail.com"
+      },
+      "sdkAuthToken": "mock-jwt-token"
+    },
+    "ios": {
+      "appGroup": "group.com.exponea.sdk.example",
+      "requirePushAuthorization": false
+    },
+    "pushTokenTrackingFrequency": "DAILY",
+    "regenerateDeviceIdOnAnonymize": true
+  }
+]

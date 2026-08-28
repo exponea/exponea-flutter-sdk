@@ -12,14 +12,17 @@ class ExponeaConfigurationChange {
     let project: ExponeaProject?
     let mapping: [EventType : [ExponeaProject]]?
     
-    init(_ data: [String:Any?], parser: ConfigurationParser, baseUrl: String) throws {
+    init(_ data: [String:Any?], parser: ConfigurationParser) throws {
         if let projectData = data["project"] as? [String:Any?] {
-            self.project = try parser.parseExponeaProject(projectData, defaultBaseUrl: baseUrl)
+            self.project = try parser.parseExponeaProject(projectData)
         } else {
             self.project = nil
         }
         if let mappingData = data["mapping"] as? [String:Any?] {
-            self.mapping = try parser.parseProjectMapping(mappingData, defaultBaseUrl: self.project?.baseUrl ?? baseUrl)
+            self.mapping = try parser.parseProjectMapping(
+                mappingData,
+                inheritBaseUrl: self.project?.baseUrl
+            )
         } else {
             self.mapping = nil
         }

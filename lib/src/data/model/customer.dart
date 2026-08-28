@@ -1,7 +1,13 @@
 import 'package:meta/meta.dart';
 
+part 'customer_identity.dart';
+
+sealed class CustomerIdentifier {
+  const CustomerIdentifier();
+}
+
 @immutable
-class Customer {
+class Customer extends CustomerIdentifier {
   final Map<String, String> ids;
   final Map<String, dynamic> properties;
 

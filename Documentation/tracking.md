@@ -120,7 +120,7 @@ Without identification, events are tracked for an anonymous customer, only ident
 
 ### Identify
 
-Use the `identifyCustomer()` method with a `Customer` object as an argument to identify a customer using their unique [hard ID](https://documentation.bloomreach.com/engagement/docs/customer-identification#hard-id).
+Use the `identifyCustomer()` method to identify a customer using their unique [hard ID](https://documentation.bloomreach.com/engagement/docs/customer-identification#hard-id).
 
 The default hard ID is `registered` and its value is typically the customer's email address. However, your {user.mkg} project may define a different hard ID.
 
@@ -136,54 +136,82 @@ Although you can use `identifyCustomer` with a [soft ID](https://documentation.b
 >
 > If a customer profile is anonymized or deleted in the {user.mkg} web app, initializing the SDK again in the app can cause the profile to be reidentified or recreated from locally cached data. Always clear local data appropriately to prevent unintended profile recreation.
 
-
 #### Arguments
 
-| Name                     | Type                  | Description |
-| ------------------------ | --------------------- | ----------- |
-| customer **(required)**  | [Customer](#customer) | Customer object. |
+`identifyCustomer` accepts a `CustomerIdentifier` — either `Customer` (project mode, legacy) or `CustomerIdentity` (Stream mode, preferred):
 
-##### Customer
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `identifier` **(required)** | `CustomerIdentifier` | `Customer` or `CustomerIdentity`. |
+| `properties` | `Map<String, dynamic>?` | Dictionary of customer properties. Optional; defaults to none. |
 
-| Name               | Type                 | Description |
-| -------------------| -------------------- | ----------- |
-| ids **(required)** | Map<String, String>  | Dictionary of customer unique identifiers. Only identifiers defined in the {user.mkg} project are accepted. |
-| properties         | Map<String, dynamic> | Dictionary of customer properties. |
+**Using `CustomerIdentity` (preferred for Stream mode)**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `customerIds` **(required)** | `Map<String, String>` | Dictionary of customer unique identifiers. Only identifiers defined in the {user.mkg} project are accepted. |
+| `sdkAuthToken` | `String?` | Stream JWT. If provided, stored persistently. If omitted, any previously set auth token is cleared. |
+
+**Using `Customer` (project mode)**
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `ids` **(required)** | `Map<String, String>` | Dictionary of customer unique identifiers. |
+| `properties` | `Map<String, dynamic>` | Dictionary of customer properties. Passed as part of the `Customer` object, not as a separate argument. |
 
 #### Examples
 
-First, create a `Customer` object containing at least the customer's hard ID and, optionally, a dictionary with additional customer properties:
+Using `CustomerIdentity`:
 
 ```dart
-final customer = Customer(
-  ids: {
-    'registered': 'jane.doe@example.com',
-  },
+await _plugin.identifyCustomer(
+  CustomerIdentity(
+    customerIds: {'registered': 'jane.doe@example.com'},
+  ),
   properties: {
     'first_name': 'Jane',
     'last_name': 'Doe',
-    'age', 32
+    'age': 32,
   },
 );
 ```
 
-Pass the customer object to `identifyCustomer()`:
+Without additional properties:
 
 ```dart
-_plugin.identifyCustomer(customer);
+await _plugin.identifyCustomer(
+  CustomerIdentity(
+    customerIds: {'registered': 'jane.doe@example.com'},
+  ),
+);
 ```
 
-If you only want to update the customer ID without any additional properties, you can pass an empty dictionary into `properties`:
+To identify a customer and set the SDK auth token at the same time, include the token in `CustomerIdentity`:
+
+```dart
+await _plugin.identifyCustomer(
+  CustomerIdentity(
+    customerIds: {'registered': 'jane.doe@example.com'},
+    sdkAuthToken: 'your-jwt-token',
+  ),
+);
+```
+
+Using legacy `Customer` (project mode):
 
 ```dart
 final customer = Customer(
-  ids: {
-    'registered': 'jane.doe@example.com',
+  ids: {'registered': 'jane.doe@example.com'},
+  properties: {
+    'first_name': 'Jane',
+    'last_name': 'Doe',
+    'age': 32,
   },
-  properties: {},
 );
 _plugin.identifyCustomer(customer);
 ```
+
+You can also supply an initial `CustomerIdentity` at SDK initialization—see [Initialize with customer identity](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-with-customer-identity).
 
 ### Anonymize
 
@@ -201,30 +229,66 @@ Invoking this method will cause the SDK to:
 * Preload in-app messages, in-app content blocks, and app inbox for the new customer.
 * Track a new `installation` event for the new customer.
 
-#### How tokens are removed during anonymization
-
-The SDK removes push notification tokens differently depending on the version:
-
-**SDK versions below 2.3.0:**
-
-- Assigns an empty string to the `google_push_notification_id`, `huawei_push_notification_id`, or `apple_push_notification_id` customer property.
-
-**SDK versions 2.3.0 and higher:**
-
-- Tracks a `notification_state` event with `valid = false` and `description = Invalidated`
+You can also use the `anonymize` method to switch to a different integration configuration. The SDK will then track events to a new customer record in the new project or stream, similar to the first app session after installation on a new device.
 
 > 📘 Note
 >
-> Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#token-tracking-via-notification_state-event).
+> When the SDK is configured with `StreamIntegrationConfig` and an SDK auth token is set, the SDK attempts a best-effort flush of pending events before clearing local data.
 
-You can also use the `anonymize` method to switch to a different {user.mkg} project. The SDK will then track events to a new customer record in the new project, similar to the first app session after installation on a new device.
+> ❗️ Avoid anonymous events on logout
+>
+> `anonymize()` creates a new anonymous customer profile and tracks subsequent events against it. If you don't want to generate events against an unidentified profile, use [`stopIntegration()`](#stop-sdk-integration) on logout instead—unlike `anonymize()`, it does not create a new anonymous profile. This is especially relevant for `StreamIntegrationConfig` integrations using an [SDK auth token (JWT)](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization) on a stream configured with signed-only permissions.
+
+Pass an optional [`ConfigurationChange`](#configurationchange) argument to change the default integration or route map. Use `IntegrationConfigurationChange` with `IntegrationConfig` (preferred) or the legacy `ExponeaConfigurationChange` with `ExponeaProject`.
 
 #### Examples
 
-```dart
-_plugin.anonymize();```
+Reset without switching integration:
 
-Switch to a different project:
+```dart
+_plugin.anonymize();
+```
+
+Switch to a different project (using `ProjectIntegrationConfig`):
+
+```dart
+_plugin.anonymize(
+  IntegrationConfigurationChange(
+    integrationConfig: ProjectIntegrationConfig(
+      projectToken: 'new-project-token',
+      authorizationToken: 'Token new-auth-token',
+    ),
+    integrationRouteMap: {
+      EventType.payment: [
+        ProjectIntegrationConfig(
+          projectToken: 'special-project-for-payments',
+          authorizationToken: 'Token payment-auth',
+          baseUrl: 'https://api-payments.some-domain.com',
+        ),
+      ],
+    },
+  ),
+);
+```
+
+Switch to a different stream integration:
+
+```dart
+_plugin.anonymize(
+  IntegrationConfigurationChange(
+    integrationConfig: StreamIntegrationConfig(
+      streamId: 'new-stream-id',
+      baseUrl: 'https://api.exponea.com',
+    ),
+  ),
+);
+```
+
+> 📘
+>
+> When switching to a `StreamIntegrationConfig` with `anonymize()`, `integrationRouteMap` is not supported and will be ignored. Provide a new `CustomerIdentity` via `identifyCustomer()` after anonymization if a Stream JWT is needed for the new customer.
+
+Legacy style — switch project with `ExponeaProject` (deprecated):
 
 ```dart
 final configChange = ExponeaConfigurationChange(
@@ -245,6 +309,17 @@ final configChange = ExponeaConfigurationChange(
 _plugin.anonymize(configChange);
 ```
 
+> 📘
+>
+> On iOS, passing only `integrationRouteMap` without `integrationConfig` results in the route map being silently ignored. This is a native SDK limitation with no workaround at the wrapper layer.
+
+##### ConfigurationChange
+
+Sealed supertype for the optional `anonymize()` argument:
+
+* **`IntegrationConfigurationChange`** (preferred) — accepts `IntegrationConfig` and `integrationRouteMap`.
+* **`ExponeaConfigurationChange`** (deprecated) — accepts `ExponeaProject` and `projectMapping`.
+
 ## Sessions
 
 The SDK tracks sessions automatically by default, producing two events: `session_start` and `session_end`.
@@ -258,6 +333,24 @@ The default session timeout is 60 seconds. Set `sessionTimeout` in the [SDK conf
 To disable automatic session tracking, set `automaticSessionTracking` to `false` in the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
 
 Use the `trackSessionStart()` and `trackSessionEnd()` methods to track sessions manually.
+
+#### How tokens are removed during anonymization
+
+The SDK removes push notification tokens differently depending on the version:
+
+**SDK versions below 2.3.0:**
+
+- Assigns an empty string to the `google_push_notification_id`, `huawei_push_notification_id`, or `apple_push_notification_id` customer property.
+
+**SDK versions 2.3.0 and higher:**
+
+- Tracks a `notification_state` event with `valid = false` and `description = Invalidated`
+
+> 📘 Note
+>
+> Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-notifications#token-tracking-via-notification_state-event).
+
+You can also use the `anonymize` method to switch to a different {user.mkg} project. The SDK will then track events to a new customer record in the new project, similar to the first app session after installation on a new device.
 
 #### Examples
 

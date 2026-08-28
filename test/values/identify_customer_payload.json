@@ -1,0 +1,40 @@
+[
+  {
+    "ids": {
+      "registered": "test@mail.com"
+    },
+    "properties": {}
+  },
+  {
+    "ids": {
+      "registered": "test@mail.com"
+    },
+    "properties": {
+      "str_test": "abc-123",
+      "double_test": 123.987,
+      "int_test": 109,
+      "bool_test": true
+    }
+  },
+  {
+    "customerIds": {
+      "registered": "test@mail.com"
+    }
+  },
+  {
+    "customerIds": {
+      "registered": "test@mail.com"
+    },
+    "sdkAuthToken": "mock-jwt-token"
+  },
+  {
+    "customerIds": {
+      "registered": "test@mail.com"
+    },
+    "sdkAuthToken": "mock-jwt-token",
+    "properties": {
+      "first_name": "Alice",
+      "plan": "premium"
+    }
+  }
+]

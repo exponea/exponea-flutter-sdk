@@ -11,12 +11,15 @@ void main() {
 
     final data = readMapData('configuration');
     test('check data', () async {
-      expect(data.length, 4);
+      expect(data.length, 7);
     });
     final noData = data[0];
     final minData = data[1];
     final defaultSession = data[2];
     final fullData = data[3];
+    final normalizedMinData = data[4];
+    final normalizedDefaultSession = data[5];
+    final normalizedFullData = data[6];
 
     group('encode', () {
       test('minimal', () async {
@@ -24,7 +27,7 @@ void main() {
           projectToken: 'mock-project-token',
           authorizationToken: 'mock-auth-token',
         );
-        expect(encode(config), minData);
+        expect(encode(config), normalizedMinData);
       });
 
       test('defaultSession', () async {
@@ -79,7 +82,7 @@ void main() {
           applicationId: 'default-application'
         );
 
-        expect(encode(config), defaultSession);
+        expect(encode(config), normalizedDefaultSession);
       });
 
       test('full', () async {
@@ -134,7 +137,7 @@ void main() {
             applicationId: 'default-application'
         );
 
-        expect(encode(config), fullData);
+        expect(encode(config), normalizedFullData);
       });
     });
 

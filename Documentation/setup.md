@@ -17,6 +17,10 @@ The Exponea Flutter SDK can be installed or updated through a dependency in your
 >
 > Refer to [Flutter SDK release notes](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-release-notes) for the latest Exponea Flutter SDK release.
 
+> ❗️
+>
+> **SDK versions 3.0.0 and higher** require **Dart 3.0+** and **Flutter 3.10+** (sealed-class API for Stream/JWT integration types). Upgrade your toolchain before updating to a JWT/Stream release. For more information, see [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update#update-to-version-300-or-higher).
+
 ### Add dependency
 
 In your project's `pubspec.yaml` file, add a dependency to the Exponea Flutter SDK under `dependencies:`:
@@ -73,7 +77,10 @@ Now that you have installed the SDK in your project, you must import, configure,
 >
 > Refer to [Stop SDK integration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-tracking#stop-sdk-integration) for details.
 
-The required configuration parameters are `projectToken`, `authorizationToken`, and `baseURL`. You can find these in the {user.mkg} webapp under `Project settings` > `Access management` > `API`.
+The required configuration parameter is `integrationConfig`. Choose one of two types depending on your integration:
+
+- **`ProjectIntegrationConfig`** — for a standard Engagement integration. Requires `projectToken`, `authorizationToken`, and `baseUrl`. Find your credentials in the {user.mkg} webapp under **Project settings** > **Access management** > **API**.
+- **`StreamIntegrationConfig`** — for a [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration. Requires `streamId` and an optional `baseUrl`. Find your stream ID in the Data hub app under **Event streams** > select your stream > **Access Security**.
 
 > 📘
 >
@@ -85,20 +92,80 @@ Import the SDK:
 import 'package:exponea/exponea.dart';
 ```
 
-Initialize the SDK:
+Initialize the SDK with a `ProjectIntegrationConfig`:
 
 ```dart
 final _plugin = ExponeaPlugin();
 final configuration = ExponeaConfiguration(
-  projectToken: 'YOUR_PROJECT_TOKEN',
-  authorizationToken: 'YOUR_API_KEY',
-  // default baseUrl value is https://api.exponea.com
-  baseUrl: 'YOUR_API_BASE_URL', 
+  integrationConfig: ProjectIntegrationConfig(
+    projectToken: 'YOUR_PROJECT_TOKEN',
+    authorizationToken: 'Token YOUR_API_KEY',
+    // default baseUrl value is https://api.exponea.com
+    baseUrl: 'YOUR_API_BASE_URL',
+  ),
 );
-_plugin.configure(configuration).catchError((error) {
+await _plugin.configure(configuration).catchError((error) {
   print('Error: $error');
   return false;
 });
+```
+
+Or initialize with a `StreamIntegrationConfig`:
+
+```dart
+final _plugin = ExponeaPlugin();
+final configuration = ExponeaConfiguration(
+  integrationConfig: StreamIntegrationConfig(
+    streamId: 'YOUR_STREAM_ID',
+    // default baseUrl value is https://api.exponea.com
+    baseUrl: 'YOUR_API_BASE_URL',
+  ),
+);
+await _plugin.configure(configuration).catchError((error) {
+  print('Error: $error');
+  return false;
+});
+```
+
+> 📘 Note
+>
+> - For detailed JWT setup, see [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization).
+> - See the Data hub documentation to learn how to [configure Flutter SDK with JWT authentication](https://documentation.bloomreach.com/data-hub/docs/configure-flutter-sdk-with-jwt-authentication) for event streams.
+
+### Initialize with customer identity
+
+Optionally, provide a `CustomerIdentity` as the `customerIdentifier` argument to `configure()` to identify the customer immediately during initialization:
+
+```dart
+final _plugin = ExponeaPlugin();
+
+final customerIdentity = CustomerIdentity(
+  customerIds: {'registered': 'jane.doe@example.com'},
+  sdkAuthToken: 'your-jwt-token',
+);
+
+await _plugin.configure(
+  ExponeaConfiguration(
+    integrationConfig: StreamIntegrationConfig(
+      streamId: 'YOUR_STREAM_ID',
+      baseUrl: 'YOUR_API_BASE_URL',
+    ),
+  ),
+  customerIdentifier: customerIdentity,
+);
+```
+
+For Stream integrations, subscribe to `sdkAuthErrorStream` before `configure()` so auth errors during initialization are handled immediately. For more information, see [sdkAuthErrorStream](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdkautherrorstream).
+
+Legacy initialization with flat project fields (deprecated) still works:
+
+```dart
+final configuration = ExponeaConfiguration(
+  projectToken: 'YOUR_PROJECT_TOKEN',
+  authorizationToken: 'YOUR_API_KEY',
+  baseUrl: 'YOUR_API_BASE_URL',
+);
+await _plugin.configure(configuration);
 ```
 
 #### Configure application ID

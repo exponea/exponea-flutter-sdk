@@ -1,0 +1,29 @@
+[
+  {},
+  {
+    "integrationConfig": {
+      "streamId": "mock-stream-id"
+    }
+  },
+  {
+    "integrationConfig": {
+      "projectToken": "mock-project-token",
+      "authorizationToken": "mock-auth-token"
+    }
+  },
+  {
+    "integrationConfig": {
+      "projectToken": "mock-project-token",
+      "authorizationToken": "mock-auth-token",
+      "baseUrl": "https://api.exponea.com"
+    },
+    "integrationRouteMap": {
+      "PAYMENT": [
+        {
+          "projectToken": "other-project-token",
+          "authorizationToken": "other-auth-token"
+        }
+      ]
+    }
+  }
+]

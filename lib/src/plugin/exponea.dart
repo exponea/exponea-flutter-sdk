@@ -7,7 +7,7 @@ class ExponeaPlugin implements BaseInterface {
 
   @override
   Future<void> anonymize([
-    ExponeaConfigurationChange configurationChange =
+    ConfigurationChange configurationChange =
         const ExponeaConfigurationChange(),
   ]) =>
       _platform.anonymize(configurationChange);
@@ -16,8 +16,14 @@ class ExponeaPlugin implements BaseInterface {
   Future<void> checkPushSetup() => _platform.checkPushSetup();
 
   @override
-  Future<bool> configure(ExponeaConfiguration configuration) =>
-      _platform.configure(configuration);
+  Future<bool> configure(
+    ExponeaConfiguration configuration, {
+    CustomerIdentifier? customerIdentifier,
+  }) =>
+      _platform.configure(
+        configuration,
+        customerIdentifier: customerIdentifier,
+      );
 
   @override
   Future<List<Consent>> fetchConsents() => _platform.fetchConsents();
@@ -47,8 +53,21 @@ class ExponeaPlugin implements BaseInterface {
   Future<LogLevel> getLogLevel() => _platform.getLogLevel();
 
   @override
-  Future<void> identifyCustomer(Customer customer) =>
-      _platform.identifyCustomer(customer);
+  Future<void> identifyCustomer(
+    CustomerIdentifier identifier, {
+    Map<String, dynamic>? properties,
+  }) =>
+      _platform.identifyCustomer(
+        identifier,
+        properties: properties,
+      );
+
+  @override
+  Future<void> setSdkAuthToken(String token) =>
+      _platform.setSdkAuthToken(token);
+
+  @override
+  Stream<SdkAuthError> get sdkAuthErrorStream => _platform.sdkAuthErrorStream;
 
   @override
   Future<bool> isConfigured() => _platform.isConfigured();

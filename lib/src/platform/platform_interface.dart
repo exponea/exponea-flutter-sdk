@@ -32,7 +32,7 @@ abstract class ExponeaPlatform extends PlatformInterface
 
   @override
   Future<void> anonymize([
-    ExponeaConfigurationChange configurationChange =
+    ConfigurationChange configurationChange =
         const ExponeaConfigurationChange(),
   ]) async {
     throw UnimplementedError();
@@ -44,7 +44,10 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  Future<bool> configure(ExponeaConfiguration configuration) async {
+  Future<bool> configure(
+    ExponeaConfiguration configuration, {
+    CustomerIdentifier? customerIdentifier,
+  }) async {
     throw UnimplementedError();
   }
 
@@ -90,9 +93,20 @@ abstract class ExponeaPlatform extends PlatformInterface
   }
 
   @override
-  Future<void> identifyCustomer(Customer customer) async {
+  Future<void> identifyCustomer(
+    CustomerIdentifier identifier, {
+    Map<String, dynamic>? properties,
+  }) async {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> setSdkAuthToken(String token) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<SdkAuthError> get sdkAuthErrorStream => throw UnimplementedError();
 
   @override
   Future<bool> isConfigured() async {

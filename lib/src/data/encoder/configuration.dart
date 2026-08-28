@@ -1,16 +1,34 @@
 import '../model/configuration.dart';
+import '../normalization/configuration_normalizer.dart';
 import '../util/object.dart';
 import 'http_log_level.dart';
+import 'integration_config.dart';
 import 'notification_importance.dart';
 import 'project.dart';
 import 'token_frequency.dart';
 
 abstract class ExponeaConfigurationEncoder {
   static ExponeaConfiguration decode(Map<String, dynamic> data) {
+    final integrationConfigData =
+        data.getOptional<Map<String, dynamic>>('integrationConfig');
+    final integrationConfig = integrationConfigData
+        ?.let(IntegrationConfigEncoder.decode);
+    final integrationRouteMap = data
+        .getOptional<Map<String, dynamic>>('integrationRouteMap')
+        ?.let(IntegrationRouteMapEncoder.decode);
+
     return ExponeaConfiguration(
-      projectToken: data.getRequired('projectToken'),
-      authorizationToken: data.getRequired('authorizationToken'),
-      baseUrl: data.getOptional('baseUrl'),
+      integrationConfig: integrationConfig,
+      integrationRouteMap: integrationRouteMap,
+      projectToken: integrationConfig == null
+          ? data.getRequired('projectToken')
+          : null,
+      authorizationToken: integrationConfig == null
+          ? data.getRequired('authorizationToken')
+          : null,
+      baseUrl: integrationConfig == null
+          ? data.getOptional('baseUrl')
+          : null,
       projectMapping: data
           .getOptional<Map<String, dynamic>>('projectMapping')
           ?.let(ExponeaProjectMappingEncoder.decode),
@@ -24,7 +42,8 @@ abstract class ExponeaConfigurationEncoder {
           .getOptional<String>('pushTokenTrackingFrequency')
           ?.let(TokenFrequencyEncoder.decode),
       requirePushAuthorization: data.getOptional('requirePushAuthorization'),
-      allowDefaultCustomerProperties: data.getOptional('allowDefaultCustomerProperties'),
+      allowDefaultCustomerProperties:
+          data.getOptional('allowDefaultCustomerProperties'),
       advancedAuthEnabled: data.getOptional('advancedAuthEnabled'),
       android: data
           .getOptional<Map<String, dynamic>>('android')
@@ -38,32 +57,34 @@ abstract class ExponeaConfigurationEncoder {
           .toList(growable: false),
       manualSessionAutoClose: data.getOptional('manualSessionAutoClose'),
       regenerateDeviceIdOnAnonymize: data.getOptional('regenerateDeviceIdOnAnonymize'),
-      applicationId: data.getOptional('applicationId')
+      applicationId: data.getOptional('applicationId'),
     );
   }
 
   static Map<String, dynamic> encode(ExponeaConfiguration config) {
+    final integrationConfig = resolveIntegrationConfig(config);
+    final routeMap = resolveIntegrationRouteMap(config, integrationConfig);
+    final omitAdvancedAuth = shouldOmitAdvancedAuthForStream(config);
+
     return {
-      'projectToken': config.projectToken,
-      'authorizationToken': config.authorizationToken,
-      'baseUrl': config.baseUrl,
-      'projectMapping':
-          config.projectMapping?.let(ExponeaProjectMappingEncoder.encode),
+      'integrationConfig': IntegrationConfigEncoder.encode(integrationConfig),
+      'integrationRouteMap': routeMap?.let(IntegrationRouteMapEncoder.encode),
       'defaultProperties': config.defaultProperties,
       'flushMaxRetries': config.flushMaxRetries?.toDouble(),
       'sessionTimeout': config.sessionTimeout,
       'automaticSessionTracking': config.automaticSessionTracking,
       'allowDefaultCustomerProperties': config.allowDefaultCustomerProperties,
-      'advancedAuthEnabled': config.advancedAuthEnabled,
-      'pushTokenTrackingFrequency':
-          config.pushTokenTrackingFrequency?.let(TokenFrequencyEncoder.encode),
+      if (!omitAdvancedAuth) 'advancedAuthEnabled': config.advancedAuthEnabled,
+      'pushTokenTrackingFrequency': config.pushTokenTrackingFrequency
+          ?.let(TokenFrequencyEncoder.encode),
       'requirePushAuthorization': config.requirePushAuthorization,
       'android': config.android?.let(AndroidExponeaConfigurationEncoder.encode),
       'ios': config.ios?.let(IOSExponeaConfigurationEncoder.encode),
-      'inAppContentBlockPlaceholdersAutoLoad': config.inAppContentBlockPlaceholdersAutoLoad,
-      'manualSessionAutoClose' : config.manualSessionAutoClose,
+      'inAppContentBlockPlaceholdersAutoLoad':
+          config.inAppContentBlockPlaceholdersAutoLoad,
+      'manualSessionAutoClose': config.manualSessionAutoClose,
       'regenerateDeviceIdOnAnonymize': config.regenerateDeviceIdOnAnonymize,
-      'applicationId' : config.applicationId
+      'applicationId': config.applicationId,
     }..removeWhere((key, value) => value == null);
   }
 }
@@ -84,7 +105,8 @@ abstract class AndroidExponeaConfigurationEncoder {
       httpLoggingLevel: data
           .getOptional<String>('httpLoggingLevel')
           ?.let(HttpLoggingLevelEncoder.decode),
-      appInboxDetailImageInset: data.getOptional<num>('appInboxDetailImageInset')?.toInt(),
+      appInboxDetailImageInset:
+          data.getOptional<num>('appInboxDetailImageInset')?.toInt(),
       allowWebViewCookies: data.getOptional('allowWebViewCookies'),
     );
   }

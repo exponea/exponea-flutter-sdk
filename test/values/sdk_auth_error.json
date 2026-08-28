@@ -1,0 +1,29 @@
+[
+  {
+    "errorCode": "TOKEN_ABOUT_TO_EXPIRE",
+    "customerIds": {
+      "registered": "user@example.com"
+    }
+  },
+  {
+    "errorCode": "TOKEN_EXPIRED",
+    "customerIds": {}
+  },
+  {
+    "errorCode": "TOKEN_REJECTED",
+    "customerIds": {
+      "registered": "user@example.com",
+      "cookie": "abc123"
+    }
+  },
+  {
+    "errorCode": "TOKEN_NOT_PROVIDED",
+    "customerIds": {}
+  },
+  {
+    "errorCode": "TOKEN_INSUFFICIENT",
+    "customerIds": {
+      "registered": "user@example.com"
+    }
+  }
+]

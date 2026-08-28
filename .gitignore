@@ -8,3 +8,6 @@ build/
 
 *.iml
 .idea/
+.vscode/
+example/.vscode/
+example/.gradle-user-home/

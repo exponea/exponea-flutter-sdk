@@ -1,7 +1,10 @@
+export 'integration_config.dart';
 export 'configuration.dart';
 export 'configuration_change.dart';
+export 'integration_configuration_change.dart';
 export 'consent.dart';
 export 'customer.dart';
+export 'customer_identity.dart';
 export 'datetime.dart';
 export 'duration.dart';
 export 'event.dart';
@@ -26,3 +29,4 @@ export 'in_app_message_action.dart';
 export 'in_app_message_button.dart';
 export 'purchased_item.dart';
 export 'segmentation_stream_data_handler.dart';
+export 'sdk_auth_error.dart';

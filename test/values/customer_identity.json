@@ -1,0 +1,5 @@
+[
+  {"customerIds": {}},
+  {"customerIds": {"registered": "test@mail.com"}},
+  {"customerIds": {"registered": "test@mail.com"}, "sdkAuthToken": "mock-jwt-token"}
+]

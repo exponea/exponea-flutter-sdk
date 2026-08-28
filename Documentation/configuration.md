@@ -15,26 +15,157 @@ This page provides an overview of all configuration parameters for the SDK. In a
 >
 > Refer to [Initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk) for instructions.
 
+## Integration modes
+
+The SDK supports two integration modes, selected via `integrationConfig`:
+
+* **Project** (`ProjectIntegrationConfig`): classic Bloomreach Engagement project integration using `projectToken` and `authorizationToken`. This is the default mode for existing apps.
+* **Stream** (`StreamIntegrationConfig`): [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration using `streamId`. API authentication uses a runtime **JWT auth token** via `setSdkAuthToken()` instead of `authorizationToken` or `advancedAuthEnabled`. See [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization).
+
+Prefer the new `integrationConfig` field. Legacy flat fields (`projectToken`, `authorizationToken`, `baseUrl`, `projectMapping`) remain supported for backward compatibility but are **deprecated**. The SDK wraps them into `ProjectIntegrationConfig` at configure time and logs a deprecation warning.
+
+### Project configuration
+
+```dart
+final config = ExponeaConfiguration(
+  integrationConfig: ProjectIntegrationConfig(
+    projectToken: 'my-project-token',
+    authorizationToken: 'Token my-auth-token',
+    baseUrl: 'https://api.exponea.com',
+  ),
+);
+```
+
+Legacy style (still works):
+
+```dart
+final config = ExponeaConfiguration(
+  projectToken: 'my-project-token',
+  authorizationToken: 'Token my-auth-token',
+  baseUrl: 'https://api.exponea.com',
+);
+```
+
+### Stream configuration
+
+```dart
+final config = ExponeaConfiguration.stream(
+  streamId: 'my-stream-id',
+  baseUrl: 'https://stream.exponea.com',
+);
+
+// equivalent:
+final config = ExponeaConfiguration(
+  integrationConfig: StreamIntegrationConfig(
+    streamId: 'my-stream-id',
+    baseUrl: 'https://stream.exponea.com',
+  ),
+);
+```
+
+When using Stream configuration:
+
+* **Don't** set `authorizationToken` on the configuration—authentication is JWT-based at runtime.
+* `advancedAuthEnabled` and `integrationRouteMap` are **Project-only**. If set alongside a Stream integration, the SDK logs a warning and ignores them.
+
+### Multi-project routing
+
+Use `integrationRouteMap` to route specific event types to additional **Project** integrations. Stream destinations aren't valid entries in the route map.
+
+```dart
+final config = ExponeaConfiguration(
+  integrationConfig: ProjectIntegrationConfig(
+    projectToken: 'default-token',
+    authorizationToken: 'Token default-auth',
+  ),
+  integrationRouteMap: {
+    EventType.trackEvent: [
+      ProjectIntegrationConfig(
+        projectToken: 'analytics-token',
+        authorizationToken: 'Token analytics-auth',
+      ),
+    ],
+  },
+);
+```
+
+`projectMapping` with `ExponeaProject` entries is deprecated; use `integrationRouteMap` with `ProjectIntegrationConfig` instead.
+
+### Runtime validation
+
+At configure time, the SDK validates integration settings:
+
+* Either `integrationConfig` **or** legacy `projectToken` + `authorizationToken` must be set—one is required, and they're mutually exclusive
+* Stream config must not be combined with `advancedAuthEnabled` or `integrationRouteMap` (warning + ignore).
+
 ## Configuration parameters
 
 The following parameters are specified in an `ExponeaConfiguration` object. Refer to [lib/src/data/model/configuration.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/lib/src/data/model/configuration.dart) for the complete Dart definition.
 
-* `projectToken` **(required)**
-   * Your project token. You can find this in the {user.mkg} web app under `Project settings` > `Access management` > `API`.
+* `integrationConfig`
+  * **Required in new integrations.** Project or Stream integration settings for the default destination.
+  * Use `ProjectIntegrationConfig` for a standard Engagement project, or `StreamIntegrationConfig` for a [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration.
+  * `ProjectIntegrationConfig` fields:
+    * `projectToken` **(required)** — your Engagement project token, found in the Engagement web app under **Project settings** > **Access management** > **API**
+    * `authorizationToken` **(required)** — your Engagement public API key; must be a **public** key (see [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management))
+    * `baseUrl` — API base URL; defaults to `https://api.exponea.com`
+  * `StreamIntegrationConfig` fields:
+    * `streamId` **(required)** — your Data Hub stream ID, found in the Data Hub app under **Event streams** > *your stream* > **Access Security**
+    * `baseUrl` — optional base URL override for the stream endpoint; defaults to `https://api.exponea.com`
+  * The two modes are mutually exclusive; you cannot provide both `projectToken` and `streamId` in the same `integrationConfig`.
+  * Example with `ProjectIntegrationConfig`:
+    ```dart
+    integrationConfig: ProjectIntegrationConfig(
+      projectToken: 'YOUR_PROJECT_TOKEN',
+      authorizationToken: 'Token YOUR_API_KEY',
+      baseUrl: 'https://api.exponea.com',
+    ),
+    ```
+  * Example with `StreamIntegrationConfig`:
+    ```dart
+    integrationConfig: StreamIntegrationConfig(
+      streamId: 'YOUR_STREAM_ID',
+      baseUrl: 'https://api.exponea.com',
+    ),
+    ```
+  * See also [Integration modes](#integration-modes).
 
-* `authorizationToken` **(required)**
+* `integrationRouteMap`
+  * If you need to track events to additional Engagement projects, define a mapping between event types and `ProjectIntegrationConfig` objects.
+  * An event is always tracked to the default integration and any integrations in this map.
+  * **Only applicable when `integrationConfig` is a `ProjectIntegrationConfig`.** Ignored for `StreamIntegrationConfig`.
+  * Example:
+    ```dart
+    integrationRouteMap: {
+      EventType.banner: [
+        ProjectIntegrationConfig(
+          projectToken: 'other-project-token',
+          authorizationToken: 'Token other-auth-token',
+        ),
+      ],
+    }
+    ```
+
+* `projectToken` **(deprecated)**
+   * Your project token. You can find this in the {user.mkg} web app under `Project settings` > `Access management` > `API`.
+   * **Required** when using legacy flat configuration (without `integrationConfig`). Use `integrationConfig: ProjectIntegrationConfig(...)` instead.
+
+* `authorizationToken` **(deprecated)**
    * Your {user.mkg} API key.
    * The token must be an {user.mkg} **public** key. See [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
    * For more information, refer to [Exponea API documentation](https://docs.exponea.com/reference#access-keys).
+   * **Required** when using legacy flat configuration (without `integrationConfig`). Not used in Stream mode.
 
-* `baseUrl`
+* `baseUrl` **(deprecated)**
   * Your API base URL which can be found in the {user.mkg} web app under `Project settings` > `Access management` > `API`.
   * Default value `https://api.exponea.com`.
   * If you have custom base URL, you must set this property.
+  * Use `integrationConfig` with `ProjectIntegrationConfig` or `StreamIntegrationConfig` instead.
 
-* `projectMapping`
+* `projectMapping` **(deprecated)**
   * If you need to track some events to a different {user.mkg} project, you can define a mapping between event types and {user.mkg} projects.
   * An event is always tracked to the default project and any projects it is mapped to.
+  * Use `integrationRouteMap` with `ProjectIntegrationConfig` entries instead.
   * Example:
     ```dart
     projectMapping: {
@@ -84,8 +215,9 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
   * Default value: `10`
 
 * `advancedAuthEnabled`
-  * If set, advanced authorization is used for communication with the {user.mkg} APIs listed in [Customer Token Authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#customer-token-authorization).
+  * If set, the SDK uses advanced authorization for communication with the {user.mkg} APIs listed in [Customer token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#customer-token-authorization).
   * Refer to the [authorization documentation](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization) for details.
+  * **Only applicable when `integrationConfig` is a `ProjectIntegrationConfig`.** If set to `true` with a `StreamIntegrationConfig` integration, the SDK logs a warning and ignores the setting. For stream-based integrations, refer to [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization).
 
 * `inAppContentBlockPlaceholdersAutoLoad`
   * Automatically load the contents of in-app content blocks assigned to these Placeholder IDs.

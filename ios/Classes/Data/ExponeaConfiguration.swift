@@ -9,7 +9,7 @@ import Foundation
 import ExponeaSDK
 
 class ExponeaConfiguration {
-    let projectSettings: ExponeaSDK.Exponea.ProjectSettings
+    let integrationConfig: any IntegrationType
     let pushNotificationTracking: ExponeaSDK.Exponea.PushNotificationTracking
     let automaticSessionTracking: ExponeaSDK.Exponea.AutomaticSessionTracking
     let flushingSetup: ExponeaSDK.Exponea.FlushingSetup
@@ -20,9 +20,18 @@ class ExponeaConfiguration {
     var manualSessionAutoClose: Bool = true
     var regenerateDeviceIdOnAnonymize: Bool? = nil
     var applicationId: String? = nil
-    
+
     init(_ data: [String: Any?], parser: ConfigurationParser) throws {
-        self.projectSettings = try parser.parseProjectSettings(data)
+        if let integrationConfigData: [String: Any?] = try data.getOptional("integrationConfig") {
+            let routeMap = try parser.parseIntegrationRouteMap(from: data)
+            self.integrationConfig = try parser.parseIntegrationConfig(
+                integrationConfigData,
+                integrationRouteMap: routeMap
+            )
+        } else {
+            self.integrationConfig = try parser.parseProjectSettings(data)
+        }
+
         self.pushNotificationTracking = try parser.parsePushNotificationTracking(data)
         self.automaticSessionTracking = try parser.parseSessionTracking(data)
         self.flushingSetup = try parser.parseFlushingSetup(data)
@@ -30,7 +39,8 @@ class ExponeaConfiguration {
         if let allowDefaultCustomerProperties = data["allowDefaultCustomerProperties"] as? Bool {
             self.allowDefaultCustomerProperties = allowDefaultCustomerProperties
         }
-        if let advancedAuthEnabled = data["advancedAuthEnabled"] as? Bool {
+        if integrationConfig is Exponea.StreamSettings == false,
+           let advancedAuthEnabled = data["advancedAuthEnabled"] as? Bool {
             self.advancedAuthEnabled = advancedAuthEnabled
         }
         if let inAppContentBlockPlaceholdersAutoLoad = data["inAppContentBlockPlaceholdersAutoLoad"] as? [String] {

@@ -16,7 +16,6 @@ class ExponeaConfigurationChangeSpec: QuickSpec {
             let parser = ConfigurationParser()
             let fileData = TestUtil.loadFile("configuration_change")
             let jsonList = TestUtil.parseJsonList(fileData).map { $0 as! [String:Any?] }
-            let defaultBaseUrl = "DDD"
             
             it("verify data") {
                 expect(jsonList.count).to(equal(4))
@@ -24,7 +23,7 @@ class ExponeaConfigurationChangeSpec: QuickSpec {
             
             it("emoty map") {
                 let data = jsonList[0]
-                let change = try parser.parseConfigChange(data, defaultBaseUrl: defaultBaseUrl)
+                let change = try parser.parseConfigChange(data)
 
                 expect(change.project).to(beNil())
                 expect(change.mapping).to(beNil())
@@ -32,19 +31,19 @@ class ExponeaConfigurationChangeSpec: QuickSpec {
             
             it("minimal") {
                 let data = jsonList[1]
-                let change = try parser.parseConfigChange(data, defaultBaseUrl: defaultBaseUrl)
+                let change = try parser.parseConfigChange(data)
                 
                 expect(change.project).notTo(beNil())
                 let project = change.project!
                 expect(project.projectToken).to(equal("mock-project-token"))
                 expect(project.authorization).to(equal(.token("mock-auth-token")))
-                expect(project.baseUrl).to(equal(defaultBaseUrl))
+                expect(project.baseUrl).to(equal(ExponeaSDK.Constants.Repository.baseUrl))
                 expect(change.mapping).to(beNil())
             }
             
             it("minimal with base url") {
                 let data = jsonList[2]
-                let change = try parser.parseConfigChange(data, defaultBaseUrl: defaultBaseUrl)
+                let change = try parser.parseConfigChange(data)
                 
                 expect(change.project).notTo(beNil())
                 let project = change.project!
@@ -56,7 +55,7 @@ class ExponeaConfigurationChangeSpec: QuickSpec {
             
             it("full") {
                 let data = jsonList[3]
-                let change = try parser.parseConfigChange(data, defaultBaseUrl: defaultBaseUrl)
+                let change = try parser.parseConfigChange(data)
                 
                 expect(change.project).notTo(beNil())
                 let project = change.project!

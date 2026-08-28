@@ -11,12 +11,14 @@ private let openedPushStreamName = "\(channelName)/opened_push"
 private let receivedPushStreamName = "\(channelName)/received_push"
 private let inAppMessagesStreamName = "\(channelName)/in_app_messages"
 private let segmentationDataStreamName = "\(channelName)/segmentation_data"
+private let sdkAuthStreamName = "\(channelName)/sdk_auth"
 
 enum METHOD_NAME: String {
     case methodConfigure = "configure"
     case methodIsConfigured = "isConfigured"
     case methodGetCustomerCookie = "getCustomerCookie"
     case methodIdentifyCustomer = "identifyCustomer"
+    case methodSetSdkAuthToken = "setSdkAuthToken"
     case methodAnonymize = "anonymize"
     case methodGetDefaultProperties = "getDefaultProperties"
     case methodSetDefaultProperties = "setDefaultProperties"
@@ -305,6 +307,9 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         let segmentationDataChannel = FlutterEventChannel(name: segmentationDataStreamName, binaryMessenger: registrar.messenger())
         segmentationDataChannel.setStreamHandler(SegmentationDataStreamHandler.newInstance())
 
+        let sdkAuthEventChannel = FlutterEventChannel(name: sdkAuthStreamName, binaryMessenger: registrar.messenger())
+        sdkAuthEventChannel.setStreamHandler(SdkAuthStreamHandler.newInstance())
+
         registrar.register(FluffViewFactory(), withId: "FluffView")
         registrar.register(FlutterInAppContentBlockPlaceholderFactory(messenger: registrar.messenger()), withId: "InAppContentBlockPlaceholder")
         registrar.register(FlutterAppInboxDetailViewFactory(), withId: "AppInboxDetailView")
@@ -330,6 +335,8 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             getCustomerCookie(with: result)
         case .methodIdentifyCustomer:
             identifyCustomer(call.arguments, with: result)
+        case .methodSetSdkAuthToken:
+            setSdkAuthToken(call.arguments, with: result)
         case .methodAnonymize:
             anonymize(call.arguments, with: result)
         case .methodGetDefaultProperties:
@@ -1083,13 +1090,19 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
     }
     
     private func unregisterSegmentationDataStream(_ args: Any?, with result: FlutterResult) {
-        guard requireConfigured(with: result) else { return }
         guard let params = args as? [String: Any],
               let instanceId = params["instanceId"] as? String else {
             result(FlutterError(code: errorCode, message: "Invalid arguments for unregisterSegmentationDataStream", details: nil))
             return
         }
-        
+        // Unregistering after the SDK has been stopped (e.g. stream teardown triggered by
+        // disposing widgets after stopIntegration) is a no-op rather than an error.
+        guard exponeaInstance.isConfigured else {
+            segmentationDataCallbacks.removeAll { $0.instanceId == instanceId }
+            result(nil)
+            return
+        }
+
         if let callbackToRemove = segmentationDataCallbacks.first(where: { $0.instanceId == instanceId }) {
             SegmentationManager.shared.removeCallback(callbackData: callbackToRemove.nativeCallback)
             segmentationDataCallbacks.removeAll { $0.instanceId == instanceId }
@@ -1126,14 +1139,17 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             let data = args as! [String:Any?]
             let parser = ConfigurationParser()
             let config = try parser.parseConfig(data)
+            let customerIdentity = parser.parseCustomerIdentity(
+                data["customerIdentity"] as? [String: Any?]
+            )
 
-            if config.regenerateDeviceIdOnAnonymize == true {
-                let sdkConfiguration = try parser.buildSdkConfiguration(config, data: data)
-                exponeaInstance.configure(with: sdkConfiguration, authContext: nil)
+            if customerIdentity != nil || config.regenerateDeviceIdOnAnonymize == true {
+                let nativeConfiguration = try parser.parseConfiguration(config, data: data)
+                exponeaInstance.configure(with: nativeConfiguration, authContext: customerIdentity)
                 exponeaInstance.flushingMode = .immediate
             } else {
                 exponeaInstance.configure(
-                    config.projectSettings,
+                    config.integrationConfig,
                     pushNotificationTracking: config.pushNotificationTracking,
                     automaticSessionTracking: config.automaticSessionTracking,
                     defaultProperties: config.defaultProperties,
@@ -1145,11 +1161,13 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
                     applicationID: config.applicationId
                 )
             }
+
             if (!exponeaInstance.isConfigured) {
                 result(FlutterError(code: errorCode, message: ExponeaError.configurationError.errorDescription, details: nil))
             } else {
                 exponeaInstance.pushNotificationsDelegate = self
                 exponeaInstance.inAppMessagesDelegate = InAppMessageActionStreamHandler.currentInstance
+                registerSdkAuthErrorHandler()
                 result(true)
             }
         } catch {
@@ -1171,8 +1189,30 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         guard requireConfigured(with: result) else { return }
         do {
             let data = args as! [String:Any?]
-            let customer = try ExponeaCustomer(data)
-            exponeaInstance.identifyCustomer(customerIds: customer.ids, properties: customer.properties, timestamp: nil)
+            let parser = ConfigurationParser()
+            let identity: ExponeaSDK.CustomerIdentity
+            let properties: [String: JSONConvertible]
+
+            if data["customerIds"] != nil {
+                guard let parsedIdentity = parser.parseCustomerIdentity(data) else {
+                    throw ExponeaDataError.invalidValue(for: "customerIds")
+                }
+                identity = parsedIdentity
+                properties = try parser.parseIdentifyProperties(data["properties"])
+            } else {
+                let customer = try ExponeaCustomer(data)
+                identity = ExponeaSDK.CustomerIdentity(
+                    customerIds: customer.ids,
+                    jwtToken: nil
+                )
+                properties = customer.properties
+            }
+
+            exponeaInstance.identifyCustomer(
+                context: identity,
+                properties: properties,
+                timestamp: nil
+            )
             result(nil)
         } catch {
             let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
@@ -1180,18 +1220,56 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    private func anonymize(_ args: Any?, with result: FlutterResult) {
+    private func setSdkAuthToken(_ args: Any?, with result: FlutterResult) {
+        guard requireConfigured(with: result) else { return }
+        let data = args as! [String: Any?]
+        guard let token = data["token"] as? String else {
+            result(FlutterError(
+                code: errorCode,
+                message: "setSdkAuthToken requires a non-null token.",
+                details: nil
+            ))
+            return
+        }
+        exponeaInstance.setSdkAuthToken(token)
+        result(nil)
+    }
+
+    private func registerSdkAuthErrorHandler() {
+        exponeaInstance.setJwtErrorHandler { context in
+            let customerIds = (context.customerIds ?? [:]).reduce(into: [String: String]()) { result, item in
+                result[String(describing: item.key)] = item.value
+            }
+            let error = SdkAuthError(
+                errorCode: SdkAuthErrorReasonMapper.map(context.reason),
+                customerIds: customerIds
+            )
+            _ = SdkAuthStreamHandler.handle(error: error)
+        }
+    }
+
+    private func anonymize(_ args: Any?, with result: @escaping FlutterResult) {
         guard requireConfigured(with: result) else { return }
         do {
             let data = args as! [String:Any?]
             let parser = ConfigurationParser()
-            let change = try parser.parseConfigChange(data, defaultBaseUrl: exponeaInstance.configuration!.baseUrl)
-            if let project = change.project {
-                exponeaInstance.anonymize(exponeaProject: project, projectMapping: change.mapping)
-            } else {
-                exponeaInstance.anonymize()
+            let change = try parser.parseConfigurationChangePayload(data)
+            switch change {
+            case .legacy(let configChange):
+                if let project = configChange.project {
+                    Exponea.shared.anonymize(
+                        exponeaIntegrationType: project,
+                        exponeaProjectMapping: configChange.mapping
+                    ) { result(nil) }
+                } else {
+                    exponeaInstance.anonymize(completion: { result(nil) })
+                }
+            case .integration(let integrationConfig, let integrationRouteMap):
+                Exponea.shared.anonymize(
+                    exponeaIntegrationType: integrationConfig,
+                    exponeaProjectMapping: integrationRouteMap
+                ) { result(nil) }
             }
-            result(nil)
         } catch {
             let error = FlutterError(code: errorCode, message: error.localizedDescription, details: nil)
             result(error)
@@ -1473,10 +1551,9 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
         return true
     }
 
-    private func stopIntegration(with result: FlutterResult) {
+    private func stopIntegration(with result: @escaping FlutterResult) {
         guard requireConfigured(with: result) else { return }
-        exponeaInstance.stopIntegration()
-        result(nil)
+        exponeaInstance.stopIntegration(completion: { result(nil) })
     }
 
     private func clearLocalCustomerData(_ args: Any?, with result: FlutterResult) {

@@ -4,6 +4,9 @@ import 'package:exponea/exponea.dart';
 import 'package:flutter/services.dart';
 
 import '../data/encoder/main.dart';
+import '../data/normalization/configure_payload.dart';
+import '../data/normalization/identify_customer_payload.dart';
+import '../data/normalization/set_sdk_auth_token_payload.dart';
 import '../data/util/object.dart';
 
 /// An implementation of [ExponeaPlatform] that uses method channels.
@@ -23,10 +26,14 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _segmentationDataStreamName = '$_channelName/segmentation_data';
   static const _segmentationDataEventChannel = EventChannel(_segmentationDataStreamName);
 
+  static const _sdkAuthStreamName = '$_channelName/sdk_auth';
+  static const _sdkAuthEventChannel = EventChannel(_sdkAuthStreamName);
+
   static const _methodConfigure = 'configure';
   static const _methodIsConfigured = 'isConfigured';
   static const _methodGetCustomerCookie = 'getCustomerCookie';
   static const _methodIdentifyCustomer = 'identifyCustomer';
+  static const _methodSetSdkAuthToken = 'setSdkAuthToken';
   static const _methodAnonymize = 'anonymize';
   static const _methodGetDefaultProperties = 'getDefaultProperties';
   static const _methodSetDefaultProperties = 'setDefaultProperties';
@@ -88,6 +95,7 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   Stream<OpenedPush>? _openedPushStream;
   Stream<ReceivedPush>? _receivedPushStream;
   Stream<InAppMessageAction>? _inAppMessageActionStream;
+  Stream<SdkAuthError>? _sdkAuthErrorStream;
 
   MethodChannelExponeaPlatform() {
     _segmentationStreamDataHandler = SegmentationStreamDataHandler(
@@ -100,8 +108,14 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   }
 
   @override
-  Future<bool> configure(ExponeaConfiguration configuration) async {
-    final data = ExponeaConfigurationEncoder.encode(configuration);
+  Future<bool> configure(
+    ExponeaConfiguration configuration, {
+    CustomerIdentifier? customerIdentifier,
+  }) async {
+    final data = encodeConfigurePayload(
+      configuration,
+      customerIdentifier: customerIdentifier,
+    );
     return (await _channel.invokeMethod(_methodConfigure, data))!;
   }
 
@@ -116,17 +130,28 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   }
 
   @override
-  Future<void> identifyCustomer(Customer customer) async {
-    final data = CustomerEncoder.encode(customer);
+  Future<void> identifyCustomer(
+    CustomerIdentifier identifier, {
+    Map<String, dynamic>? properties,
+  }) async {
+    final data = encodeIdentifyCustomerPayload(
+      identifier,
+      properties: properties,
+    );
     await _channel.invokeMethod<void>(_methodIdentifyCustomer, data);
   }
 
   @override
+  Future<void> setSdkAuthToken(String token) async {
+    final data = encodeSetSdkAuthTokenPayload(token);
+    await _channel.invokeMethod<void>(_methodSetSdkAuthToken, data);
+  }
+
+  @override
   Future<void> anonymize([
-    ExponeaConfigurationChange configChange =
-        const ExponeaConfigurationChange(),
+    ConfigurationChange configChange = const ExponeaConfigurationChange(),
   ]) async {
-    final data = ExponeaConfigurationChangeEncoder.encode(configChange);
+    final data = ConfigurationChangeEncoder.encode(configChange);
     await _channel.invokeMethod<void>(_methodAnonymize, data);
   }
 
@@ -242,6 +267,15 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
         .cast<Map<dynamic, dynamic>>()
         .map((event) => InAppMessageActionEncoder.decode(event));
     return _inAppMessageActionStream!;
+  }
+
+  @override
+  Stream<SdkAuthError> get sdkAuthErrorStream {
+    _sdkAuthErrorStream ??= _sdkAuthEventChannel
+        .receiveBroadcastStream()
+        .cast<Map<dynamic, dynamic>>()
+        .map((event) => SdkAuthErrorEncoder.decode(event));
+    return _sdkAuthErrorStream!;
   }
 
   @override

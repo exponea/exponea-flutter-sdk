@@ -11,6 +11,36 @@ content:
 
 This guide will help you upgrade your Exponea SDK to the new version.
 
+## Update to version 3.0.0 or higher
+
+SDK versions 3.0.0 and higher add **Stream (Data hub) integration** and **JWT authentication** for the Tracking API Security feature.
+
+This update introduces two major changes:
+
+### 1. Dart and Flutter version requirements
+
+* **Dart:** 3.0 or higher (`sdk: '>=3.0.0 <4.0.0'`)
+* **Flutter:** 3.10 or higher
+
+Apps on Dart 2.x or Flutter &lt; 3.10 must upgrade their toolchain before updating the SDK.
+
+Refer to the [Flutter upgrade guide](https://docs.flutter.dev/release/upgrade) and [Dart 3 migration guide](https://dart.dev/resources/dart-3-migration) if needed.
+
+### 2. New configuration and auth APIs (optional migration)
+
+Existing **Project** integrations continue to work without code changes. Legacy flat configuration fields (`projectToken`, `authorizationToken`, `baseUrl`, `projectMapping`) still work but emit deprecation warnings.
+
+To adopt the new API surface (recommended for new Stream integrations):
+
+| Legacy | Preferred |
+| ------ | --------- |
+| Flat `projectToken` / `authorizationToken` / `baseUrl` | `integrationConfig: ProjectIntegrationConfig(...)` |
+| `projectMapping` | `integrationRouteMap` with `ProjectIntegrationConfig` |
+| `ExponeaConfigurationChange` in `anonymize()` | `IntegrationConfigurationChange` |
+| `Customer` only in `identifyCustomer()` | `CustomerIdentity` for Stream mode with JWT |
+
+For **Stream mode**, see [Configuration](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration#integration-modes), [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization), and [Initialize with customer identity](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-with-customer-identity).
+
 ## Update to version 2.3.0 or higher
 
 SDK versions 2.3.0 and higher support multiple mobile applications within a single {user.mkg} project.

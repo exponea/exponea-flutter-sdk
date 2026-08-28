@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:exponea/exponea.dart';
+import 'package:exponea_example/model/home_page_args.dart';
 import 'package:exponea_example/page/config.dart';
 import 'package:exponea_example/page/home.dart';
+import 'package:exponea_example/util/stream_auth_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -69,7 +71,11 @@ class _MyAppState extends State<MyApp> {
     } else if (link.toLowerCase().contains("stopandrestart")) {
       print("Stop SDK and Restart: $link");
        await _plugin.stopIntegration();
-      _navigatorKey.currentState?.pushNamedAndRemoveUntil(Routes.config, (route) => false);
+      StreamAuthListener.stop();
+      _navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        Routes.config,
+        (route) => false,
+      );
     }
   }
 
@@ -110,10 +116,13 @@ class _MyAppState extends State<MyApp> {
         );
 
       case Routes.home:
-        final config = settings.arguments as ExponeaConfiguration;
+        final args = settings.arguments as HomePageArgs;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => HomePage(config: config),
+          builder: (context) => HomePage(
+            config: args.config,
+            isStreamConfig: args.isStreamConfig,
+          ),
         );
 
       default:

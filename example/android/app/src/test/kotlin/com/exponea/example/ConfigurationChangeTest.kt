@@ -10,8 +10,6 @@ import org.junit.Test
 
 class ConfigurationChangeTest {
     companion object {
-        private val DEFAULT_URL = "default-base-url"
-
         lateinit var data: List<Map<String, Any?>>
 
         @BeforeClass @JvmStatic fun setup() {
@@ -27,7 +25,7 @@ class ConfigurationChangeTest {
     @Test
     fun `parse empty map`() {
         val parser = ExponeaConfigurationParser()
-        val decoded = parser.parseConfigChange(data[0], DEFAULT_URL)
+        val decoded = parser.parseConfigChange(data[0])
 
         assertEquals(decoded.project, null)
         assertEquals(decoded.mapping, null)
@@ -36,20 +34,20 @@ class ConfigurationChangeTest {
     @Test
     fun `parse minimal`() {
         val parser = ExponeaConfigurationParser()
-        val decoded = parser.parseConfigChange(data[1], DEFAULT_URL)
+        val decoded = parser.parseConfigChange(data[1])
 
         assertEquals(decoded.project != null, true)
         val project = decoded.project!!
         assertEquals(project.projectToken, "mock-project-token")
         assertEquals(project.authorization, "Token mock-auth-token")
-        assertEquals(project.baseUrl, DEFAULT_URL)
+        assertEquals(project.baseUrl, ExponeaConfiguration().baseURL)
         assertEquals(decoded.mapping, null)
     }
 
     @Test
     fun `parse with base url`() {
         val parser = ExponeaConfigurationParser()
-        val decoded = parser.parseConfigChange(data[2], DEFAULT_URL)
+        val decoded = parser.parseConfigChange(data[2])
 
         assertEquals(decoded.project != null, true)
         val project = decoded.project!!
@@ -62,7 +60,7 @@ class ConfigurationChangeTest {
     @Test
     fun `parse full`() {
         val parser = ExponeaConfigurationParser()
-        val decoded = parser.parseConfigChange(data[3], DEFAULT_URL)
+        val decoded = parser.parseConfigChange(data[3])
 
         assertEquals(decoded.project != null, true)
         val project = decoded.project!!

@@ -4,6 +4,8 @@ import com.exponea.data.ExponeaConfigurationParser
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.ExponeaConfiguration.TokenFrequency
+import com.exponea.sdk.models.ProjectConfig
+import com.exponea.sdk.models.StreamConfig
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.BeforeClass
@@ -20,7 +22,7 @@ class ConfigurationTest {
 
     @Test
     fun `validate data`() {
-        assertEquals(data.size, 4)
+        assertEquals(data.size, 7)
     }
 
     @Test
@@ -129,5 +131,78 @@ class ConfigurationTest {
         assertEquals(config.manualSessionAutoClose, true)
         assertEquals(config.regenerateDeviceIdOnAnonymize, true)
         assertEquals(config.applicationId, "default-application")
+    }
+
+    @Test
+    fun `parse normalized minimal config`() {
+        val parser = ExponeaConfigurationParser()
+        val config = parser.parseConfig(data[4])
+        val integration = config.integrationConfig as ProjectConfig
+
+        assertEquals(integration.projectToken, "mock-project-token")
+        assertEquals(integration.authorization, "Token mock-auth-token")
+        assertEquals(config.integrationRouteMap.isEmpty(), true)
+    }
+
+    @Test
+    fun `parse normalized defaultSession config`() {
+        val parser = ExponeaConfigurationParser()
+        val config = parser.parseConfig(data[5])
+        val integration = config.integrationConfig as ProjectConfig
+
+        assertEquals(integration.projectToken, "mock-project-token")
+        assertEquals(integration.authorization, "Token mock-auth-token")
+        assertEquals(integration.baseUrl, "http://mock.base.url.com")
+        assertEquals(config.integrationRouteMap.size, 1)
+        val projectList = config.integrationRouteMap[EventType.BANNER]!!
+        assertEquals(projectList.size, 1)
+        assertEquals(projectList[0].projectToken, "other-project-token")
+        assertEquals(projectList[0].authorization, "Token other-auth-token")
+        // Route map entry has no baseUrl of its own, so it must use the SDK default,
+        // NOT inherit the parent project's baseUrl (http://mock.base.url.com).
+        assertEquals(projectList[0].baseUrl, ExponeaConfiguration().baseURL)
+    }
+
+    @Test
+    fun `parse integration route map entry does not inherit parent base url`() {
+        val parser = ExponeaConfigurationParser()
+        val config = parser.parseConfig(
+            mapOf(
+                "integrationConfig" to mapOf(
+                    "projectToken" to "mock-project-token",
+                    "authorizationToken" to "mock-auth-token",
+                    "baseUrl" to "https://project.example.com",
+                ),
+                "integrationRouteMap" to mapOf(
+                    "PAYMENT" to listOf(
+                        mapOf(
+                            "projectToken" to "other-project-token",
+                            "authorizationToken" to "other-auth-token",
+                        ),
+                    ),
+                ),
+            ),
+        )
+        val integration = config.integrationConfig as ProjectConfig
+        assertEquals(integration.baseUrl, "https://project.example.com")
+
+        val projectList = config.integrationRouteMap[EventType.PAYMENT]!!
+        assertEquals(projectList.size, 1)
+        assertEquals(projectList[0].baseUrl, ExponeaConfiguration().baseURL)
+    }
+
+    @Test
+    fun `parse stream integration config`() {
+        val streamFixtures = BaseTest.readMapData("integration_config")
+        val parser = ExponeaConfigurationParser()
+        val config = parser.parseConfig(
+            mapOf("integrationConfig" to streamFixtures[4])
+        )
+        val integration = config.integrationConfig as StreamConfig
+
+        assertEquals(integration.streamId, "mock-stream-id")
+        assertEquals(integration.baseUrl, "https://stream.exponea.com")
+        assertEquals(config.integrationRouteMap.isEmpty(), true)
+        assertEquals(config.advancedAuthEnabled, false)
     }
 }

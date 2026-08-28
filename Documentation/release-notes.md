@@ -14,18 +14,6 @@ content:
 > Refer to the [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
-## Release Notes for 2.7.0
-#### June 25, 2026
-* Added:
-  * Adds the `regenerateDeviceIdOnAnonymize` configuration parameter to generate a new `device_id` when calling `anonymize()`.
-  * Updates the native Android SDK to version 5.2.1.
-  * Updates the native iOS SDK to version 4.2.0.
-  * Deprecates the top-level `requirePushAuthorization` configuration parameter in favor of `ios.requirePushAuthorization`.
-  * Updates the documentation related to `notification_state` event tracking and push notification configuration.
-* Fixed:
-  * Fixes an `anonymize()` crash and iOS push-callback loss after Flutter engine restart and updates setup documentation to recommend calling `configure()` on every Flutter engine attach.
-  * Fixes the `willPresent` notification presentation options to show a banner, persist in the notification center, and play sound.  
-
 ## Release Notes for 2.6.1
 #### May 11, 2026
 * Fixed:

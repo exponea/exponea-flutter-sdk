@@ -1,3 +1,4 @@
+export 'src/data/model/integration_config.dart';
 export 'src/data/model/configuration.dart';
 export 'src/data/model/configuration_change.dart';
 export 'src/data/model/consent.dart';
@@ -34,6 +35,7 @@ export 'src/data/model/token_frequency.dart';
 export 'src/data/model/app_inbox_action.dart';
 export 'src/data/model/app_inbox_message.dart';
 export 'src/data/model/purchased_item.dart';
+export 'src/data/model/sdk_auth_error.dart';
 export 'src/platform/platform_interface.dart';
 export 'src/widget/app_inbox_button.dart';
 export 'src/widget/app_inbox_detail_view.dart';

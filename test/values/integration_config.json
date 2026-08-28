@@ -1,0 +1,24 @@
+[
+  {},
+  {
+    "projectToken": "mock-project-token",
+    "authorizationToken": "mock-auth-token"
+  },
+  {
+    "projectToken": "mock-project-token",
+    "authorizationToken": "mock-auth-token",
+    "baseUrl": "https://api.exponea.com"
+  },
+  {
+    "streamId": "mock-stream-id"
+  },
+  {
+    "streamId": "mock-stream-id",
+    "baseUrl": "https://stream.exponea.com"
+  },
+  {
+    "streamId": "mock-stream-id",
+    "projectToken": "mock-project-token",
+    "authorizationToken": "mock-auth-token"
+  }
+]

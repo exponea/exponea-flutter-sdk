@@ -1,11 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:exponea/exponea.dart';
 import 'package:exponea_example/main.dart';
+import 'package:exponea_example/util/local_jwt_generator.dart';
+import 'package:exponea_example/util/sdk_setup_state.dart';
+import 'package:exponea_example/util/stream_auth_listener.dart';
+import 'package:exponea_example/widget/identify_customer_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'app_inbox_list_page.dart';
@@ -16,10 +18,12 @@ final _plugin = ExponeaPlugin();
 
 class HomePage extends StatefulWidget {
   final ExponeaConfiguration config;
+  final bool isStreamConfig;
 
   const HomePage({
     Key? key,
     required this.config,
+    required this.isStreamConfig,
   }) : super(key: key);
 
   @override
@@ -55,11 +59,25 @@ class _HomePageState extends State<HomePage> {
         .inAppMessageActionStream(overrideDefaultBehavior: true)
         .listen(_onInAppMessageActionEvent);
     initializeSegmentationDataStreams();
+    if (widget.isStreamConfig && LocalJwtTokenGenerator.instance.isConfigured) {
+      StreamAuthListener.onAuthError = (error) {
+        if (!mounted) {
+          return;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Auth error: ${error.errorCode}'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      };
+    }
     super.initState();
   }
 
   @override
   void dispose() {
+    StreamAuthListener.onAuthError = null;
     _openedPushSub.cancel();
     _receivedPushSub.cancel();
     _inAppMessageActionSub.cancel();
@@ -113,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
-                        onPressed: () => _identifyCustomer(context),
+                        onPressed: () => _showIdentifyCustomerDialog(context),
                         child: const Text('Identify'),
                       ),
                       const SizedBox(width: 8),
@@ -124,6 +142,13 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+                if (widget.isStreamConfig)
+                  ListTile(
+                    title: ElevatedButton(
+                      onPressed: () => _setAuthToken(context),
+                      child: const Text('Set Auth Token'),
+                    ),
+                  ),
                 ListTile(
                   title: ElevatedButton(
                       onPressed: () => _stopIntegration(context),
@@ -472,21 +497,46 @@ class _HomePageState extends State<HomePage> {
         return await _plugin.getCustomerCookie();
       });
 
-  Future<void> _identifyCustomer(BuildContext context) =>
+  Future<void> _showIdentifyCustomerDialog(BuildContext context) {
+    return IdentifyCustomerDialog.show(
+      context,
+      plugin: _plugin,
+      isStreamConfig: widget.isStreamConfig,
+      onResult: (_) async {},
+    );
+  }
+
+  Future<void> _setAuthToken(BuildContext context) =>
       _runAndShowResult(context, () async {
-        const email = 'test-user-1@test.com';
-        const customerIds = {'registered': email};
-        const customer = Customer(ids: customerIds);
-        final sp = await SharedPreferences.getInstance();
-        var customerIdsString = json.encode(customerIds);
-        await sp.setString("customer_ids", customerIdsString);
-        await _plugin.identifyCustomer(customer);
-        return email;
+        if (!LocalJwtTokenGenerator.instance.isConfigured) {
+          throw PlatformException(
+            code: 'jwt_not_configured',
+            message: 'JWT generator is not configured',
+          );
+        }
+        final ids = SdkSetupState.customerIds;
+        if (ids.isEmpty) {
+          throw PlatformException(
+            code: 'no_customer',
+            message: 'No customer identified yet',
+          );
+        }
+        final token = LocalJwtTokenGenerator.instance.generateToken(ids);
+        if (token == null) {
+          throw PlatformException(
+            code: 'token_generation_failed',
+            message: 'Failed to generate JWT token',
+          );
+        }
+        await _plugin.setSdkAuthToken(token);
+        return 'Token set';
       });
 
   Future<void> _anonymize(BuildContext context) =>
       _runAndShowResult(context, () async {
         await _plugin.anonymize();
+        SdkSetupState.reset();
+        StreamAuthListener.stop();
       });
 
   Future<void> _getDefaultProps(BuildContext context) =>
@@ -607,6 +657,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> _stopIntegration(BuildContext context) =>
       _runAndShowResult(context, () async {
         await _plugin.stopIntegration();
+        SdkSetupState.reset();
+        StreamAuthListener.stop();
         showStopIntegrationInfoDialog(context);
       });
 
@@ -734,7 +786,11 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               child: const Text('Back to Auth'),
               onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(Routes.config, (route) => false,);
+                StreamAuthListener.stop();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.config,
+                  (route) => false,
+                );
               },
             ),
             TextButton(

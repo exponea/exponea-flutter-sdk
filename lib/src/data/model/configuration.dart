@@ -2,22 +2,40 @@ import 'package:meta/meta.dart';
 
 import 'event_type.dart';
 import 'http_log_level.dart';
+import 'integration_config.dart';
 import 'notification_importance.dart';
 import 'project.dart';
 import 'token_frequency.dart';
 
 @immutable
 class ExponeaConfiguration {
+  /// Project or Stream integration settings for the default destination.
+  final IntegrationConfig? integrationConfig;
+
+  /// Map event types to extra project integrations.
+  final Map<EventType, List<ProjectIntegrationConfig>>? integrationRouteMap;
+
   /// Default Exponea project token
-  final String projectToken;
+  @Deprecated(
+    'Use integrationConfig with ProjectIntegrationConfig instead.',
+  )
+  final String? projectToken;
 
   /// Default Exponea project authorization token
-  final String authorizationToken;
+  @Deprecated(
+    'Use integrationConfig with ProjectIntegrationConfig instead.',
+  )
+  final String? authorizationToken;
 
   /// Default Exponea project base URL
+  @Deprecated(
+    'Use integrationConfig with ProjectIntegrationConfig or '
+    'StreamIntegrationConfig instead.',
+  )
   final String? baseUrl;
 
   /// Map event types to extra projects. Every event is tracked into default project and all projects based on this mapping
+  @Deprecated('Use integrationRouteMap instead.')
   final Map<EventType, List<ExponeaProject>>? projectMapping;
 
   /// Default properties added to every event tracked to Exponea
@@ -67,10 +85,18 @@ class ExponeaConfiguration {
   final String? applicationId;
 
   const ExponeaConfiguration({
-    required this.projectToken,
-    required this.authorizationToken,
+    this.integrationConfig,
+    this.integrationRouteMap,
+    @Deprecated('Use integrationConfig with ProjectIntegrationConfig instead.')
+    this.projectToken,
+    @Deprecated('Use integrationConfig with ProjectIntegrationConfig instead.')
+    this.authorizationToken,
+    @Deprecated(
+      'Use integrationConfig with ProjectIntegrationConfig or '
+      'StreamIntegrationConfig instead.',
+    )
     this.baseUrl,
-    this.projectMapping,
+    @Deprecated('Use integrationRouteMap instead.') this.projectMapping,
     this.defaultProperties,
     this.flushMaxRetries,
     this.sessionTimeout,
@@ -87,8 +113,51 @@ class ExponeaConfiguration {
     this.inAppContentBlockPlaceholdersAutoLoad,
     this.manualSessionAutoClose,
     this.regenerateDeviceIdOnAnonymize,
-    this.applicationId
-  });
+    this.applicationId,
+  }) : assert(
+          integrationConfig != null ||
+              (projectToken != null && authorizationToken != null),
+          'ExponeaConfiguration requires integrationConfig or legacy '
+          'projectToken and authorizationToken.',
+        );
+
+  factory ExponeaConfiguration.stream({
+    required String streamId,
+    String? baseUrl,
+    Map<String, Object>? defaultProperties,
+    int? flushMaxRetries,
+    double? sessionTimeout,
+    bool? automaticSessionTracking,
+    TokenFrequency? pushTokenTrackingFrequency,
+    bool? requirePushAuthorization,
+    bool? allowDefaultCustomerProperties,
+    AndroidExponeaConfiguration? android,
+    IOSExponeaConfiguration? ios,
+    List<String>? inAppContentBlockPlaceholdersAutoLoad,
+    bool? manualSessionAutoClose,
+    bool? regenerateDeviceIdOnAnonymize,
+    String? applicationId,
+  }) {
+    return ExponeaConfiguration(
+      integrationConfig: StreamIntegrationConfig(
+        streamId: streamId,
+        baseUrl: baseUrl,
+      ),
+      defaultProperties: defaultProperties,
+      flushMaxRetries: flushMaxRetries,
+      sessionTimeout: sessionTimeout,
+      automaticSessionTracking: automaticSessionTracking,
+      pushTokenTrackingFrequency: pushTokenTrackingFrequency,
+      requirePushAuthorization: requirePushAuthorization,
+      allowDefaultCustomerProperties: allowDefaultCustomerProperties,
+      android: android,
+      ios: ios,
+      inAppContentBlockPlaceholdersAutoLoad: inAppContentBlockPlaceholdersAutoLoad,
+      manualSessionAutoClose: manualSessionAutoClose,
+      regenerateDeviceIdOnAnonymize: regenerateDeviceIdOnAnonymize,
+      applicationId: applicationId,
+    );
+  }
 }
 
 @immutable
