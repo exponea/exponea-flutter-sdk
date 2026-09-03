@@ -7,7 +7,7 @@ parent:
   uri: flutter-sdk-in-app-personalization
 content:
   excerpt: >-
-    Display native in-app messages based on definitions set up in Engagement
+    Display native in-app messages based on definitions set up in Marketing
     using the Flutter SDK
 ---
 

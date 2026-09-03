@@ -13,7 +13,7 @@ This guide will help you upgrade your Exponea SDK to the new version.
 
 ## Update to version 3.0.0 or higher
 
-Version 3.0.0 adds **Stream (Data hub) integration** and **JWT authentication** for the Tracking API Security feature, and adopts the UIScene lifecycle. Apple introduced a UIScene adoption warning in iOS 26 and will enforce it as a hard requirement in iOS 27.
+Version 3.0.0 adds **Stream ({user.dh}) integration** and **JWT authentication** for the Tracking API Security feature, and adopts the UIScene lifecycle. Apple introduced a UIScene adoption warning in iOS 26 and will enforce it as a hard requirement in iOS 27.
 
 ### 1. Dart and Flutter version requirements
 

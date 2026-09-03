@@ -79,8 +79,8 @@ Now that you have installed the SDK in your project, you must import, configure,
 
 The required configuration parameter is `integrationConfig`. Choose one of two types depending on your integration:
 
-- **`ProjectIntegrationConfig`** — for a standard Engagement integration. Requires `projectToken`, `authorizationToken`, and `baseUrl`. Find your credentials in the {user.mkg} webapp under **Project settings** > **Access management** > **API**.
-- **`StreamIntegrationConfig`** — for a [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration. Requires `streamId` and an optional `baseUrl`. Find your stream ID in the Data hub app under **Event streams** > select your stream > **Access Security**.
+- **`ProjectIntegrationConfig`** — for a standard {user.mkg} integration. Requires `projectToken`, `authorizationToken`, and `baseUrl`. Find your credentials in the {user.mkg} webapp under **Project settings** > **Access management** > **API**.
+- **`StreamIntegrationConfig`** — for a {user.dh} [event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration. Requires `streamId` and an optional `baseUrl`. Find your stream ID in the {user.dh} app under **Event streams** > select your stream > **Access Security**.
 
 > 📘
 >
@@ -130,7 +130,7 @@ await _plugin.configure(configuration).catchError((error) {
 > 📘 Note
 >
 > - For detailed JWT setup, see [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization).
-> - See the Data hub documentation to learn how to [configure Flutter SDK with JWT authentication](https://documentation.bloomreach.com/data-hub/docs/configure-flutter-sdk-with-jwt-authentication) for event streams.
+> - See the {user.dh} documentation to learn how to [configure Flutter SDK with JWT authentication](https://documentation.bloomreach.com/data-hub/docs/configure-flutter-sdk-with-jwt-authentication) for event streams.
 
 ### Initialize with customer identity
 

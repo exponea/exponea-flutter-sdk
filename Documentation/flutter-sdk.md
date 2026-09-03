@@ -15,7 +15,7 @@ content:
 
 The Exponea Flutter SDK lets you integrate your Flutter-based mobile application with {user.mkg} and track your customers' behavior in your app. Integrating the SDK in your app enables tracking events and customer properties, sending push notifications, and displaying in-app messages and content blocks.
 
-The SDK supports two integration modes: the standard **Engagement project** integration using a project token and API key, and the **[Data hub event streams](https://documentation.bloomreach.com/data-hub/docs/event-streams)** integration using a stream ID and JWT-based authentication.
+The SDK supports two integration modes: the standard **{user.mkg} project** integration using a project token and API key, and the **{user.dh} [event streams](https://documentation.bloomreach.com/data-hub/docs/event-streams)** integration using a stream ID and JWT-based authentication.
 
 The Flutter SDK is implemented as a wrapper around the native [Android](https://documentation.bloomreach.com/engagement/docs/android-sdk) and [iOS](https://documentation.bloomreach.com/engagement/docs/ios-sdk) SDKs.
 

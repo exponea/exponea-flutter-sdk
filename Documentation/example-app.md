@@ -72,7 +72,7 @@ When you run the app in the simulator, you'll see the **ConfigPage** (Auth scree
    - Enter your `Project token`, `Authorization token` (API key), and `Base URL`.
    - **Optional:** Enter `Advanced Auth key` to enable [customer token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#customer-token-authorization).
 3. For **Stream Config**:
-   - Enter your `Stream ID`. You can find the stream ID in the Data hub app under **Event streams** > select your stream > **Access Security**.
+   - Enter your `Stream ID`. You can find the stream ID in the {user.dh} app under **Event streams** > select your stream > **Access Security**.
    - **Optional:** Enter `JWT Key ID` and `JWT Secret` to enable local JWT token generation for testing. Both must be provided together. Refer to [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization) for details.
 4. **Optional:** Enter `Registered ID` to identify the customer at configure time via `CustomerIdentity`.
 5. **Optional:** Enter `Application ID` if your {user.mkg} project supports multiple mobile apps. If you leave this blank, the SDK uses the default value `default-application`. See [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for more.

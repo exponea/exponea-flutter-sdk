@@ -19,8 +19,8 @@ This page provides an overview of all configuration parameters for the SDK. In a
 
 The SDK supports two integration modes, selected via `integrationConfig`:
 
-* **Project** (`ProjectIntegrationConfig`): classic Bloomreach Engagement project integration using `projectToken` and `authorizationToken`. This is the default mode for existing apps.
-* **Stream** (`StreamIntegrationConfig`): [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration using `streamId`. API authentication uses a runtime **JWT auth token** via `setSdkAuthToken()` instead of `authorizationToken` or `advancedAuthEnabled`. See [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization).
+* **Project** (`ProjectIntegrationConfig`): classic {user.mkg} project integration using `projectToken` and `authorizationToken`. This is the default mode for existing apps.
+* **Stream** (`StreamIntegrationConfig`): {user.dh} [event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration using `streamId`. API authentication uses a runtime **JWT auth token** via `setSdkAuthToken()` instead of `authorizationToken` or `advancedAuthEnabled`. See [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization).
 
 Prefer the new `integrationConfig` field. Legacy flat fields (`projectToken`, `authorizationToken`, `baseUrl`, `projectMapping`) remain supported for backward compatibility but are **deprecated**. The SDK wraps them into `ProjectIntegrationConfig` at configure time and logs a deprecation warning.
 
@@ -104,13 +104,13 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
 
 * `integrationConfig`
   * **Required in new integrations.** Project or Stream integration settings for the default destination.
-  * Use `ProjectIntegrationConfig` for a standard Engagement project, or `StreamIntegrationConfig` for a [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration.
+  * Use `ProjectIntegrationConfig` for a standard {user.mkg} project, or `StreamIntegrationConfig` for a {user.dh} [event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration.
   * `ProjectIntegrationConfig` fields:
-    * `projectToken` **(required)** — your Engagement project token, found in the Engagement web app under **Project settings** > **Access management** > **API**
-    * `authorizationToken` **(required)** — your Engagement public API key; must be a **public** key (see [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management))
+    * `projectToken` **(required)** — your {user.mkg} project token, found in the {user.mkg} web app under **Project settings** > **Access management** > **API**
+    * `authorizationToken` **(required)** — your {user.mkg} public API key; must be a **public** key (see [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management))
     * `baseUrl` — API base URL; defaults to `https://api.exponea.com`
   * `StreamIntegrationConfig` fields:
-    * `streamId` **(required)** — your Data Hub stream ID, found in the Data Hub app under **Event streams** > *your stream* > **Access Security**
+    * `streamId` **(required)** — your {user.dh} stream ID, found in the {user.dh} app under **Event streams** > *your stream* > **Access Security**
     * `baseUrl` — optional base URL override for the stream endpoint; defaults to `https://api.exponea.com`
   * The two modes are mutually exclusive; you cannot provide both `projectToken` and `streamId` in the same `integrationConfig`.
   * Example with `ProjectIntegrationConfig`:
@@ -131,7 +131,7 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
   * See also [Integration modes](#integration-modes).
 
 * `integrationRouteMap`
-  * If you need to track events to additional Engagement projects, define a mapping between event types and `ProjectIntegrationConfig` objects.
+  * If you need to track events to additional {user.mkg} projects, define a mapping between event types and `ProjectIntegrationConfig` objects.
   * An event is always tracked to the default integration and any integrations in this map.
   * **Only applicable when `integrationConfig` is a `ProjectIntegrationConfig`.** Ignored for `StreamIntegrationConfig`.
   * Example:
