@@ -223,6 +223,70 @@ class ExponeaConfigurationParserSpec: QuickSpec {
                 expect(settings.baseUrl).to(equal("https://stream.exponea.com"))
                 expect(config.advancedAuthEnabled).to(beNil())
             }
+
+            describe("NSNull optional values") {
+                func minimalConfigData(
+                    iosRequirePushAuthorization: Any? = nil,
+                    rootRequirePushAuthorization: Any? = nil
+                ) -> [String: Any?] {
+                    var data: [String: Any?] = [
+                        "projectToken": "mock-project-token",
+                        "authorizationToken": "mock-auth-token",
+                    ]
+                    if let iosRequirePushAuthorization {
+                        data["ios"] = [
+                            "appGroup": "mock-app-group",
+                            "requirePushAuthorization": iosRequirePushAuthorization,
+                        ]
+                    }
+                    if let rootRequirePushAuthorization {
+                        data["requirePushAuthorization"] = rootRequirePushAuthorization
+                    }
+                    return data
+                }
+
+                it("treats ios requirePushAuthorization NSNull as absent and defaults to true") {
+                    let data = minimalConfigData(iosRequirePushAuthorization: NSNull())
+                    let config = try parser.parseConfig(data)
+
+                    expect(config.pushNotificationTracking.requirePushAuthorization).to(equal(true))
+                }
+
+                it("treats root requirePushAuthorization NSNull as absent and defaults to true") {
+                    let data = minimalConfigData(rootRequirePushAuthorization: NSNull())
+                    let config = try parser.parseConfig(data)
+
+                    expect(config.pushNotificationTracking.requirePushAuthorization).to(equal(true))
+                }
+
+                it("prefers ios requirePushAuthorization over root NSNull fallback") {
+                    let data = minimalConfigData(
+                        iosRequirePushAuthorization: false,
+                        rootRequirePushAuthorization: NSNull()
+                    )
+                    let config = try parser.parseConfig(data)
+
+                    expect(config.pushNotificationTracking.requirePushAuthorization).to(equal(false))
+                }
+
+                it("falls back to root value when ios requirePushAuthorization is NSNull") {
+                    let data = minimalConfigData(
+                        iosRequirePushAuthorization: NSNull(),
+                        rootRequirePushAuthorization: false
+                    )
+                    let config = try parser.parseConfig(data)
+
+                    expect(config.pushNotificationTracking.requirePushAuthorization).to(equal(false))
+                }
+
+                it("parseConfiguration treats ios requirePushAuthorization NSNull as default true") {
+                    let data = minimalConfigData(iosRequirePushAuthorization: NSNull())
+                    let config = try parser.parseConfig(data)
+                    let nativeConfig = try parser.parseConfiguration(config, data: data)
+
+                    expect(nativeConfig.requirePushAuthorization).to(equal(true))
+                }
+            }
         }
 
         describe("configure payload customer identity") {

@@ -10,6 +10,9 @@ import Foundation
 extension NSDictionary {
     func getOptionalSafely<T>(property: String) throws -> T? {
         if let value = self[property] {
+            guard !(value is NSNull) else {
+                return nil
+            }
             guard let value = value as? T else {
                 throw ExponeaDataError.invalidType(for: property)
             }
@@ -20,6 +23,9 @@ extension NSDictionary {
 
     func getRequiredSafely<T>(property: String) throws -> T {
         guard let anyValue = self[property] else {
+            throw ExponeaDataError.missingProperty(property: property)
+        }
+        guard !(anyValue is NSNull) else {
             throw ExponeaDataError.missingProperty(property: property)
         }
         guard let value = anyValue as? T else {

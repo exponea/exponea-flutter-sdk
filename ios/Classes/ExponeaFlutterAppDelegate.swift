@@ -72,11 +72,7 @@ open class ExponeaFlutterAppDelegate: FlutterAppDelegate {
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
         // show notification even if the app is in the foreground
-        if #available(iOS 14, *) {
-            completionHandler([.banner, .list, .sound])
-        } else {
-            completionHandler([.alert, .sound])
-        }
+        completionHandler([.banner, .list, .sound])
     }
 
     // Sole legacy-path Universal Link entry point. SwiftExponeaPlugin intentionally does not

@@ -46,7 +46,27 @@ Then run the following command:
 pod install
 ```
 
-The minimum supported iOS version for the SDK is 13.0. You may need to change the iOS version on the first line of your `ios/Podfile` to `platform :ios, '13.0'`, or higher.
+The minimum supported iOS version for the SDK is 15.0. You may need to change the iOS version on the first line of your `ios/Podfile` to `platform :ios, '15.0'`, or higher.
+
+> ❗️
+>
+> **Xcode 27 compatibility:** CocoaPods sets each pod target's deployment target from that pod's podspec, not from your app's `platform :ios` line alone. Flutter plugins and other transitive dependencies may still declare iOS 9.0–13.0. Add or merge the following `post_install` hook in your `ios/Podfile` (keep any existing `flutter_additional_ios_build_settings` call):
+>
+> ```ruby
+> post_install do |installer|
+>   installer.pods_project.targets.each do |target|
+>     target.build_configurations.each do |config|
+>       deployment_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+>       if deployment_target.nil? || deployment_target.to_f < 15.0
+>         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+>       end
+>     end
+>     flutter_additional_ios_build_settings(target)
+>   end
+> end
+> ```
+>
+> After changing the Podfile, run `pod install` again. Set **iOS Deployment Target** to 15.0 or higher for your app target and any notification extensions in Xcode.
 
 ### Android setup
 
