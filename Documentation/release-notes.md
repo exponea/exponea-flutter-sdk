@@ -14,6 +14,23 @@ content:
 > Refer to the [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 3.0.0
+#### September 08, 2026
+* Added:
+  * Adds Stream (Data hub) integration and JWT authentication for Tracking API Security.
+  * Adopts the UIScene lifecycle on iOS for Universal Links and push notification handling, ensuring compatibility with for iOS 26+ and iOS 27.
+  * Updates setup documentation for Android Auto Backup and SDK SharedPreferences.
+  * Updates the native Android SDK to version 5.3.1.
+  * Updates the native iOS SDK to version 4.3.0.
+  * Raises the minimum Flutter version to 3.38.0 and Dart SDK to 3.10.0.
+  * Raises the minimum supported iOS version to 15.0 for Xcode 27 compatibility.
+* Fixed:
+  * Fixes `flushData()` to await native flush completion and propagate errors on both platforms.
+  * Fixes In-App Content Block placeholder and carousel rendering by switching to native views with optimized platform caches.
+* Updated:
+  * Updates the Example App Android build toolchain for Flutter 3.47.2 compatibility.
+
+
 ## Release Notes for 2.7.0
 #### June 25, 2026
 * Added:
