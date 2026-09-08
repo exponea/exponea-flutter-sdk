@@ -364,13 +364,15 @@ class _ConfigPageState extends State<ConfigPage> {
     );
   }
 
-  CustomerIdentifier? _buildCustomerIdentifier({required bool isStream}) {
+  Future<CustomerIdentifier?> _buildCustomerIdentifier({
+    required bool isStream,
+  }) async {
     final registeredId = _registeredIdController.text.trim();
     if (registeredId.isEmpty) {
       return null;
     }
     final customerIds = {'registered': registeredId};
-    SdkSetupState.setCustomerIds(customerIds);
+    await SdkSetupState.setCustomerIds(customerIds);
     if (isStream && LocalJwtTokenGenerator.instance.isConfigured) {
       final token = LocalJwtTokenGenerator.instance.generateToken(customerIds);
       return CustomerIdentity(
@@ -418,8 +420,9 @@ class _ConfigPageState extends State<ConfigPage> {
       );
     }
 
-    SdkSetupState.reset();
-    final customerIdentifier = _buildCustomerIdentifier(isStream: isStream);
+    await SdkSetupState.reset();
+    final customerIdentifier =
+        await _buildCustomerIdentifier(isStream: isStream);
 
     try {
       final config = await _buildConfiguration(pushIcon);
@@ -511,7 +514,7 @@ class _ConfigPageState extends State<ConfigPage> {
       await _plugin.clearLocalCustomerData(
         appGroup: 'group.com.exponea.sdk.example',
       );
-      SdkSetupState.reset();
+      await SdkSetupState.reset();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Sdk has been cleared')),

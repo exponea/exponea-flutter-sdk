@@ -83,7 +83,7 @@ class _IdentifyCustomerDialogState extends State<IdentifyCustomerDialog> {
       } else {
         await widget.plugin.identifyCustomer(Customer(ids: ids));
       }
-      SdkSetupState.setCustomerIds(ids);
+      await SdkSetupState.setCustomerIds(ids);
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(

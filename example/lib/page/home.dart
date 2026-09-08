@@ -535,7 +535,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _anonymize(BuildContext context) =>
       _runAndShowResult(context, () async {
         await _plugin.anonymize();
-        SdkSetupState.reset();
+        await SdkSetupState.reset();
         StreamAuthListener.stop();
       });
 
@@ -657,7 +657,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _stopIntegration(BuildContext context) =>
       _runAndShowResult(context, () async {
         await _plugin.stopIntegration();
-        SdkSetupState.reset();
+        await SdkSetupState.reset();
         StreamAuthListener.stop();
         showStopIntegrationInfoDialog(context);
       });
