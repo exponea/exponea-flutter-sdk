@@ -32,28 +32,26 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+
+    # Plugin iOS specs (Quick/Nimble), fixtures from the repository test/values.
+    pod 'Quick', '5.0.1'
+    pod 'Nimble', '9.2.1'
+  end
 end
 
-target 'ExponeaTests' do
-  use_frameworks!
-  use_modular_headers!
-
-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-
-  pod 'Quick', '5.0.1'
-  pod 'Nimble', '9.2.1'
-end
-
+# Rich push extensions. Keep the version equal to ExponeaSDK in the plugin podspec.
 target 'ExampleNotificationService' do
   use_frameworks!
 
-  pod 'ExponeaSDK-Notifications'
+  pod 'ExponeaSDK-Notifications', '4.3.0'
 end
 
 target 'ExampleNotificationContent' do
   use_frameworks!
 
-  pod 'ExponeaSDK-Notifications'
+  pod 'ExponeaSDK-Notifications', '4.3.0'
 end
 
 post_install do |installer|

@@ -2,7 +2,8 @@
 //  ExampleAuthProvider.swift
 //  Runner
 //
-//  Created by Adam Mihalik on 02/03/2023.
+//  Supplies the customer token when the auth form's "Advanced auth key" is set.
+//  The SDK finds it by the Objective-C name `ExponeaAuthProvider`.
 //
 
 import Foundation

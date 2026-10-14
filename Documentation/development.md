@@ -21,11 +21,13 @@ The project consists of Flutter code in the `/lib` folder, a native Android modu
 
 The Android native module is written in Kotlin, since that's also used for our native [Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk).
 
-* We use [JUnit4](https://junit.org/junit4/) to run unit tests. Use `./gradlew test` to run unit tests.
+* We use [JUnit4](https://junit.org/junit4/) to run unit tests. The tests are hosted by the example app: run `./gradlew :app:testGmsDebugUnitTest` in `example/android` (after `flutter pub get` in `example`).
 
 ### iOS
 
 The iOS native module is written in Swift, since that's also used for our native [iOS SDK](https://documentation.bloomreach.com/engagement/docs/ios-sdk).
 
 * We use [CocoaPods](https://cocoapods.org/) to manage dependencies. You'll see a `Podfile` that defines dependencies for the "standalone" Xcode project that we use to develop the iOS native module. These pods won't be part of the released package, the `.podspec` file is located at package level. Run `pod install` before opening the Xcode project and starting development.
-* We use [quick](https://github.com/Quick/Quick) to write tests, you can run them directly in XCode.
+* We use [Quick](https://github.com/Quick/Quick) and [Nimble](https://github.com/Quick/Nimble) to write tests. The tests are hosted by the example app's `RunnerTests` target:
+   * Run `pod install` in `example/ios`.
+   * Then, run the tests in Xcode or with `xcodebuild test -workspace Runner.xcworkspace -scheme Runner -only-testing:RunnerTests`.

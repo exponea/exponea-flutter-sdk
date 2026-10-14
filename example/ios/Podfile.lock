@@ -1,7 +1,5 @@
 PODS:
   - AnyCodable-FlightSchool (0.6.3)
-  - app_links (6.4.1):
-    - Flutter
   - exponea (0.0.1):
     - AnyCodable-FlightSchool (= 0.6.3)
     - ExponeaSDK (= 4.3.0)
@@ -16,18 +14,14 @@ PODS:
     - Flutter
     - FlutterMacOS
   - SwiftSoup (2.11.3)
-  - url_launcher_ios (0.0.1):
-    - Flutter
 
 DEPENDENCIES:
-  - app_links (from `.symlinks/plugins/app_links/ios`)
   - exponea (from `.symlinks/plugins/exponea/ios`)
-  - ExponeaSDK-Notifications
+  - ExponeaSDK-Notifications (= 4.3.0)
   - Flutter (from `Flutter`)
   - Nimble (= 9.2.1)
   - Quick (= 5.0.1)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -39,30 +33,24 @@ SPEC REPOS:
     - SwiftSoup
 
 EXTERNAL SOURCES:
-  app_links:
-    :path: ".symlinks/plugins/app_links/ios"
   exponea:
     :path: ".symlinks/plugins/exponea/ios"
   Flutter:
     :path: Flutter
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-  url_launcher_ios:
-    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 1c9890be5884140c60da5fde1b66380dec4c244a
-  app_links: 3dbc685f76b1693c66a6d9dd1e9ab6f73d97dc0a
   exponea: dc620f6d8a6c853127f45f65ef97be1c540e93e6
   ExponeaSDK: bb135577b3eae733d0f08e46fea1a1476b6f78a4
   ExponeaSDK-Notifications: b11db8d3edef301146577f2b6ad4f7a2050ed7fb
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
-  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   SwiftSoup: 959c9ac70d7053fbf476341bfac90ab228523f2a
-  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
-PODFILE CHECKSUM: e8f09e9527a89630744c7894709e358725c36dfe
+PODFILE CHECKSUM: a5e89451777d7ee4f4c797aa8c3501e3539601b8
 
 COCOAPODS: 1.16.2

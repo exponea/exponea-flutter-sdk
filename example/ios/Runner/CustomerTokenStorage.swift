@@ -2,7 +2,10 @@
 //  CustomerTokenStorage.swift
 //  Runner
 //
-//  Created by Adam Mihalik on 02/03/2023.
+//  !!! Proof of concept for the example app only, ported from the legacy example app. Do not rely
+//  on it for real customer token handling. Reads the auth form values persisted by the Flutter app
+//  (`shared_preferences`, `flutter.` prefix) and requests a token from
+//  `{base_url}/webxp/exampleapp/customertokens`.
 //
 
 import Foundation
@@ -131,11 +134,11 @@ class CustomerTokenStorage {
             customerIds = loadedIds
         }
         return Config(
-            // See config.dart how are stored fields
+            // Auth form fields, see lib/features/authentication/auth_preferences.dart
             host: prefs.string(forKey: "flutter.base_url"),
             projectToken: prefs.string(forKey: "flutter.project_token"),
             publicKey: prefs.string(forKey: "flutter.advanced_auth_token"),
-            // See home.dart how are stored customerIds in _identifyCustomer method
+            // Written on configure and identify, see lib/util/customer_token_ids.dart
             customerIds: customerIds
         )
     }

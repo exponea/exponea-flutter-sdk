@@ -39,7 +39,7 @@ After the SDK initializes (see [Initial setup for Flutter SDK](https://documenta
 
 > 📘
 >
-> Refer to [in_app_cb_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_page.dart) in the [Example app for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app) for a reference implementation.
+> For a reference implementation, see [`content_blocks_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/content_blocks/content_blocks_screen.dart) in the [Example app for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app).
 
 > 👍
 >
@@ -65,7 +65,7 @@ InAppContentBlockCarousel(
 
 > 📘
 >
-> Refer to [in_app_cb_carousel_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_carousel_page.dart) in the [Example app for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app) for a reference implementation.
+> For a reference implementation, see [`content_blocks_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/content_blocks/content_blocks_screen.dart) in the [Example app for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app).
 
 > 👍
 >

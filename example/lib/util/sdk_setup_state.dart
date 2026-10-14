@@ -1,35 +1,28 @@
-import 'dart:convert';
+import 'package:exponea_example/models/integration_mode.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
-/// Last known customer IDs for JWT generation in the example app.
-///
-/// Also persists IDs to SharedPreferences so native [CustomerTokenStorage]
-/// can read them for advanced authorization (App Inbox).
+/// Last known SDK setup flags for the example app (identify, JWT, Stream mode).
 class SdkSetupState {
   SdkSetupState._();
 
-  static const _spKeyCustomerIds = 'customer_ids';
-
   static Map<String, String> _customerIds = {};
+  static bool isStreamConfig = false;
+  static bool isCustomerIdentified = false;
 
-  static Map<String, String> get customerIds =>
-      Map.unmodifiable(_customerIds);
+  static Map<String, String> get customerIds => Map.unmodifiable(_customerIds);
 
-  static Future<void> setCustomerIds(Map<String, String> ids) async {
+  static String get registeredId => _customerIds['registered'] ?? '';
+
+  static void setCustomerIds(Map<String, String> ids) {
     _customerIds = Map<String, String>.from(ids);
-    final sp = await SharedPreferences.getInstance();
-    if (ids.isEmpty) {
-      await sp.remove(_spKeyCustomerIds);
-      return;
-    }
-
-    await sp.setString(_spKeyCustomerIds, json.encode(ids));
   }
 
-  static Future<void> reset() async {
+  static void setStreamConfig(IntegrationMode mode) {
+    isStreamConfig = mode == IntegrationMode.stream;
+  }
+
+  static void reset() {
     _customerIds = {};
-    final sp = await SharedPreferences.getInstance();
-    await sp.remove(_spKeyCustomerIds);
+    isStreamConfig = false;
+    isCustomerIdentified = false;
   }
 }

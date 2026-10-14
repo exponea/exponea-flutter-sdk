@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:exponea/exponea.dart';
 import 'package:exponea_example/util/local_jwt_generator.dart';
 import 'package:exponea_example/util/sdk_setup_state.dart';
+import 'package:exponea/exponea.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -16,7 +16,6 @@ class StreamAuthListener {
   static final ExponeaPlugin _plugin = ExponeaPlugin();
   static StreamSubscription<SdkAuthError>? _subscription;
 
-  /// Optional hook for UI feedback (e.g. snackbar on [HomePage]).
   static void Function(SdkAuthError error)? onAuthError;
 
   static bool get isActive => _subscription != null;

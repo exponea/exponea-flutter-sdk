@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
     <application>
+        <!-- Forwards HMS Push Kit tokens and messages to the Exponea SDK. -->
         <service
-            android:name="com.exponea.example.services.MyHmsMessageService"
+            android:name="com.exponea.example.ExampleHmsMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT" />

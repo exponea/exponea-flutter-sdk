@@ -30,9 +30,10 @@ You must have the following software installed to be able to build and run the e
    ```shell
    git clone https://github.com/exponea/exponea-flutter-sdk.git
    ```
-2. Enter the `example` directory containing the example app:
+2. Enter the `example` directory containing the example app and install dependencies:
    ```shell
    cd exponea-flutter-sdk/example
+   flutter pub get
    ```
 3. To run the app on iOS:
    1. Run CocoaPods in the `ios` directory to install dependencies:
@@ -52,77 +53,82 @@ You must have the following software installed to be able to build and run the e
       ```shell
       flutter run --flavor gms
       ```
-      Alternatively, use `--flavor hms` for Huawei devices without GooglePlay services but with HMS Core.
+      Alternatively, use `--flavor hms` for Huawei devices without Google Play services but with HMS Core.
       > 👍
       >
       > If you use Visual Studio Code, you can create a [launch configuration](https://code.visualstudio.com/docs/editor/debugging#_launch-configurations) to use the flavor flag.
 
 > 📘
 >
-> To enable push notifications in the example app, you must also configure the [Firebase integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-configure-firebase) or [Huawei integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-configure-huawei) in the Exponea web app.
+> To enable push notifications in the example app, you must also configure the [Firebase integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-configure-firebase) or [Huawei integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-configure-huawei) in the {user.mkg} web app. Use the `gms` product flavor for Firebase or the `hms` flavor for Huawei. On iOS, the example app includes notification service and content extensions for rich push notifications. Rich push notifications require a physical device.
 
 ## Navigate the example app
 
-![Example app auth screens](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/example-app-stream-config.png)
+![Example app SDK Configuration screen](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/example-app-auth.png)
 
-When you run the app in the simulator, you'll see the **ConfigPage** (Auth screen). The screen fields change depending on the selected integration type. Here's how to set it up:
+Run the app to open the **SDK Configuration** screen. The fields change depending on the selected integration type. To set it up:
 
-1. Select your integration type: **Project Config** or **Stream Config**.
-2. For **Project Config**:
-   - Enter your `Project token`, `Authorization token` (API key), and `Base URL`.
-   - **Optional:** Enter `Advanced Auth key` to enable [customer token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#customer-token-authorization).
-3. For **Stream Config**:
-   - Enter your `Stream ID`. You can find the stream ID in the {user.dh} app under **Event streams** > select your stream > **Access Security**.
-   - **Optional:** Enter `JWT Key ID` and `JWT Secret` to enable local JWT token generation for testing. Both must be provided together. Refer to [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization) for details.
-4. **Optional:** Enter `Registered ID` to identify the customer at configure time via `CustomerIdentity`.
-5. **Optional:** Enter `Application ID` if your {user.mkg} project supports multiple mobile apps. If you leave this blank, the SDK uses the default value `default-application`. See [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration) for more.
-6. Optionally, disable `Automatic Session Tracking` using the switch (default enabled).
-7. Then click `Configure` to [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk).
+1. Select your integration type using the **Project** or **Stream** toggle.
+2. For **Project**:
+   - Enter your **Project token**.
+   - Enter your **Authorization token** (API key).
+   - **Optional:** Enter **Advanced auth key** to enable [customer token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#customer-token-authorization).
+3. For **Stream**:
+   - Enter your **Stream ID**. Find the stream ID in the {user.dh} app under **Event streams** > select your stream > **Access Security**.
+   - **Optional:** Enter **JWT Key ID** and **JWT Secret** to enable local JWT token generation for testing. Both must be provided together. Refer to [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-authorization#sdk-auth-token-authorization) for details.
+4. Enter the **API URL** (API base URL for the {user.br} platform).
+5. **Optional:** Enter an email address hard ID in the **Registered customer ID** field to identify the customer. Leave blank for anonymous tracking.
+6. **Optional:** Enter **Application ID (optional)** if your {user.mkg} project supports multiple mobile apps. If you leave this blank, the SDK uses the default value `default-application`. For more details, see [Configuration for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration).
+7. Click **Start** to [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#initialize-the-sdk).
 
-> [`config.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/config.dart)
+The **Clear local data** button invokes `ExponeaPlugin().clearLocalCustomerData()` to delete all locally stored data without initializing the SDK.
 
-The **HomePage** provides several buttons to test the different SDK features.
+- [`authentication_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/authentication/authentication_screen.dart)
+- [`plugin_exponea_service.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/services/plugin_exponea_service.dart)
 
-> [`home.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/home.dart)
+> 👍
+>
+> When using **Project** integration, prefix your API key with `Token `, for example:
+> `Token 0b7uuqicb0fwuv1tqz7ubesxzj3kc3dje3lqyqhzd94pgwnypdiwxz45zqkhjmbf`.
 
-- In the `Push events` section, you can `Request Push Authorization` and check whether push notifications are `Configured?`.
+![Example app screens: fetching, tracking, track event, identify](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/example-app-screens-1.png)
 
-- In the `Customer` section, retrieve the customer's soft ID (`Get Cookie`), `Identify` the customer, identify with JWT (Stream mode), or `Anonymize` the customer.
+After initialization, the main screen provides bottom navigation to test different SDK features. The app bar also includes:
+   * SDK status indicator
+   * SDK configuration overview
+   * Logs bottom sheet
+   * **Reset** action that returns to the **SDK Configuration** screen
 
-- In Stream mode, use **Set Auth Token** for manual JWT refresh. Auth errors trigger automatic token refresh when JWT Key ID and secret were configured on the auth screen.
+- The **Fetching** screen enables you to fetch consents, recommendations, and segments, and open the App Inbox.
+  - [`fetching_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/fetching/fetching_screen.dart)
 
-- In the `Fetch` section, you can fetch the customer's `Consents` and `Recommendations`.
+- The **Tracking** screen shows the customer's cookie ID and enables you to identify the customer, set the SDK auth token (**Stream** integration), track custom events, payments, and page views, request push permission, and track push tokens and push delivered and clicked events. The **Track Custom Event** dialog includes presets that trigger the test in-app messages, for example `Modal`, `Fullscreen`, `Slide-in`, and `Alert Rich`.
+  - [`tracking_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/tracking/tracking_screen.dart)
+  - [`identify_customer_dialog.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/tracking/identify_customer_dialog.dart)
+  - [`track_custom_event_dialog.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/tracking/track_custom_event_dialog.dart)
 
-- In the `Flush Mode` section, you can `Get` and `Set` the flush mode, and trigger a manual `Flush`.
+- The **Flushing** screen lets you read and change the flush mode and flush period, trigger a manual data flush, and read and change the SDK log level.
+  - [`flushing_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/flushing/flushing_screen.dart)
 
-- In the `Flush Period` section, you can configure the flush period using the slider and the `Set` button.
+- The **Anonymize** screen lets you anonymize the current customer and stop the SDK integration.
+  - [`anonymize_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/anonymize/anonymize_screen.dart)
 
-- In the `Track` section, you can track an `Event` (a harcoded event `event_name` with some sample properties) and, if you disabled automatic session tracking, you can manually track `Session Start` and `Session End`.
+- The **In-app CB** screen displays in-app content blocks. Use the placeholder IDs `example_top`, `example_list`, and `example_carousel` in your in-app content block settings. Use `ph_x_example_iOS` and `ph_x_example_Android` to test platform-specific content blocks, and `example_carousel_ios` and `example_carousel_and` for platform-specific carousels.
+  - [`content_blocks_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/content_blocks/content_blocks_screen.dart)
 
-- In the `Trigger in-app messages by event` section, you can track various test events you can use to trigger in-app messages while testing:
-  - `Modal` (track a `test_msg_modal` event)
-  - `Fullscreen` (track a `test_msg_fullscreen` event)
-  - `Slide-in` (tracks a `test_msg_slide` event)
-  - `Alert` (tracks a `test_msg_alert` event)
-
-- In the `Log Level` section, you can `Get` the current log level.
-
-- In the `App Inbox` section, you can access the `App Inbox`, `Fetch all` messages, `Fetch first` message, and `Mark first as read`.
-
-- Using the `In App CB Example Page` button, you can access the **InAppCbPage** to test in-app content blocks. Use the placeholder IDs `example_top` and `example_list` for the corresponding placeholders. Use the placeholder IDs `ph_x_example_iOS` and `ph_x_example_Android` to test platform-specific content blocks in the placeholder labeled "platformSpecificPlaceholderId".
-  > [in_app_cb_page.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/in_app_cb_page.dart)
+The app also logs segmentation data, in-app message actions, and received and opened push notifications to the logs bottom sheet, so you can see the SDK callbacks in action.
 
 Try out the different features in the app, then find the customer profile in the {user.mkg} web app (under `Data & Assets` > `Customers`) to see the properties and events tracked by the SDK.
 
-By default, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value in the logs and find the corresponding profile in the {user.mkg} web app.
+If you left the **Registered customer ID** field blank, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value on the **Tracking** screen and find the corresponding profile in the {user.mkg} web app.
 
-If you used the `Identify` button, the customer can be found in {user.mkg} web app by the test email address (`test-user-1@test.com`).
+If you entered a hard ID — for example, an email address — in the **Registered customer ID** field, you can find the customer in the {user.mkg} web app by their email address.
 
 > 📘
 >
-> Refer to [Customer Identification](https://documentation.bloomreach.com/engagement/docs/customer-identification) for more information on soft IDs and hard IDs.
+> For more information on soft IDs and hard IDs, see [Customer identification](https://documentation.bloomreach.com/engagement/docs/customer-identification).
 
-![Example app screens](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/example-app-flutter-android.png)
+![Example app screens: flushing, anonymize, content blocks](https://raw.githubusercontent.com/exponea/exponea-flutter-sdk/main/Documentation/images/example-app-screens-2.png)
 
 ## Troubleshooting
 
@@ -130,3 +136,4 @@ If you encounter any issues running the example app, the following may help:
 
 - In the `example` directory, run `flutter clean`, then `flutter pub get`.
 - If the app doesn't start on Android, you may have forgotten to include the `--flavor gms` or `--flavor hms` flag.
+- If Android refuses to install the app over an existing installation (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`), uninstall the previous build once. The example app is signed with a shared demo key.

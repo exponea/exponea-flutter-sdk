@@ -52,7 +52,7 @@ That's all that's required to integrate the App Inbox. Optionally, you can [cust
 
 > 📘
 >
-> See [home.dart](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/page/home.dart) for a reference implementation.
+> For a reference implementation, see [`fetching_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/fetching/fetching_screen.dart) and [`app_inbox_style.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/util/app_inbox_style.dart) in the [Example app for Flutter SDK](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-example-app).
 
 ## Default App Inbox behavior
 

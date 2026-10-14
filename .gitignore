@@ -6,6 +6,8 @@
 
 build/
 
+coverage/
+
 *.iml
 .idea/
 .vscode/
