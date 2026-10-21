@@ -53,6 +53,7 @@ android {
         }
         create("hms") {
             dimension = "messagingService"
+            proguardFiles("hms-rules.pro")
         }
     }
 
@@ -62,6 +63,7 @@ android {
         }
         release {
             signingConfig = signingConfigs.getByName("config")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }
