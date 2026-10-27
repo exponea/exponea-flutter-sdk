@@ -1,3 +1,7 @@
 Documentation/
 
 build/
+AGENTS.md
+**/AGENTS.md
+CLAUDE.md
+coverage/

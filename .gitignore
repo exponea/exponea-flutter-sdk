@@ -13,3 +13,6 @@ coverage/
 .vscode/
 example/.vscode/
 example/.gradle-user-home/
+
+# Local AI agent state
+.claude/
