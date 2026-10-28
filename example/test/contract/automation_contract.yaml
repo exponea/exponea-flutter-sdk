@@ -184,6 +184,18 @@ capabilities:
         afterTap: btn_toggle_carousels
       - id: lbl_carousel_status
         afterTap: btn_toggle_carousels
+      - cb_tab_classic
+      - cb_tab_runtime_lab
+      - id: btn_cb_runtime_prefetch
+        afterTap: cb_tab_runtime_lab
+      - id: btn_cb_runtime_availability
+        afterTap: cb_tab_runtime_lab
+      - id: btn_cb_runtime_invalidate
+        afterTap: cb_tab_runtime_lab
+      - id: btn_cb_runtime_logout
+        afterTap: cb_tab_runtime_lab
+      - id: lbl_cb_runtime_status
+        afterTap: cb_tab_runtime_lab
   configuration-sheet:
     screen: AppShell
     pump:

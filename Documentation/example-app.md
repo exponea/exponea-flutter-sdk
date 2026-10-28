@@ -113,7 +113,7 @@ After initialization, the main screen provides bottom navigation to test differe
 - The **Anonymize** screen lets you anonymize the current customer and stop the SDK integration.
   - [`anonymize_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/anonymize/anonymize_screen.dart)
 
-- The **In-app CB** screen displays in-app content blocks. Use the placeholder IDs `example_top`, `example_list`, and `example_carousel` in your in-app content block settings. Use `ph_x_example_iOS` and `ph_x_example_Android` to test platform-specific content blocks, and `example_carousel_ios` and `example_carousel_and` for platform-specific carousels.
+- The **In-app CB** screen displays in-app content blocks. Use the placeholder IDs `example_top`, `example_list`, and `example_carousel` in your in-app content block settings. Use `ph_x_example_iOS` and `ph_x_example_Android` to test platform-specific content blocks, and `example_carousel_ios` and `example_carousel_and` for platform-specific carousels. The **Runtime Control** tab drives `ExponeaPlugin().inAppContentBlocksController` (prefetch, availability, invalidate) and logs each result. For more information, see [Try the runtime controller in the example app](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-content-blocks#try-the-runtime-controller-in-the-example-app).
   - [`content_blocks_screen.dart`](https://github.com/exponea/exponea-flutter-sdk/blob/main/example/lib/features/content_blocks/content_blocks_screen.dart)
 
 The app also logs segmentation data, in-app message actions, and received and opened push notifications to the logs bottom sheet, so you can see the SDK callbacks in action.

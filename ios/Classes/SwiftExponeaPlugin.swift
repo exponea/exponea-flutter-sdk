@@ -73,6 +73,9 @@ enum METHOD_NAME: String {
     case unregisterSegmentationDataStream = "unregisterSegmentationDataStream"
     case methodStopIntegration = "stopIntegration"
     case methodClearLocalCustomerData = "clearLocalCustomerData"
+    case methodInAppContentBlocksControllerPrefetch = "inAppContentBlocksControllerPrefetch"
+    case methodInAppContentBlocksControllerAvailability = "inAppContentBlocksControllerAvailability"
+    case methodInAppContentBlocksControllerInvalidate = "inAppContentBlocksControllerInvalidate"
 }
 
 
@@ -450,6 +453,24 @@ public class SwiftExponeaPlugin: NSObject, FlutterPlugin {
             stopIntegration(with: result)
         case .methodClearLocalCustomerData:
             clearLocalCustomerData(call.arguments, with: result)
+        case .methodInAppContentBlocksControllerPrefetch:
+            RuntimeInAppContentBlockControllerBridge.prefetch(
+                controller: exponeaInstance.inAppContentBlocksController,
+                arguments: call.arguments,
+                result: result
+            )
+        case .methodInAppContentBlocksControllerAvailability:
+            RuntimeInAppContentBlockControllerBridge.availability(
+                controller: exponeaInstance.inAppContentBlocksController,
+                arguments: call.arguments,
+                result: result
+            )
+        case .methodInAppContentBlocksControllerInvalidate:
+            RuntimeInAppContentBlockControllerBridge.invalidate(
+                controller: exponeaInstance.inAppContentBlocksController,
+                arguments: call.arguments,
+                result: result
+            )
         }
     }
     

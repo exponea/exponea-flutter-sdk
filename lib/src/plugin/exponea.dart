@@ -1,9 +1,36 @@
 import 'package:exponea/exponea.dart';
 
 import '../interface.dart';
+import 'runtime_in_app_content_block_controller.dart';
 
 class ExponeaPlugin implements BaseInterface {
+  ExponeaPlugin() {
+    _runtimeControllerState.seed();
+  }
+
   ExponeaPlatform get _platform => ExponeaPlatform.instance;
+
+  // Shared by all ExponeaPlugin instances; keyed by platform so a replaced
+  // platform (tests) starts with fresh state.
+  static final _runtimeControllerStates =
+      Expando<RuntimeInAppContentBlockControllerState>();
+
+  RuntimeInAppContentBlockControllerState get _runtimeControllerState {
+    final platform = _platform;
+    return _runtimeControllerStates[platform] ??=
+        RuntimeInAppContentBlockControllerState(platform);
+  }
+
+  /// Runtime in-app content block controller, or `null` while the SDK is not
+  /// configured.
+  ///
+  /// A new instance is created when [configure] starts the SDK; a repeated
+  /// [configure] keeps the existing one. After [stopIntegration] the getter
+  /// returns `null` and the old instance fails with
+  /// `RuntimeInAppContentBlockControllerUnavailable`. Read the getter each
+  /// time instead of keeping a long-lived reference.
+  RuntimeInAppContentBlockController? get inAppContentBlocksController =>
+      _runtimeControllerState.controller;
 
   @override
   Future<void> anonymize([
@@ -19,11 +46,15 @@ class ExponeaPlugin implements BaseInterface {
   Future<bool> configure(
     ExponeaConfiguration configuration, {
     CustomerIdentifier? customerIdentifier,
-  }) =>
-      _platform.configure(
-        configuration,
-        customerIdentifier: customerIdentifier,
-      );
+  }) async {
+    final state = _runtimeControllerState;
+    final started = await _platform.configure(
+      configuration,
+      customerIdentifier: customerIdentifier,
+    );
+    state.onConfigured(started);
+    return started;
+  }
 
   @override
   Future<List<Consent>> fetchConsents() => _platform.fetchConsents();
@@ -256,7 +287,11 @@ class ExponeaPlugin implements BaseInterface {
       _platform.segmentationDataStream(exposingCategory, includeFirstLoad: includeFirstLoad);
 
   @override
-  Future<void> stopIntegration() => _platform.stopIntegration();
+  Future<void> stopIntegration() async {
+    final state = _runtimeControllerState;
+    await _platform.stopIntegration();
+    state.onStopped();
+  }
 
   @override
   Future<void> clearLocalCustomerData({String? appGroup}) => _platform.clearLocalCustomerData(appGroup: appGroup);

@@ -95,18 +95,230 @@ The SDK automatically tracks `banner` events for in-app content blocks with the 
 
 The SDK can only display an in-app content block after it has been fully loaded (including its content, any images, and its height). Therefore, the in-app content block may only show in the app after a delay.
 
-You may prefetch in-app content blocks for specific placeholders to make them display as soon as possible.
+Hide this delay by warming the content for specific placeholders before the user reaches the screen that renders them. Use `ExponeaPlugin().inAppContentBlocksController?.prefetch()`, described in [Control in-app content blocks at runtime](#control-in-app-content-blocks-at-runtime). The existing `InAppContentBlockPlaceholder` and `InAppContentBlockCarousel` widgets still own rendering and tracking.
 
 ```dart
-final _plugin = ExponeaPlugin();
-...
+// Call this as soon as the destination screen (and its placeholder IDs) is known,
+// for example when the user taps a navigation item.
+await ExponeaPlugin().inAppContentBlocksController?.prefetch(['placeholder_1']);
+```
+
+Alternatively, if the placeholder IDs are static, you can let the SDK load them right after initialization by listing them in the `inAppContentBlockPlaceholdersAutoLoad` [configuration parameter](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-configuration). The runtime controller is the better choice whenever IDs depend on navigation, customer identity, or CMS layout.
+
+```dart
 final config = ExponeaConfiguration(
     ...
     inAppContentBlockPlaceholdersAutoLoad: ['placeholder_1'],
     ...
 );
-final configured = await _plugin.configure(config);
+final configured = await ExponeaPlugin().configure(config);
 ```
+
+### Control in-app content blocks at runtime
+
+`ExponeaPlugin().inAppContentBlocksController` is a runtime controller for in-app content blocks. It lets you warm content before navigation, make a time-bounded rendering decision, and evict content you know has changed. The controller loads content in the background; the existing placeholder and carousel widgets still own rendering and tracking.
+
+The controller changes with the SDK state as follows:
+
+* Before you call `configure()`, the controller is `null`.
+* After `configure()` completes, the controller is available.
+* If you call `configure()` again while the SDK is already configured, the controller stays the same instance. In this case, `configure()` returns `false`.
+* After `identifyCustomer()` or `anonymize()`, the controller stays the same instance. The native SDK resets its cache on a customer change, so prefetch again afterward.
+* After a successful `stopIntegration()`, the controller is `null`.
+* After a `configure()` call that follows `stopIntegration()`, the controller is a new instance.
+
+Always read `ExponeaPlugin().inAppContentBlocksController` when you need it instead of keeping a long-lived reference. A reference kept across `stopIntegration()` rejects every call.
+
+```dart
+final controller = ExponeaPlugin().inAppContentBlocksController;
+if (controller == null) {
+  // SDK is not configured; render your fallback.
+  return;
+}
+```
+
+> 📘
+>
+> Flutter holds the controller state on the Dart side. After a hot restart, the native SDK stays configured, but the Dart state resets. The getter returns `null` until `configure()` runs again or the plugin checks with the native SDK whether it's configured. The plugin runs this check right after you create the first `ExponeaPlugin()`. A secondary Flutter engine or isolate that hasn't called `configure()` also sees `null`.
+
+#### Which API to use
+
+| API | Use it when | Result |
+| --- | --- | --- |
+| `prefetch(ids, [deadlineMs])` | The IDs for a future screen are already known and content should be warmed before navigation. | `Future` of a map from distinct ID to `InAppContentBlockAvailability` (`ready`, `empty`, or `loading`). |
+| `availability(id, deadlineMs)` | The current screen must decide whether to render one placement or a fallback within a deadline. | `Future` of `InAppContentBlockAvailabilityResolved` (with `ready` or `empty`) or `InAppContentBlockAvailabilityTimedOut`. |
+| `invalidate(ids, reason, [mode])` | The content of a placement changed in {user.mkg}, and the SDK must no longer show the cached version. | `Future<void>` that completes after the native controller accepts the request. |
+
+`prefetch` accepts multiple placeholder IDs and deduplicates repeated IDs. Use it to hide loading time before a user reaches a screen. `availability` accepts only a single ID because it represents one UI decision. All three methods return a `Future` and fail if the native SDK isn't configured.
+
+#### Handle errors
+
+Runtime methods fail with a `PlatformException`. Known error codes are the same on iOS and Android, and the same as in the React Native SDK:
+
+| Error code | Meaning |
+| --- | --- |
+| `RuntimeInAppContentBlockControllerUnavailable` | The native controller is unavailable because the SDK isn't configured, or the Dart controller instance was deactivated by `stopIntegration()`. |
+| `RuntimeInAppContentBlockControllerInvalidMode` | The bridge received an unsupported invalidation mode. Use `InAppContentBlockInvalidateMode.eager` or `.lazy`. |
+| `RuntimeInAppContentBlockControllerError` | An unexpected native failure occurred. Native error details are preserved in `message` and `details`. |
+
+A deactivated instance remains unusable even after configuring the SDK again. Obtain a new instance from `ExponeaPlugin().inAppContentBlocksController` after configuration succeeds. Reading a `null` controller is not itself an error; the `?.` operator skips the operation.
+
+```dart
+final controller = ExponeaPlugin().inAppContentBlocksController;
+if (controller != null) {
+  try {
+    await controller.prefetch(['example_list']);
+  } on PlatformException catch (error) {
+    if (error.code == 'RuntimeInAppContentBlockControllerUnavailable') {
+      // Show your fallback. Obtain a fresh controller after configuration.
+    } else {
+      debugPrint('Content block prefetch failed: $error');
+    }
+  }
+}
+```
+
+An availability timeout is an `InAppContentBlockAvailabilityTimedOut` decision, not an error. An `empty` availability result is also a normal result.
+
+#### Warm content before navigation
+
+Start prefetching as soon as you know the destination or its layout. Once an ID is `ready`, mount the corresponding `InAppContentBlockPlaceholder` (or `InAppContentBlockCarousel`) to use the prefetched content. Prefetching reduces loading work, but it doesn't guarantee immediate display, because display eligibility, rendering, and layout still apply.
+
+```dart
+Future<void> openProductList(BuildContext context) async {
+  final results = await ExponeaPlugin()
+      .inAppContentBlocksController
+      ?.prefetch(['example_list'], 2000);
+  if (results?['example_list'] == InAppContentBlockAvailability.ready) {
+    // Content is warmed; mount the placeholder on the destination screen.
+    // Display eligibility, rendering, and layout still apply.
+  }
+  if (context.mounted) Navigator.of(context).pushNamed('/products');
+}
+```
+
+The deadline is optional. Without one, the `Future` waits for final states (`ready` or `empty`). With a deadline, the `Future` reports every ID that hasn't resolved by that time as a snapshot: `loading` on iOS and `empty` on Android. In both cases, the value is temporary and doesn't prove that no campaign exists. The background request continues and might populate the cache later. To decide the UI fallback, use `availability` instead of a deadline-bound `prefetch` result.
+
+#### Make a bounded rendering decision
+
+Use `availability` when waiting too long would make the screen feel slow and a fallback is acceptable.
+
+```dart
+final decision = await ExponeaPlugin()
+    .inAppContentBlocksController
+    ?.availability('example_list', 2000);
+
+setState(() {
+  _showContentBlock = switch (decision) {
+    // Mount InAppContentBlockPlaceholder(placeholderId: 'example_list').
+    InAppContentBlockAvailabilityResolved(
+      availability: InAppContentBlockAvailability.ready
+    ) =>
+      true,
+    // 'empty': load completed without renderable content.
+    InAppContentBlockAvailabilityResolved() => false,
+    // Timed out or SDK not configured: show your own fallback.
+    InAppContentBlockAvailabilityTimedOut() || null => false,
+  };
+});
+```
+
+A resolved `empty` decision means the load completed without renderable content. `InAppContentBlockAvailabilityTimedOut` means only that this caller stopped waiting. It doesn't cancel the load, so a later `availability` call or a placeholder mount can use content that finishes loading afterward. A resolved decision is never `loading`.
+
+#### Calling both APIs for the same ID
+
+Calling the following methods together is safe:
+
+```dart
+final controller = ExponeaPlugin().inAppContentBlocksController;
+controller?.prefetch(['example_list'], 2000);
+final decision = await controller?.availability('example_list', 2000);
+```
+
+They share one in-flight load for `example_list` and don't create two initial requests. Each `Future` still completes exactly once with its own result type. Use this pairing when the screen needs both proactive prefetching and a deadline-based UI fallback. In most flows, prefetching before navigation is enough.
+
+With a deadline of zero or a negative value, both methods return immediately:
+* `availability` returns `InAppContentBlockAvailabilityTimedOut`.
+* `prefetch` returns cached terminal states and the snapshot value for other IDs.
+
+Both still start or continue populating the cache in the background.
+
+#### Prefetch after identifying the customer
+
+Content block eligibility depends on the customer. The native SDK resets its runtime cache when the customer changes, so a prefetch issued before `identifyCustomer()` completes may be evaluated for the previous (anonymous) customer. Order the calls as follows:
+
+```dart
+final plugin = ExponeaPlugin();
+await plugin.identifyCustomer(const Customer(ids: {'registered': 'user@example.com'}));
+// The controller instance is unchanged, only its cache was reset.
+await plugin.inAppContentBlocksController?.prefetch(['home_banner', 'home_list']);
+```
+
+The same applies after `anonymize()`.
+
+#### Invalidate changed content
+
+`invalidate(ids, reason, [mode])` evicts the cached content of the given placements. In the default `InAppContentBlockInvalidateMode.eager` mode, it also immediately starts a fresh load. In `InAppContentBlockInvalidateMode.lazy` mode, it only evicts, and the next `prefetch`, `availability`, or placeholder load fetches the content.
+
+The `reason` is a local diagnostic label that the SDK writes to verbose logs only. The SDK never persists it or sends it over the network. The method accepts unknown IDs and starts loading them.
+
+```dart
+await ExponeaPlugin().inAppContentBlocksController?.invalidate(
+  ['example_list'],
+  'content updated in CMS',
+  InAppContentBlockInvalidateMode.eager,
+);
+```
+
+> ❗️
+>
+> Call `invalidate` only when the placement's source content has changed. Don't call it to acknowledge or consume a successful prefetch. Calling it right after a `ready` result discards the prefetched content and triggers another request.
+
+##### Refresh a mounted placeholder after invalidate
+
+The controller only evicts and reloads cached content. It doesn't refresh an `InAppContentBlockPlaceholder` or `InAppContentBlockCarousel` that's already mounted, so the widget keeps showing the content it loaded. To display the refreshed content, remount the widget by giving it a new `Key`. This creates a new platform view that loads the invalidated placement again. The example app's runtime lab uses the same pattern.
+
+```dart
+class PromoBanner extends StatefulWidget {
+  const PromoBanner({super.key});
+
+  @override
+  State<PromoBanner> createState() => _PromoBannerState();
+}
+
+class _PromoBannerState extends State<PromoBanner> {
+  Key _bannerKey = UniqueKey();
+
+  Future<void> onPromoCodeApplied() async {
+    await ExponeaPlugin().inAppContentBlocksController?.invalidate(
+      ['promo_banner'],
+      'promo code applied',
+    );
+    // A new key creates a new platform view, which loads the fresh content.
+    setState(() => _bannerKey = UniqueKey());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InAppContentBlockPlaceholder(
+      key: _bannerKey,
+      placeholderId: 'promo_banner',
+    );
+  }
+}
+```
+
+A remount briefly resets the placeholder height and tracks a new `show` event for the content block. Content that is mounted for the first time after `invalidate` needs no special handling.
+
+#### Try the runtime controller in the example app
+
+Open the in-app content blocks screen and select **Runtime Control**. The **Basic** tab contains the existing placeholder and carousel examples. The runtime lab accepts comma-separated or newline-separated placeholder IDs and a deadline in milliseconds. The lab records method results and placeholder events in a log that you can copy.
+
+The **happy path** and **post-login CMS** scenarios prefetch and then mount placeholders to display eligible content. The other scenarios test prefetch, availability, eager or lazy invalidation, and customer lifecycle changes without mounting new placeholders. Blocks already mounted in the lab remain mounted during those scenarios. The happy path and post-login scenarios replace them when they mount new views. Switching away from the runtime tab unmounts the lab.
+
+The identity scenarios change the SDK customer to `user_a`, `user_b`, or an anonymous customer. The timeout scenario uses a 1 ms deadline, but a fast response can still resolve within that time. Check the actual decision in the log.
+
+The lab retains the last placeholder IDs and deadline across tab and screen changes until the app restarts. It doesn't retain logs and mounted views when the lab unmounts.
 
 ### Customize action behavior
 

@@ -221,6 +221,7 @@ The following parameters are specified in an `ExponeaConfiguration` object. Refe
 
 * `inAppContentBlockPlaceholdersAutoLoad`
   * Automatically load the contents of in-app content blocks assigned to these Placeholder IDs.
+  * To prefetch placeholders whose IDs are known only at runtime, use `ExponeaPlugin().inAppContentBlocksController` instead. Refer to [Control in-app content blocks at runtime](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-in-app-content-blocks#control-in-app-content-blocks-at-runtime).
 
 * `manualSessionAutoClose`
   * Determines whether the SDK automatically tracks `session_end` for sessions that remain open when `ExponeaPlugin().trackSessionStart()` is called multiple times in manual session tracking mode.

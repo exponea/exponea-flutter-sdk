@@ -59,6 +59,10 @@ class PluginExponeaService implements ExponeaService {
   SdkStatusStore get statusStore => _statusStore;
 
   @override
+  RuntimeInAppContentBlockController? get inAppContentBlocksController =>
+      _plugin.inAppContentBlocksController;
+
+  @override
   void appendLog(String message) {
     _logs.add(message);
   }

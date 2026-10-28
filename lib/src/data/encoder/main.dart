@@ -21,6 +21,7 @@ export 'recommendation.dart';
 export 'token_frequency.dart';
 export 'app_inbox.dart';
 export 'in_app_content_block.dart';
+export 'in_app_content_block_availability.dart';
 export 'in_app_content_block_action.dart';
 export 'in_app_content_block_action_type.dart';
 export 'in_app_content_block_personalized_data.dart';

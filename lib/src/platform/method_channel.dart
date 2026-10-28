@@ -56,6 +56,9 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   static const _trackAppInboxOpenedWithoutTrackingConsent = 'trackAppInboxOpenedWithoutTrackingConsent';
   static const _trackAppInboxClick = 'trackAppInboxClick';
   static const _trackAppInboxClickWithoutTrackingConsent = 'trackAppInboxClickWithoutTrackingConsent';
+  static const _methodInAppContentBlocksControllerPrefetch = 'inAppContentBlocksControllerPrefetch';
+  static const _methodInAppContentBlocksControllerAvailability = 'inAppContentBlocksControllerAvailability';
+  static const _methodInAppContentBlocksControllerInvalidate = 'inAppContentBlocksControllerInvalidate';
   static const _markAppInboxAsRead = 'markAppInboxAsRead';
   static const _fetchAppInbox = 'fetchAppInbox';
   static const _fetchAppInboxItem = 'fetchAppInboxItem';
@@ -583,5 +586,44 @@ class MethodChannelExponeaPlatform extends ExponeaPlatform {
   @override
   Future<void> clearLocalCustomerData({String? appGroup}) async {
     await _channel.invokeMethod<void>(_methodClearLocalCustomerData, {'appGroup': appGroup});
+  }
+
+  @override
+  Future<Map<String, InAppContentBlockAvailability>>
+      inAppContentBlocksControllerPrefetch(
+    List<String> ids,
+    int? deadlineMs,
+  ) async {
+    final data = {'ids': ids, 'deadlineMs': deadlineMs};
+    final result = (await _channel.invokeMapMethod<String, dynamic>(
+        _methodInAppContentBlocksControllerPrefetch, data))!;
+    return InAppContentBlockAvailabilityEncoder.decodePrefetch(result);
+  }
+
+  @override
+  Future<InAppContentBlockAvailabilityDecision>
+      inAppContentBlocksControllerAvailability(
+    String id,
+    int deadlineMs,
+  ) async {
+    final data = {'id': id, 'deadlineMs': deadlineMs};
+    final result = (await _channel.invokeMapMethod<String, dynamic>(
+        _methodInAppContentBlocksControllerAvailability, data))!;
+    return InAppContentBlockAvailabilityEncoder.decodeDecision(result);
+  }
+
+  @override
+  Future<void> inAppContentBlocksControllerInvalidate(
+    List<String> ids,
+    String reason,
+    InAppContentBlockInvalidateMode mode,
+  ) async {
+    final data = {
+      'ids': ids,
+      'reason': reason,
+      'mode': InAppContentBlockInvalidateModeEncoder.encode(mode),
+    };
+    await _channel.invokeMethod<void>(
+        _methodInAppContentBlocksControllerInvalidate, data);
   }
 }

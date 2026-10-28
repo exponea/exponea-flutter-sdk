@@ -352,4 +352,28 @@ abstract class ExponeaPlatform extends PlatformInterface
   Future<void> clearLocalCustomerData({String? appGroup}) async {
     throw UnimplementedError();
   }
+
+  Future<Map<String, InAppContentBlockAvailability>>
+      inAppContentBlocksControllerPrefetch(
+    List<String> ids,
+    int? deadlineMs,
+  ) async {
+    throw UnimplementedError();
+  }
+
+  Future<InAppContentBlockAvailabilityDecision>
+      inAppContentBlocksControllerAvailability(
+    String id,
+    int deadlineMs,
+  ) async {
+    throw UnimplementedError();
+  }
+
+  Future<void> inAppContentBlocksControllerInvalidate(
+    List<String> ids,
+    String reason,
+    InAppContentBlockInvalidateMode mode,
+  ) async {
+    throw UnimplementedError();
+  }
 }

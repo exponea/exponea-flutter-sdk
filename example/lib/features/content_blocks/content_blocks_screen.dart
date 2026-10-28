@@ -1,4 +1,5 @@
 import 'package:exponea_example/app/brand_colors.dart';
+import 'package:exponea_example/features/content_blocks/runtime_controller_lab.dart';
 import 'package:exponea_example/util/test_environment.dart';
 import 'package:exponea/exponea.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,7 @@ class _ContentBlocksScreenState extends State<ContentBlocksScreen> {
   static const _contentBlockEvery = 5;
   static const _listHeight = 400.0;
 
+  bool _showRuntimeLab = false;
   bool _showCarousels = false;
   final bool _placeholdersBuilt = true;
   bool _carouselsBuilt = false;
@@ -143,62 +145,109 @@ class _ContentBlocksScreenState extends State<ContentBlocksScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: Card(
-              margin: EdgeInsets.zero,
-              color: BrandColors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: const BorderSide(color: BrandColors.grey300),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Show carousels',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Semantics(
-                      identifier: 'btn_toggle_carousels',
-                      label: 'Show carousels',
-                      toggled: _showCarousels,
-                      excludeSemantics: true,
-                      child: Switch(
-                        value: _showCarousels,
-                        onChanged: _onToggleCarousels,
-                        thumbColor: WidgetStateProperty.resolveWith(
-                          (states) => BrandColors.black,
-                        ),
-                        trackColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.selected)
-                              ? BrandColors.yellow
-                              : BrandColors.grey400,
-                        ),
-                      ),
-                    ),
-                  ],
+            child: Row(
+              children: [
+                Expanded(
+                  child: _TabButton(
+                    semanticsId: 'cb_tab_classic',
+                    label: 'Basic',
+                    selected: !_showRuntimeLab,
+                    onPressed: () => setState(() => _showRuntimeLab = false),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _TabButton(
+                    semanticsId: 'cb_tab_runtime_lab',
+                    label: 'Runtime Control',
+                    selected: _showRuntimeLab,
+                    onPressed: () => setState(() => _showRuntimeLab = true),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-              child: _showCarousels
-                  ? (_carouselsBuilt ? _buildCarouselsGroup() : const SizedBox.shrink())
-                  : (_placeholdersBuilt
-                      ? _buildPlaceholdersGroup()
-                      : const SizedBox.shrink()),
-            ),
+            child: _showRuntimeLab
+                ? SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+                    child: _SectionCard(
+                      title: 'Runtime Control',
+                      child: RuntimeControllerLab(
+                        platformPlaceholderId: _platformPlaceholderId,
+                      ),
+                    ),
+                  )
+                : _buildBasicTab(),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBasicTab() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+          child: Card(
+            margin: EdgeInsets.zero,
+            color: BrandColors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: const BorderSide(color: BrandColors.grey300),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Show carousels',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  Semantics(
+                    identifier: 'btn_toggle_carousels',
+                    label: 'Show carousels',
+                    toggled: _showCarousels,
+                    excludeSemantics: true,
+                    child: Switch(
+                      value: _showCarousels,
+                      onChanged: _onToggleCarousels,
+                      thumbColor: WidgetStateProperty.resolveWith(
+                        (states) => BrandColors.black,
+                      ),
+                      trackColor: WidgetStateProperty.resolveWith(
+                        (states) => states.contains(WidgetState.selected)
+                            ? BrandColors.yellow
+                            : BrandColors.grey400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+            child: _showCarousels
+                ? (_carouselsBuilt
+                    ? _buildCarouselsGroup()
+                    : const SizedBox.shrink())
+                : (_placeholdersBuilt
+                    ? _buildPlaceholdersGroup()
+                    : const SizedBox.shrink()),
+          ),
+        ),
+      ],
     );
   }
 
@@ -314,6 +363,46 @@ class _ContentBlocksScreenState extends State<ContentBlocksScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _TabButton extends StatelessWidget {
+  const _TabButton({
+    required this.semanticsId,
+    required this.label,
+    required this.selected,
+    required this.onPressed,
+  });
+
+  final String semanticsId;
+  final String label;
+  final bool selected;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      identifier: semanticsId,
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: selected ? BrandColors.yellow : BrandColors.white,
+          foregroundColor: BrandColors.black,
+          side: BorderSide(
+              color: selected ? BrandColors.black : BrandColors.grey300),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          minimumSize: const Size.fromHeight(44),
+          textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        child: Text(label),
+      ),
     );
   }
 }

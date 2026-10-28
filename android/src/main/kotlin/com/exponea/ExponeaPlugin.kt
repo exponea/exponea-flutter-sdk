@@ -272,12 +272,18 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
         private const val METHOD_UNREGISTER_SEGMENTATION_DATA_STREAM = "unregisterSegmentationDataStream"
         private const val METHOD_STOP_INTEGRATION = "stopIntegration"
         private const val METHOD_CLEAR_LOCAL_CUSTOMER_DATA = "clearLocalCustomerData"
+        private const val METHOD_IN_APP_CONTENT_BLOCKS_CONTROLLER_PREFETCH = "inAppContentBlocksControllerPrefetch"
+        private const val METHOD_IN_APP_CONTENT_BLOCKS_CONTROLLER_AVAILABILITY = "inAppContentBlocksControllerAvailability"
+        private const val METHOD_IN_APP_CONTENT_BLOCKS_CONTROLLER_INVALIDATE = "inAppContentBlocksControllerInvalidate"
     }
 
     var activity: Context? = null
     private var configuration: ExponeaConfiguration? = null
     private val handler: Handler = Handler(Looper.getMainLooper())
     private val segmentationDataCallbacks = CopyOnWriteArrayList<FlutterSegmentationDataCallback>()
+    private val runtimeInAppContentBlockControllerBridge = RuntimeInAppContentBlockControllerBridge {
+        if (Exponea.isInitialized) Exponea.inAppContentBlocksController else null
+    }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         Log.i(TAG, "onMethodCall(${call.method})")
@@ -465,6 +471,15 @@ private class ExponeaMethodHandler(private val context: Context) : MethodCallHan
             }
             METHOD_CLEAR_LOCAL_CUSTOMER_DATA -> {
                 clearLocalCustomerData(call.arguments, result)
+            }
+            METHOD_IN_APP_CONTENT_BLOCKS_CONTROLLER_PREFETCH -> {
+                runtimeInAppContentBlockControllerBridge.prefetch(call.arguments, result)
+            }
+            METHOD_IN_APP_CONTENT_BLOCKS_CONTROLLER_AVAILABILITY -> {
+                runtimeInAppContentBlockControllerBridge.availability(call.arguments, result)
+            }
+            METHOD_IN_APP_CONTENT_BLOCKS_CONTROLLER_INVALIDATE -> {
+                runtimeInAppContentBlockControllerBridge.invalidate(call.arguments, result)
             }
             else -> {
                 result.notImplemented()

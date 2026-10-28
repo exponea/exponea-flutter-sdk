@@ -39,6 +39,15 @@ class FakeExponeaService implements ExponeaService {
   @override
   SdkStatusStore get statusStore => _statusStore;
 
+  /// Recorded by widget tests; returned while [runtimeControllerAvailable] is true.
+  final FakeRuntimeInAppContentBlockController runtimeController =
+      FakeRuntimeInAppContentBlockController();
+  bool runtimeControllerAvailable = true;
+
+  @override
+  RuntimeInAppContentBlockController? get inAppContentBlocksController =>
+      runtimeControllerAvailable ? runtimeController : null;
+
   @override
   void appendLog(String message) {
     _logs.add(message);
@@ -259,5 +268,42 @@ class FakeExponeaService implements ExponeaService {
   Future<void> setLogLevel(LogLevel level) async {
     _logLevel = level;
     appendLog('Fake setLogLevel($level)');
+  }
+}
+
+class FakeRuntimeInAppContentBlockController
+    implements RuntimeInAppContentBlockController {
+  final List<String> calls = [];
+  Map<String, InAppContentBlockAvailability>? prefetchResult;
+  Map<String, InAppContentBlockAvailabilityDecision> availabilityResults = {};
+
+  @override
+  Future<Map<String, InAppContentBlockAvailability>> prefetch(
+    List<String> ids, [
+    int? deadlineMs,
+  ]) async {
+    calls.add('prefetch($ids, $deadlineMs)');
+    return prefetchResult ??
+        {for (final id in ids) id: InAppContentBlockAvailability.ready};
+  }
+
+  @override
+  Future<InAppContentBlockAvailabilityDecision> availability(
+    String id,
+    int deadlineMs,
+  ) async {
+    calls.add('availability($id, $deadlineMs)');
+    return availabilityResults[id] ??
+        const InAppContentBlockAvailabilityResolved(
+            InAppContentBlockAvailability.ready);
+  }
+
+  @override
+  Future<void> invalidate(
+    List<String> ids,
+    String reason, [
+    InAppContentBlockInvalidateMode mode = InAppContentBlockInvalidateMode.eager,
+  ]) async {
+    calls.add('invalidate($ids, $reason, ${mode.name})');
   }
 }

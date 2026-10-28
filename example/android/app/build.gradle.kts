@@ -80,7 +80,7 @@ flutter {
 
 dependencies {
     // Native SDK for the customer token provider; keep equal to the plugin's exponeaSdkVersion.
-    implementation("com.exponea.sdk:sdk:5.3.1")
+    implementation("com.exponea.sdk:sdk:5.4.0")
 
     // Same versions as the legacy example app.
     "gmsImplementation"("com.google.firebase:firebase-messaging:23.0.0")
@@ -90,4 +90,6 @@ dependencies {
     // Plugin Kotlin unit tests (src/test) read fixtures from the repository test/values.
     testImplementation("junit:junit:4.12")
     testImplementation("com.google.code.gson:gson:2.10.1")
+    // Test-only: mocks the native runtime controller in plugin bridge tests. Never a plugin dependency.
+    testImplementation("io.mockk:mockk:1.14.11")
 }

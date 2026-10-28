@@ -15,6 +15,9 @@ abstract class ExponeaService {
   /// Reactive SDK lifecycle state for the toolbar status indicator.
   SdkStatusStore get statusStore;
 
+  /// Runtime in-app content block controller; `null` while the SDK is not configured.
+  RuntimeInAppContentBlockController? get inAppContentBlocksController;
+
   void appendLog(String message);
 
   void clearLogs();
