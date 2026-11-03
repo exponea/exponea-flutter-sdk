@@ -7,7 +7,7 @@ Apply the root guide as well. Commands below run from `example/` unless noted. `
 - iOS: `flutter pub get`, then `cd ios && pod install`, then `flutter run`. The Podfile forces `IPHONEOS_DEPLOYMENT_TARGET` to the SDK minimum in `post_install`; keep that hook when editing the Podfile.
 - Credentials come from `--dart-define` keys (`EXPONEA_PROJECT_TOKEN`, `EXPONEA_STREAM_ID`, `EXPONEA_AUTO_CONFIGURE`, ...) read by `lib/app/env_config.dart`. Local values go in `android/credentials.json` or `ios/credentials.json` via `--dart-define-from-file`; both are gitignored. Only the `credentials.example.json` templates are committed, and they stay empty.
 - The example is also the host for the native plugin tests. See [android/AGENTS.md](../android/AGENTS.md) and [ios/AGENTS.md](../ios/AGENTS.md) for the Gradle and `xcodebuild` commands.
-- The example has its own version (`1.0.0+1`), a looser SDK constraint and a newer `flutter_lints` than the plugin. Do not align them with the plugin in a feature PR.
+- The example version in `pubspec.yaml` (`X.Y.Z+N`) must equal the plugin version; both platforms read it from there (`flutter.versionName` on Android, `$(FLUTTER_BUILD_NAME)` in `ios/Runner/Info.plist`). Only the release script bumps `X.Y.Z` there; the `+N` build number stays `1` (the script's `flutter.versionCode` increment goes to the gitignored `android/local.properties`, which Flutter rewrites from `pubspec.yaml` on every build). The example has a looser SDK constraint and a newer `flutter_lints` than the plugin; do not align those with the plugin in a feature PR.
 
 ## Structure
 
