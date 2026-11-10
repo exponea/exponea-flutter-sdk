@@ -132,6 +132,12 @@ class _TrackCustomEventDialogState extends State<TrackCustomEventDialog> {
           semanticsId: 'btn_track_event',
           onPressed: _loading ? null : _track,
         ),
+        const SizedBox(height: 8),
+        TrackingDialogWidgets.outlinedButton(
+          label: 'Cancel',
+          semanticsId: 'btn_track_event_cancel',
+          onPressed: _loading ? null : () => Navigator.of(context).pop(),
+        ),
       ],
     );
   }

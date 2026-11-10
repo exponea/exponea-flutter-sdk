@@ -303,6 +303,13 @@ final class ExampleRootViewController: UIViewController {
 
     let ok = super.application(application, didFinishLaunchingWithOptions: launchOptions)
 
+    // Start APNs registration at launch, before the Flutter engine boots and Dart configures
+    // the SDK. The debug push self-check polls for a token only 5 s after configure, and on a
+    // real device a fresh install can take longer than that to receive one when registration
+    // starts at configure. The SDK buffers a token received before configure and replays it
+    // on init, so the self-check finds it; tracking still respects requirePushAuthorization.
+    application.registerForRemoteNotifications()
+
     if let url = DeeplinkLaunchOptions.url(from: launchOptions) {
       DeeplinkBridge.shared.ingestLink(url.absoluteString)
     }

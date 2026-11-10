@@ -104,6 +104,8 @@ capabilities:
         afterTap: btn_track_custom_event
       - id: btn_track_event
         afterTap: btn_track_custom_event
+      - id: btn_track_event_cancel
+        afterTap: btn_track_custom_event
       - id: fld_event_name
         afterTap: btn_track_custom_event
       - id: fld_event_attr_name
