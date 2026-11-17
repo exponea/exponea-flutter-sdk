@@ -143,17 +143,17 @@ For each extension, follow the instructions in [Notification Extensions](https:/
 >
 > The Flutter SDK installs the native iOS SDK through CocoaPods. Also add `ExponeaSDK-Notifications` to your extension targets in `ios/Podfile`. Follow the CocoaPods steps in the native guide instead of the Swift Package Manager steps. The native guide recommends migrating to Swift Package Manager. Don't do that in a Flutter app yet: keep `ExponeaSDK-Notifications` in `ios/Podfile` until the Flutter SDK supports Swift Package Manager.
 >
-> Use the same version as `ExponeaSDK`, which you can find in `ios/Podfile.lock`. For example, if `ios/Podfile.lock` lists `ExponeaSDK (5.0.0)`:
+> Use the same version as `ExponeaSDK`, which you can find in `ios/Podfile.lock`. For example, if `ios/Podfile.lock` lists `ExponeaSDK (5.1.0)`:
 >
 > ```ruby
 > target 'NotificationService' do
 >   use_frameworks!
->   pod 'ExponeaSDK-Notifications', '5.0.0'
+>   pod 'ExponeaSDK-Notifications', '5.1.0'
 > end
 >
 > target 'NotificationContent' do
 >   use_frameworks!
->   pod 'ExponeaSDK-Notifications', '5.0.0'
+>   pod 'ExponeaSDK-Notifications', '5.1.0'
 > end
 > ```
 >

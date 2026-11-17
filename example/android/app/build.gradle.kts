@@ -80,7 +80,7 @@ flutter {
 
 dependencies {
     // Native SDK for the customer token provider; keep equal to the plugin's exponeaSdkVersion.
-    implementation("com.exponea.sdk:sdk:5.4.0")
+    implementation("com.exponea.sdk:sdk:5.5.0")
 
     // Same versions as the legacy example app.
     "gmsImplementation"("com.google.firebase:firebase-messaging:23.0.0")

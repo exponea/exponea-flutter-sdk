@@ -45,13 +45,13 @@ end
 target 'ExampleNotificationService' do
   use_frameworks!
 
-  pod 'ExponeaSDK-Notifications', '5.0.0'
+  pod 'ExponeaSDK-Notifications', '5.1.0'
 end
 
 target 'ExampleNotificationContent' do
   use_frameworks!
 
-  pod 'ExponeaSDK-Notifications', '5.0.0'
+  pod 'ExponeaSDK-Notifications', '5.1.0'
 end
 
 post_install do |installer|
