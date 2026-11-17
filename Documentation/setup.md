@@ -27,12 +27,28 @@ In your project's `pubspec.yaml` file, add a dependency to the Exponea Flutter S
 
 ```yaml
 dependencies:
-  exponea: 1.6.0
+  exponea: 3.1.0
 ```
 
-Optionally, you can specify a minimum version (for example, `^1.6.0`) or a version range (for example, `>=1.6.0 < 2.0.0`) instead of a specific version. Refer to [Version constraints](https://cocoapods.org/) in the Dart dependencies documentation for details.
+Optionally, you can specify a minimum version (for example, `^3.1.0`) or a version range (for example, `>=3.1.0 < 4.0.0`) instead of a specific version. Refer to [Version constraints](https://dart.dev/tools/pub/dependencies#version-constraints) in the Dart dependencies documentation for details.
 
 ### iOS setup
+
+> 🚧 Swift Package Manager support is planned for the next release
+>
+> On iOS, the SDK currently supports only CocoaPods. Flutter 3.44 and later enable Swift Package Manager by default, so iOS builds log the following warning:
+>
+> ```
+> The following plugins do not support Swift Package Manager for ios:
+>   - exponea
+> This will become an error in a future version of Flutter. Please contact the plugin maintainers to request Swift Package Manager adoption.
+> ```
+>
+> Your app still builds, because Flutter installs the SDK through CocoaPods. Keep CocoaPods installed. If your app doesn't have an `ios/Podfile` yet, Flutter creates one the first time you build the iOS app, for example with `flutter build ios` or `flutter run`.
+>
+> Don't turn off Swift Package Manager. Flutter recommends against it, and future versions of the Exponea Flutter SDK are planned to install the native iOS SDK through it.
+>
+> CocoaPods trunk becomes read-only on December 2, 2026. Native iOS SDK versions already published to CocoaPods stay installable, so your existing builds keep working. Native iOS SDK versions released after that date, including bug fixes and security fixes, won't be published to CocoaPods trunk. To keep receiving them, update to an Exponea Flutter SDK version with Swift Package Manager support when it's released.
 
 To resolve the Exponea SDK dependencies for the iOS app, first `cd` into the `ios` directory in your project:
 
@@ -69,6 +85,17 @@ The minimum supported iOS version for the SDK is 15.0. You may need to change th
 > After changing the Podfile, run `pod install` again. Set **iOS Deployment Target** to 15.0 or higher for your app target and any notification extensions in Xcode.
 
 ### Android setup
+
+> 🚧 Built-in Kotlin migration is planned for the next release
+>
+> Starting with Android Gradle Plugin (AGP) 9, Flutter plugins are expected to use built-in Kotlin instead of applying the Kotlin Gradle Plugin (KGP). The SDK still applies KGP, so if your app uses AGP 9 or later, Flutter logs the following warning when you build the Android app:
+>
+> ```
+> WARNING: Your app uses the following plugins that apply Kotlin Gradle Plugin (KGP): exponea
+> Future versions of Flutter will fail to build if your app uses plugins that apply KGP.
+> ```
+>
+> Your app still builds as long as `android/gradle.properties` contains `android.builtInKotlin=false`, which the Flutter app template sets by default. Don't change it to `true` until the SDK supports built-in Kotlin, because the Android build then fails.
 
 The minimum supported Android API level for the SDK is 24. You may need to set or update `minSdkVersion` in `android/app/build.gradle` to `24` or higher:
 

@@ -139,6 +139,30 @@ Rich push notifications can contain images and buttons. To enable this functiona
 
 For each extension, follow the instructions in [Notification Extensions](https://documentation.bloomreach.com/engagement/docs/ios-sdk-notification-extensions) in the native iOS SDK documentation to set it up correctly to use the Exponea Notification Service included in the iOS SDK.
 
+> 📘
+>
+> The Flutter SDK installs the native iOS SDK through CocoaPods. Also add `ExponeaSDK-Notifications` to your extension targets in `ios/Podfile`. Follow the CocoaPods steps in the native guide instead of the Swift Package Manager steps. The native guide recommends migrating to Swift Package Manager. Don't do that in a Flutter app yet: keep `ExponeaSDK-Notifications` in `ios/Podfile` until the Flutter SDK supports Swift Package Manager.
+>
+> Use the same version as `ExponeaSDK`, which you can find in `ios/Podfile.lock`. For example, if `ios/Podfile.lock` lists `ExponeaSDK (5.0.0)`:
+>
+> ```ruby
+> target 'NotificationService' do
+>   use_frameworks!
+>   pod 'ExponeaSDK-Notifications', '5.0.0'
+> end
+>
+> target 'NotificationContent' do
+>   use_frameworks!
+>   pod 'ExponeaSDK-Notifications', '5.0.0'
+> end
+> ```
+>
+> (Replace `NotificationService` and `NotificationContent` with your extension targets' names)
+>
+> CocoaPods doesn't warn you when the two versions differ. When you update the Flutter SDK, check `ExponeaSDK` in `ios/Podfile.lock` and update `ExponeaSDK-Notifications` in your extension targets to the same version.
+>
+> Swift Package Manager support, including for notification extensions, is planned for the next release.
+
 Calling the `ExponeaNotificationContentService.didReceive()` method will enhance the notification body with the image and actions delivered within the `UNNotification` payload. Notification actions shown by `ExponeaNotificationContentService` are registered with configurations to open your application with required information and handle campaign clicks automatically.
 
 #### Checklist:

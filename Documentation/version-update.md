@@ -11,6 +11,18 @@ content:
 
 This guide will help you upgrade your Exponea SDK to the new version.
 
+> 🚧 Planned for the next release
+>
+> The next release is planned to add Swift Package Manager support on iOS and to migrate the Android plugin to built-in Kotlin. Until then, Flutter logs a build warning for each, and your app still builds. On Android, keep `android.builtInKotlin=false` in `android/gradle.properties` until the SDK supports built-in Kotlin.
+>
+> CocoaPods trunk becomes read-only on December 2, 2026. Native iOS SDK versions released after that date, including bug fixes and security fixes, won't be published to CocoaPods trunk. To keep receiving them, update to an Exponea Flutter SDK version with Swift Package Manager support when it's released, and don't turn off Swift Package Manager in Flutter.
+>
+> For details, see [iOS setup](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#ios-setup) and [Android setup](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-setup#android-setup).
+
+> 📘 Update the notification extensions too
+>
+> If you use rich push notifications, update `ExponeaSDK-Notifications` in the extension targets of your `ios/Podfile` every time you update the Flutter SDK. Use the `ExponeaSDK` version from `ios/Podfile.lock`. CocoaPods doesn't warn you when the two versions differ. For details, see [Rich push notifications](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-push-ios#rich-push-notifications).
+
 ## Update to version 3.0.0 or higher
 
 Version 3.0.0 adds **Stream ({user.dh}) integration** and **JWT authentication** for the Tracking API Security feature, and adopts the UIScene lifecycle. Apple introduced a UIScene adoption warning in iOS 26 and will enforce it as a hard requirement in iOS 27.
