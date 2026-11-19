@@ -19,7 +19,7 @@ The Exponea Flutter SDK can be installed or updated through a dependency in your
 
 > ❗️
 >
-> **SDK versions 3.0.0 and higher** require **Dart 3.0+** and **Flutter 3.10+** (sealed-class API for Stream/JWT integration types). Upgrade your toolchain before updating to a JWT/Stream release. For more information, see [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update#update-to-version-300-or-higher).
+> **SDK versions 3.0.0 and higher** require **Dart 3.10+** and **Flutter 3.38+**. Upgrade your toolchain before updating to a JWT/Stream release. For more information, see [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update#update-to-version-300-or-higher).
 
 ### Add dependency
 

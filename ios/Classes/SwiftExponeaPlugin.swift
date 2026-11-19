@@ -91,7 +91,7 @@ protocol IsExponeaFlutterSDK {
 public class ExponeaFlutterVersion: NSObject, ExponeaVersionProvider {
     required public override init() { }
     public func getVersion() -> String {
-        "3.0.0"
+        "3.1.0"
     }
 }
 

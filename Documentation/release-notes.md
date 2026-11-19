@@ -14,6 +14,21 @@ content:
 > Refer to the [Flutter SDK version update guide](https://documentation.bloomreach.com/engagement/docs/flutter-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 3.1.0
+#### November 19, 2026
+* Added:
+  * Adds the runtime in-app content block controller (`ExponeaPlugin().inAppContentBlocksController`) to prefetch content blocks, check their availability, and invalidate cached content.
+  * Adds `AGENTS.md` instruction files to the repository to guide AI coding agents that work with the SDK source code.
+* Updated:
+  * Updates the native Android SDK to version 5.5.0.
+  * Updates the native iOS SDK to version 5.1.0.
+  * Updates the documentation about planned Swift Package Manager support on iOS and built-in Kotlin support on Android.
+  * Documents how to keep `ExponeaSDK-Notifications` in sync with the `ExponeaSDK` version.
+  * Redesigns the example app.
+* Fixed:
+  * Fixes in-app content block carousels on iOS blocking the main thread, ignoring the `filterContentBlocks` and `sortContentBlocks` callbacks, and stopping auto-rotation when multiple carousels appear on the same screen.
+
+
 ## Release Notes for 3.0.0
 #### September 08, 2026
 * Added:
