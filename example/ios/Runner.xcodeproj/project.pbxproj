@@ -43,6 +43,7 @@
 		AF7F60C644615CD377393941 /* LogLevelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA2FB893FFAC97A0B79EDF4 /* LogLevelSpec.swift */; };
 		B0CAA00607E4932F3F47AE60 /* SwiftExponeaPluginSceneLifeCycleSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4398E318E7F0E69CC6203F2F /* SwiftExponeaPluginSceneLifeCycleSpec.swift */; };
 		B5761329F6E03EE9D30BED0A /* RuntimeInAppContentBlockControllerBridgeSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA73A66A94337EE1A7C5C91F /* RuntimeInAppContentBlockControllerBridgeSpec.swift */; };
+		C4A1B2C3D4E5F60718293A4C /* ContentBlockCarouselSelectionBridgeSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A1B2C3D4E5F60718293A4B /* ContentBlockCarouselSelectionBridgeSpec.swift */; };
 		B6B4C4AFF803D16770F2E06A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4B530330082F225A43B95A /* Foundation.framework */; };
 		B7F5D27A2A7F0F0B39612CD0 /* NSDictionaryGetSafelySpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7E7832F3D9919E629B6FBB /* NSDictionaryGetSafelySpec.swift */; };
 		BB42CD31AE7C952449C4B576 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6334DF389954F2F87CE17541 /* Pods_RunnerTests.framework */; };
@@ -164,6 +165,7 @@
 		A3351E119DAABBB88E521B45 /* ExponeaConfigurationChangeSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExponeaConfigurationChangeSpec.swift; sourceTree = "<group>"; };
 		B69B3167728F4CD72FEF62E3 /* ExponeaEventSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExponeaEventSpec.swift; sourceTree = "<group>"; };
 		BA73A66A94337EE1A7C5C91F /* RuntimeInAppContentBlockControllerBridgeSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RuntimeInAppContentBlockControllerBridgeSpec.swift; sourceTree = "<group>"; };
+		C4A1B2C3D4E5F60718293A4B /* ContentBlockCarouselSelectionBridgeSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentBlockCarouselSelectionBridgeSpec.swift; sourceTree = "<group>"; };
 		BFA2FB893FFAC97A0B79EDF4 /* LogLevelSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LogLevelSpec.swift; sourceTree = "<group>"; };
 		C35594435482D3D116DE6D97 /* ExponeaFlutterAppDelegateSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExponeaFlutterAppDelegateSpec.swift; sourceTree = "<group>"; };
 		C4090838FCF223809739CE93 /* Pods-ExampleNotificationContent.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleNotificationContent.debug.xcconfig"; path = "Target Support Files/Pods-ExampleNotificationContent/Pods-ExampleNotificationContent.debug.xcconfig"; sourceTree = "<group>"; };
@@ -281,6 +283,7 @@
 				8BB6B85550174509D68DDC5A /* values */,
 				DFAB00B174E875F74426ED68 /* DeeplinkHandlingTests.swift */,
 				BA73A66A94337EE1A7C5C91F /* RuntimeInAppContentBlockControllerBridgeSpec.swift */,
+				C4A1B2C3D4E5F60718293A4B /* ContentBlockCarouselSelectionBridgeSpec.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -738,6 +741,7 @@
 				4E7037B4FC095481B9B15A15 /* TestUtil.swift in Sources */,
 				1607D951BF20B9D28229FD48 /* DeeplinkHandlingTests.swift in Sources */,
 				B5761329F6E03EE9D30BED0A /* RuntimeInAppContentBlockControllerBridgeSpec.swift in Sources */,
+				C4A1B2C3D4E5F60718293A4C /* ContentBlockCarouselSelectionBridgeSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

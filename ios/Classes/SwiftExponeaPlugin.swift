@@ -3,7 +3,6 @@ import UIKit
 import ExponeaSDK
 import UserNotifications
 import Foundation
-import Combine
 import WebKit
 
 private let channelName = "com.exponea"
@@ -1703,25 +1702,5 @@ extension PushAction {
         case .browser: return .web
         case .selfCheck: return .app
         }
-    }
-}
-
-extension PassthroughSubject where PassthroughSubject.Failure == Never {
-    func retrieveFirstOrNull(timeout: TimeInterval) -> Output? {
-        let timedOutSem = DispatchSemaphore(value: 0)
-        var cancallableTask: AnyCancellable?
-        var value: Output?
-        cancallableTask = self
-            .timeout(.seconds(timeout), scheduler: DispatchQueue.global(qos: .background))
-            .sink(receiveCompletion: { _ in
-                // timeout
-                timedOutSem.signal()
-            }, receiveValue: {
-                value = $0
-                cancallableTask?.cancel()
-                timedOutSem.signal()
-            })
-        timedOutSem.wait()
-        return value
     }
 }

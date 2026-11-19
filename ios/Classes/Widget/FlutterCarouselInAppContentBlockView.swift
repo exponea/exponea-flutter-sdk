@@ -64,20 +64,16 @@ class FlutterCarouselInAppContentBlockView: CarouselInAppContentBlockView {
                     continueCallback(loadedContentBlocks)
                     return
                 }
-                let filteredContentBlocks = widget.filterContentBlocks(loadedContentBlocks)
-                continueCallback(filteredContentBlocks)
+                // The native SDK may call this off the main thread; the Dart round trip needs the main thread.
+                onMain {
+                    self.widget.selectContentBlocks(loadedContentBlocks, completion: continueCallback)
+                }
             },
             expiredCompletion: expiredCompletion
         )
     }
     override func sortContentBlocks(data: [StaticReturnData]) -> [StaticReturnData] {
-        let contentBlocksToSort = data.compactMap { $0.message }
-        guard let sortedContentBlocks = widget.sortContentBlocks(contentBlocksToSort) else {
-            return super.sortContentBlocks(data: data)
-        }
-        let sortedStaticData = sortedContentBlocks.compactMap { sortedContentBlock in
-            data.first { $0.message?.id == sortedContentBlock.id }
-        }
-        return sortedStaticData
+        // The Dart sort already ran in `filterContentBlocks`; reuse its order instead of asking Dart again.
+        return widget.sortContentBlocks(data) ?? super.sortContentBlocks(data: data)
     }
 }

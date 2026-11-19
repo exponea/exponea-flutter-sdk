@@ -5,25 +5,18 @@
 
 import ExponeaSDK
 import Foundation
-import Combine
 
 public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
-    
+
     private let channelName = "com.exponea/InAppContentBlockCarousel"
-    private let methodFilterContentBlocks = "filterContentBlocks"
-    private let methodSortContentBlocks = "sortContentBlocks"
     private let methodFIlterContentBlocksResult = "filterContentBlocksResult"
     private let methodSortContentBlocksResult = "sortContentBlocksResult"
-    
+
     private var inAppContentBlockCarousel: CarouselInAppContentBlockView?
     private let placeholderId: String
-    private let filtrationSet: Bool
-    private let sortingSet: Bool
     private var channel: FlutterMethodChannel
-    private let responseTimeout: TimeInterval
-    private var filterResponse: PassthroughSubject<[InAppContentBlockResponse], Never>?
-    private var sortResponse: PassthroughSubject<[InAppContentBlockResponse], Never>?
-    
+    private let selectionBridge: ContentBlockCarouselSelectionBridge
+
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
@@ -38,11 +31,13 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
         binaryMessenger messenger: FlutterBinaryMessenger
     ) {
         self.placeholderId = placeholderId
-        self.channel = FlutterMethodChannel(name: "\(channelName)/\(viewId)", binaryMessenger: messenger)
+        let channel = FlutterMethodChannel(name: "\(channelName)/\(viewId)", binaryMessenger: messenger)
+        self.channel = channel
+        let responseTimeout: TimeInterval
         if let responseTimeoutMillis, responseTimeoutMillis > 0 {
-            self.responseTimeout = responseTimeoutMillis / 1000
+            responseTimeout = responseTimeoutMillis / 1000
         } else {
-            self.responseTimeout = 0.25
+            responseTimeout = 0.25
             if responseTimeoutMillis != nil {
                 ExponeaSDK.Exponea.logger.log(
                     .warning,
@@ -50,10 +45,33 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
                 )
             }
         }
-        
+        self.selectionBridge = ContentBlockCarouselSelectionBridge(
+            filtrationSet: filtrationSet,
+            sortingSet: sortingSet,
+            responseTimeout: responseTimeout,
+            invoke: { method, contentBlocks, onHandled in
+                guard EngineDeliveryGuard.isSafeToDeliver() else {
+                    return false
+                }
+                channel.invokeMethod(
+                    method,
+                    arguments: contentBlocks.compactMap { contentBlock in
+                        (try? JSONEncoder().encode(contentBlock)).flatMap { String(data: $0, encoding: .utf8) }
+                    },
+                    result: { _ in
+                        // The engine delivers this reply through its own task runner, but delivers the
+                        // Dart `...Result` call through the main dispatch queue, so the two can run in
+                        // either order. The Dart handler sends its answer before it returns, so the answer
+                        // is already queued on the main dispatch queue by now; queueing `onHandled` behind
+                        // it makes it run after the answer.
+                        DispatchQueue.main.async { onHandled() }
+                    }
+                )
+                return true
+            }
+        )
+
         let callback = FlutterInAppContentBlockCarouselCallback(overrideDefaultBehavior: overrideDefaultBehavior, trackActions: trackActions, channel: channel)
-        self.filtrationSet = filtrationSet
-        self.sortingSet = sortingSet
         super.init()
         self.channel.setMethodCallHandler(onMethodCall)
         self.inAppContentBlockCarousel = FlutterCarouselInAppContentBlockView(
@@ -65,52 +83,46 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
         )
         self.inAppContentBlockCarousel?.reload()
     }
-    
+
     func onMethodCall(call : FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case methodFIlterContentBlocksResult:
-            if filterResponse == nil {
+            if !selectionBridge.filtrationSet {
                 result(FlutterError(
                     code: "InAppCB",
                     message: "Handling of filtration was invoked even when filtration is not initialized", details: nil
                 ))
                 return
             }
-            let data = call.arguments as? NSArray
-            let messages = data?
-                .compactMap { $0 as? String }
-                .compactMap { $0.data(using: .utf8) }
-                .compactMap { try? JSONDecoder().decode(InAppContentBlockResponse.self, from: $0) }
-            guard let messages else {
+            guard let ids = ContentBlockCarouselSelectionBridge.parseAnswerIds(call.arguments) else {
                 result(FlutterError(
                     code: "InAppCB",
                     message: "unable to parse messages", details: nil
                 ))
                 return
             }
-            filterResponse?.send(messages)
+            if !selectionBridge.handleFilterResult(ids) {
+                ExponeaSDK.Exponea.logger.log(.verbose, message: "InAppCbCarousel: ignoring a filter result that arrived after its timeout.")
+            }
             result(nil)
         case methodSortContentBlocksResult:
-            if sortResponse == nil {
+            if !selectionBridge.sortingSet {
                 result(FlutterError(
                     code: "InAppCB",
                     message: "Handling of sorting was invoked even when sorting is not initialized", details: nil
                 ))
                 return
             }
-            let data = call.arguments as? NSArray
-            let messages = data?
-                .compactMap { $0 as? String }
-                .compactMap { $0.data(using: .utf8) }
-                .compactMap { try? JSONDecoder().decode(InAppContentBlockResponse.self, from: $0) }
-            guard let messages else {
+            guard let ids = ContentBlockCarouselSelectionBridge.parseAnswerIds(call.arguments) else {
                 result(FlutterError(
                     code: "InAppCB",
                     message: "unable to parse messages", details: nil
                 ))
                 return
             }
-            sortResponse?.send(messages)
+            if !selectionBridge.handleSortResult(ids) {
+                ExponeaSDK.Exponea.logger.log(.verbose, message: "InAppCbCarousel: ignoring a sort result that arrived after its timeout.")
+            }
             result(nil)
         default:
             let error = FlutterError(code: "", message: "\(call.method) is not supported by iOS", details: nil)
@@ -118,57 +130,20 @@ public class FlutterInAppContentBlockCarousel: NSObject, FlutterPlatformView {
             return
         }
     }
-    
-    func filterContentBlocks(_ input: [InAppContentBlockResponse]) -> [InAppContentBlockResponse] {
-        if !filtrationSet {
-            return input
-        }
-        guard EngineDeliveryGuard.isSafeToDeliver() else {
-            return input
-        }
-        filterResponse = PassthroughSubject<[InAppContentBlockResponse], Never>()
-        channel.invokeMethod(methodFilterContentBlocks, arguments: input.map { String(data: try! JSONEncoder().encode($0), encoding: .utf8 )})
-        let responseData = filterResponse?.retrieveFirstOrNull(timeout: responseTimeout)
-        filterResponse = nil
-        guard let responseData else {
-            return input
-        }
-        let filteredResponseData = retrieveMatchingById(input, responseData)
-        return filteredResponseData
+
+    /// Applies the Dart filter and sort without blocking the main thread; see `ContentBlockCarouselSelectionBridge`.
+    func selectContentBlocks(
+        _ input: [InAppContentBlockResponse],
+        completion: @escaping ([InAppContentBlockResponse]) -> Void
+    ) {
+        selectionBridge.select(input, completion: completion)
     }
 
-    func sortContentBlocks(_ input: [InAppContentBlockResponse]) -> [InAppContentBlockResponse]? {
-        if !sortingSet {
-            return nil
-        }
-        guard EngineDeliveryGuard.isSafeToDeliver() else {
-            return input
-        }
-        sortResponse = PassthroughSubject<[InAppContentBlockResponse], Never>()
-        channel.invokeMethod(methodSortContentBlocks, arguments: input.map { String(data: try! JSONEncoder().encode($0), encoding: .utf8 )})
-        let responseData = sortResponse?.retrieveFirstOrNull(timeout: responseTimeout)
-        sortResponse = nil
-        guard let responseData else {
-            return nil
-        }
-        let sortedResponseData = retrieveMatchingById(input, responseData)
-        return sortedResponseData
+    /// Returns `data` in the order of the Dart sort, or nil when the native sort applies.
+    func sortContentBlocks(_ data: [StaticReturnData]) -> [StaticReturnData]? {
+        return selectionBridge.applyDartSortOrder(to: data)
     }
-    
-    private func retrieveMatchingById(
-        _ source: [InAppContentBlockResponse],
-        _ truth: [InAppContentBlockResponse]
-    ) -> [InAppContentBlockResponse] {
-        let idsToMatch = truth.map { $0.id }
-        return source
-            .filter { eachInSource in
-                return idsToMatch.contains(eachInSource.id)
-            }
-            .sorted {
-                idsToMatch.firstIndex(of: $0.id) ?? -1 < idsToMatch.firstIndex(of: $1.id) ?? -1
-            }
-    }
-    
+
     public func view() -> UIView {
         return inAppContentBlockCarousel ?? UIView()
     }
